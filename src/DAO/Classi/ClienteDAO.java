@@ -1,0 +1,167 @@
+package DAO.Classi;
+
+import DAO.Interfacce.IClienteDAO;
+import DAO.UtenteDAO;
+import DbInterface.DbConnection;
+import DbInterface.IDbConnection;
+import Model.Cliente;
+import Model.PuntoVendita;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class ClienteDAO implements IClienteDAO {
+
+    private static ClienteDAO instance = new ClienteDAO();
+    private Cliente cliente;
+    private static IDbConnection conn;
+    private static ResultSet rs;
+
+    private ClienteDAO() {
+        cliente = null;
+        conn = null;
+        rs = null;
+    }
+
+    public static ClienteDAO getInstance() {
+        return instance;
+    }
+
+    @Override
+    public int add(Cliente cliente, PuntoVendita puntoVendita) {
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getJob() + "');");
+        conn.executeUpdate("INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + puntoVendita.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');");
+        conn.close();
+        return rowCount;
+    }
+
+    @Override
+    public int update(Cliente cliente) {
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + cliente.getUsername() + "', password = '" + cliente.getPassword() + "', name = '" + cliente.getName() + "', surname = '" + cliente.getSurname() + "', birthdate = " + cliente.getBirthdate() + "', telephone = '" + cliente.getTelephone() + "', address = '" + cliente.getAddress() + "', job = '" + cliente.getJob() +"' WHERE idUtente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("UPDATE cliente SET canale_preferito = '" + cliente.getCanalePreferito() + "', abilitato = '" + (cliente.isAbilitato() ? 1 : 0) + "' WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.close();
+        return rowCount;
+    }
+
+    @Override
+    public int delete(Cliente cliente) {
+        conn = DbConnection.getInstance();
+        conn.executeUpdate("DELETE c FROM commento c INNER JOIN acquisto a INNER JOIN lista l ON c.idAcquisto = a.idAcquisto AND a.idLista = l.idLista WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("DELETE la FROM lista_has_articolo la INNER JOIN lista l INNER JOIN cliente c ON la.idLista = l.idLista AND l.idCliente = c.idCliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("DELETE l FROM lista l INNER JOIN cliente c ON l.idCliente = c.idCliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM cliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + cliente.getIdUtente() + "';");
+        conn.close();
+        return rowCount;
+    }
+
+    @Override
+    public Cliente findByID(int idCliente) {
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE c.idCliente = '" + idCliente + "';");
+        Cliente cliente;
+        try {
+            rs.next();
+            cliente = new Cliente();
+            cliente.setIdUtente(rs.getInt("idUtente"));
+            cliente.setEmail(rs.getString("email"));
+            cliente.setUsername(rs.getString("username"));
+            cliente.setPassword(rs.getString("password"));
+            cliente.setName(rs.getString("name"));
+            cliente.setSurname(rs.getString("surname"));
+            cliente.setBirthdate(rs.getString("birthdate"));
+            cliente.setTelephone(rs.getString("telephone"));
+            cliente.setAddress(rs.getString("address"));
+            cliente.setJob(rs.getString("job"));
+            cliente.setCanalePreferito(rs.getString("canale_preferito"));
+            cliente.setAbilitato(rs.getBoolean("abilitato"));
+            return cliente;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+
+    @Override
+    public Cliente findByUsername(String username) {
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE u.username = '" + username + "';");
+        Cliente cliente;
+        try {
+            rs.next();
+            cliente = new Cliente();
+            cliente.setIdUtente(rs.getInt("idUtente"));
+            cliente.setEmail(rs.getString("email"));
+            cliente.setUsername(rs.getString("username"));
+            cliente.setPassword(rs.getString("password"));
+            cliente.setName(rs.getString("name"));
+            cliente.setSurname(rs.getString("surname"));
+            cliente.setBirthdate(rs.getString("birthdate"));
+            cliente.setTelephone(rs.getString("telephone"));
+            cliente.setAddress(rs.getString("address"));
+            cliente.setJob(rs.getString("job"));
+            cliente.setCanalePreferito(rs.getString("canale_preferito"));
+            cliente.setAbilitato(rs.getBoolean("abilitato"));
+            return cliente;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Cliente> findAll() {
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente;");
+        ArrayList<Cliente> clienti = new ArrayList<>();
+        try {
+            while(rs.next()) {
+                cliente = new Cliente();
+                cliente.setIdUtente(rs.getInt("idUtente"));
+                cliente.setEmail(rs.getString("email"));
+                cliente.setUsername(rs.getString("username"));
+                cliente.setPassword(rs.getString("password"));
+                cliente.setName(rs.getString("name"));
+                cliente.setSurname(rs.getString("surname"));
+                cliente.setBirthdate(rs.getString("birthdate"));
+                cliente.setTelephone(rs.getString("telephone"));
+                cliente.setAddress(rs.getString("address"));
+                cliente.setJob(rs.getString("job"));
+                cliente.setCanalePreferito(rs.getString("canale_preferito"));
+                cliente.setAbilitato(rs.getBoolean("abilitato"));
+                clienti.add(cliente);
+            }
+            return clienti;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+}
