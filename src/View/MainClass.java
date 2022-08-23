@@ -23,8 +23,37 @@ public class MainClass {
 
     public static void main(String args[]) {
 
+        new AppFrame();
 
-        //variante 1 del factory method
+    }
+
+}
+
+/*------------------------------------Roba--------------------------------------------------
+
+//OGGETTO JFRAME
+
+        JFrame win2 = new MyFrame("Seconda finestra");
+
+        JFrame win3 = new MyGridLayoutFrame("Terza finestra");
+
+        JFrame win4 = new MyBorderLayoutFrame("Quarta finestra");
+
+        JFrame win5 = new MyHierarchialLayoutFrame("Quinta finestra");
+
+
+//...
+
+//ESEMPI VIEW
+        JFrame win = new JFrame("Prima finestra");
+        Container cnt = win.getContentPane();
+        JLabel lbl = new JLabel("Benvenuti");
+        cnt.add(lbl);
+        win.setSize(400, 300);
+        win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //win.setVisible(true);
+
+//variante 1 del factory method
         Cliente c = new Cliente();
         Notifica n = creaNotifica("ciao", c);
         n.notificaUtente();
@@ -38,34 +67,95 @@ public class MainClass {
         Articolo a = pFac.crea();
         ICategoria cat = pFac.creaCategoria();
 
+public static void doIt( String message) throws IOException
+{
+    // the document
+    try (PDDocument doc = new PDDocument())
+    {
+        File tempFile = File.createTempFile("lista", ".pdf");
+        // Page 1
+        PDFont font = PDType1Font.HELVETICA;
+        PDPage page = new PDPage(PDRectangle.A4);
+        doc.addPage(page);
+        float fontSize = 12.0f;
 
-        //ESEMPI VIEW
-        JFrame win = new JFrame("Prima finestra");
-        Container cnt = win.getContentPane();
-        JLabel lbl = new JLabel("Benvenuti");
-        cnt.add(lbl);
-        win.setSize(400, 300);
-        win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //win.setVisible(true);
+        PDRectangle pageSize = page.getMediaBox();
+        float centeredXPosition = (pageSize.getWidth() - fontSize/1000f)/2f;
+        float stringWidth = font.getStringWidth( message );
+        float centeredYPosition = (pageSize.getHeight() - (stringWidth*fontSize)/1000f)/3f;
 
-        //OGGETTO JFRAME
-        /*
-        JFrame win2 = new MyFrame("Seconda finestra");
+        PDPageContentStream contentStream = new PDPageContentStream(doc, page, AppendMode.OVERWRITE, false);
+        contentStream.setFont( font, fontSize );
+        contentStream.beginText();
+        // counterclockwise rotation
+        for (int i=0;i<8;i++)
+        {
+            contentStream.setTextMatrix(Matrix.getRotateInstance(i * Math.PI * 0.25,
+                    centeredXPosition, pageSize.getHeight() - centeredYPosition));
+            contentStream.showText(message + " " + i);
+        }
+        // clockwise rotation
+        for (int i=0;i<8;i++)
+        {
+            contentStream.setTextMatrix(Matrix.getRotateInstance(-i*Math.PI*0.25,
+                    centeredXPosition, centeredYPosition));
+            contentStream.showText(message + " " + i);
+        }
 
-        JFrame win3 = new MyGridLayoutFrame("Terza finestra");
+        contentStream.endText();
+        contentStream.close();
 
-        JFrame win4 = new MyBorderLayoutFrame("Quarta finestra");
+        // Page 2
+        page = new PDPage(PDRectangle.A4);
+        doc.addPage(page);
+        fontSize = 1.0f;
 
-        JFrame win5 = new MyHierarchialLayoutFrame("Quinta finestra");
-        */
+        contentStream = new PDPageContentStream(doc, page, AppendMode.OVERWRITE, false);
+        contentStream.setFont( font, fontSize );
+        contentStream.beginText();
 
-        //...
-        new AppFrame();
+        // text scaling and translation
+        for (int i=0;i<10;i++)
+        {
+            contentStream.setTextMatrix(new Matrix(12f + (i * 6), 0, 0, 12f + (i * 6),
+                    100, 100f + i * 50));
+            contentStream.showText(message + " " + i);
+        }
+        contentStream.endText();
+        contentStream.close();
 
-        String message = "ciao";
+        // Page 3
+        page = new PDPage(PDRectangle.A4);
+        doc.addPage(page);
+        fontSize = 1.0f;
 
+        contentStream = new PDPageContentStream(doc, page, AppendMode.OVERWRITE, false);
+        contentStream.setFont( font, fontSize );
+        contentStream.beginText();
 
-        //String filename
+        int i = 0;
+        // text scaling combined with rotation
+        contentStream.setTextMatrix(new Matrix(12, 0, 0, 12, centeredXPosition, centeredYPosition*1.5f));
+        contentStream.showText(message + " " + i++);
+
+        contentStream.setTextMatrix(new Matrix(0, 18, -18, 0, centeredXPosition, centeredYPosition*1.5f));
+        contentStream.showText(message + " " + i++);
+
+        contentStream.setTextMatrix(new Matrix(-24, 0, 0, -24, centeredXPosition, centeredYPosition*1.5f));
+        contentStream.showText(message + " " + i++);
+
+        contentStream.setTextMatrix(new Matrix(0, -30, 30, 0, centeredXPosition, centeredYPosition*1.5f));
+        contentStream.showText(message + " " + i++);
+
+        contentStream.endText();
+        contentStream.close();
+
+        doc.save( tempFile.getAbsolutePath() );
+        System.out.println(tempFile.getAbsolutePath() );
+    }
+}
+String message = "ciao";
+//String filename
 /*
         try (PDDocument doc = new PDDocument())
         {
@@ -97,108 +187,14 @@ public class MainClass {
         } catch (IOException e) {
             e.printStackTrace();
         }
-         */
-
-        //dimostrazione pattern bridge
-        java.util.List<Prodotto> lista = new ArrayList<Prodotto>();
-
-        // popola la lista prendendola da un DAO
 
 
-        Documento doc = new DocumentoListaAcquisto(lista, new PdfBoxAPI());
-        doc.invia("roberto@gmail.com");
+    //dimostrazione pattern bridge
+    java.util.List<Prodotto> lista = new ArrayList<Prodotto>();
 
-    }
+    // popola la lista prendendola da un DAO
 
-    public static void doIt( String message) throws IOException
-    {
-        // the document
-        try (PDDocument doc = new PDDocument())
-        {
-            File tempFile = File.createTempFile("lista", ".pdf");
-            // Page 1
-            PDFont font = PDType1Font.HELVETICA;
-            PDPage page = new PDPage(PDRectangle.A4);
-            doc.addPage(page);
-            float fontSize = 12.0f;
-
-            PDRectangle pageSize = page.getMediaBox();
-            float centeredXPosition = (pageSize.getWidth() - fontSize/1000f)/2f;
-            float stringWidth = font.getStringWidth( message );
-            float centeredYPosition = (pageSize.getHeight() - (stringWidth*fontSize)/1000f)/3f;
-
-            PDPageContentStream contentStream = new PDPageContentStream(doc, page, AppendMode.OVERWRITE, false);
-            contentStream.setFont( font, fontSize );
-            contentStream.beginText();
-            // counterclockwise rotation
-            for (int i=0;i<8;i++)
-            {
-                contentStream.setTextMatrix(Matrix.getRotateInstance(i * Math.PI * 0.25,
-                        centeredXPosition, pageSize.getHeight() - centeredYPosition));
-                contentStream.showText(message + " " + i);
-            }
-            // clockwise rotation
-            for (int i=0;i<8;i++)
-            {
-                contentStream.setTextMatrix(Matrix.getRotateInstance(-i*Math.PI*0.25,
-                        centeredXPosition, centeredYPosition));
-                contentStream.showText(message + " " + i);
-            }
-
-            contentStream.endText();
-            contentStream.close();
-
-            // Page 2
-            page = new PDPage(PDRectangle.A4);
-            doc.addPage(page);
-            fontSize = 1.0f;
-
-            contentStream = new PDPageContentStream(doc, page, AppendMode.OVERWRITE, false);
-            contentStream.setFont( font, fontSize );
-            contentStream.beginText();
-
-            // text scaling and translation
-            for (int i=0;i<10;i++)
-            {
-                contentStream.setTextMatrix(new Matrix(12f + (i * 6), 0, 0, 12f + (i * 6),
-                        100, 100f + i * 50));
-                contentStream.showText(message + " " + i);
-            }
-            contentStream.endText();
-            contentStream.close();
-
-            // Page 3
-            page = new PDPage(PDRectangle.A4);
-            doc.addPage(page);
-            fontSize = 1.0f;
-
-            contentStream = new PDPageContentStream(doc, page, AppendMode.OVERWRITE, false);
-            contentStream.setFont( font, fontSize );
-            contentStream.beginText();
-
-            int i = 0;
-            // text scaling combined with rotation
-            contentStream.setTextMatrix(new Matrix(12, 0, 0, 12, centeredXPosition, centeredYPosition*1.5f));
-            contentStream.showText(message + " " + i++);
-
-            contentStream.setTextMatrix(new Matrix(0, 18, -18, 0, centeredXPosition, centeredYPosition*1.5f));
-            contentStream.showText(message + " " + i++);
-
-            contentStream.setTextMatrix(new Matrix(-24, 0, 0, -24, centeredXPosition, centeredYPosition*1.5f));
-            contentStream.showText(message + " " + i++);
-
-            contentStream.setTextMatrix(new Matrix(0, -30, 30, 0, centeredXPosition, centeredYPosition*1.5f));
-            contentStream.showText(message + " " + i++);
-
-            contentStream.endText();
-            contentStream.close();
-
-            doc.save( tempFile.getAbsolutePath() );
-            System.out.println(tempFile.getAbsolutePath() );
-        }
-    }
-
-    //factory method. ATTENZIONE: 'static' non fa parte del design pattern
+//factory method. ATTENZIONE: 'static' non fa parte del design pattern
     public static Notifica creaNotifica(String msg, Cliente c) {
         String canale = c.getCanalePreferito();
         canale = "SMS";
@@ -210,5 +206,7 @@ public class MainClass {
         return null;
 
     }
+    Documento doc = new DocumentoListaAcquisto(lista, new PdfBoxAPI());
+        doc.invia("roberto@gmail.com");
 
-}
+------------------------------------------------------------*/
