@@ -9,7 +9,7 @@ public class DbUser {
     private DbUser() {
         userName = "root";
         pwd = "arcobaleno00";
-        schemaName = "myshop4";
+        schemaName = "myshop5";
     }
 
     public static DbUser getInstance() {

@@ -1,24 +1,24 @@
-package View.Center.Amministratore.GestionePuntiVenditaPanels.Shop;
+package View.Center.Amministratore.GestionePuntiVenditaPanels;
 
-import Model.SchedaProdotto;
+import Model.SchedaServizio;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-public class AssociaSchedaProdottoTableModel extends AbstractTableModel {
+public class AssociaSchedaServizioTableModel extends AbstractTableModel {
 
-    private ArrayList<SchedaProdotto> lista;
+    private ArrayList<SchedaServizio> lista;
     private int selectedRow;
     private int editableRow = -1;
 
-    public AssociaSchedaProdottoTableModel(ArrayList<SchedaProdotto> lista){
+    public AssociaSchedaServizioTableModel(ArrayList<SchedaServizio> lista){
         this.lista = lista;
     }
 
     @Override
     public String getColumnName(int column) {
         switch(column){
-            case 0: return "Prodotto";
+            case 0: return "Servizio";
         }
         return null;
     }
@@ -40,25 +40,25 @@ public class AssociaSchedaProdottoTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SchedaProdotto p = lista.get(rowIndex);
+        SchedaServizio s = lista.get(rowIndex);
         switch(columnIndex) {
-            case 0: return p.getProdotto().getNome();
+            case 0: return s.getServizio().getNome();
         }
         return null;
     }
 
-    public ArrayList<SchedaProdotto> getLista() {
+    public ArrayList<SchedaServizio> getLista() {
         return lista;
     }
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         switch (columnIndex) {
-            case 0: lista.get(rowIndex).getProdotto().setNome(value.toString());break;
+            case 0: lista.get(rowIndex).getServizio().setNome(value.toString());break;
         }
     }
 
-    public void setLista(ArrayList<SchedaProdotto> lista) {
+    public void setLista(ArrayList<SchedaServizio> lista) {
         this.lista = lista;
     }
 
@@ -78,4 +78,5 @@ public class AssociaSchedaProdottoTableModel extends AbstractTableModel {
     public int getEditableRow() {
         return editableRow;
     }
+
 }

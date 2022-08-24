@@ -1,12 +1,12 @@
-package View.Center.Amministratore.GestionePuntiVenditaPanels.Shop;
+package View.Center.Amministratore.GestionePuntiVenditaPanels.AggiungiShopPanel;
 
 import Business.HelpFunctions;
 import DAO.Classi.ManagerDAO;
 import DAO.Classi.PuntoVenditaDAO;
-import Model.Magazzino;
 import Model.Manager;
 import Model.PuntoVendita;
 import View.AppFrame;
+import View.Center.Amministratore.GestionePuntiVenditaPanels.AssociaArticoliPanel;
 import View.Listener.Amministratore.GestionePuntiVendita.Shop.ModifyShopListener;
 import View.Nameable;
 
@@ -15,7 +15,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ModifyShopPanel extends JPanel {
+public class AddShopPanel extends JPanel {
 
     private AppFrame appFrame;
     private ModifyShopListener modifyShopListener;
@@ -57,13 +57,12 @@ public class ModifyShopPanel extends JPanel {
     private ArrayList<Manager> mtList;
     private int selectedRow;
 
-    public ModifyShopPanel(AppFrame appFrame){
+    public AddShopPanel(AppFrame appFrame){
         this.appFrame = appFrame;
         modifyShopListener = new ModifyShopListener(this, this.appFrame);
 
         mList = ManagerDAO.getInstance().findAll();
         lista = PuntoVenditaDAO.getInstance().findAll();
-        listaBackup = PuntoVendita.cloneList(lista);
         mFreeList = new ArrayList<>();
         setManagerFree(mFreeList, mList, lista);
         comboList = (ArrayList<Nameable>) mFreeList.clone();
@@ -83,86 +82,26 @@ public class ModifyShopPanel extends JPanel {
 
     public void aggiungi(){
         PuntoVendita puntoVendita = new PuntoVendita();
-        puntoVendita.setManager(mList.get(managerField.getSelectedIndex()-1));
         puntoVendita.setIndirizzo(indirizzoField.getText());
         puntoVendita.setCitta(cittaField.getText());
-        puntoVendita.setMagazzino(new Magazzino());
         PuntoVenditaDAO.getInstance().add(puntoVendita);
         currentTableModel.getLista().add(puntoVendita);
         currentTableModel.fireTableDataChanged();
     }
 
-    public void elimina(){
-        selectedRow = currentTable.convertRowIndexToModel(currentTable.getSelectedRow());
-        PuntoVenditaDAO.getInstance().delete(currentTableModel.getLista().get(selectedRow));
-        currentTableModel.getLista().remove(selectedRow);
-        setManagerFree(mFreeList, mList, currentTableModel.getLista());
-        currentTableModel.fireTableDataChanged();
-    }
 
-    public void gestioneMagazzino(){
-        selectedRow = currentTable.convertRowIndexToModel(currentTable.getSelectedRow());
-        appFrame.getCenter().setCurrentPanel(new ModifyWareHousePanel(appFrame, currentTableModel.getLista().get(selectedRow)));
-    }
+
 
     public void associaArticoli(){
         selectedRow = currentTable.convertRowIndexToModel(currentTable.getSelectedRow());
         appFrame.getCenter().setCurrentPanel(new AssociaArticoliPanel(appFrame, currentTableModel.getLista().get(selectedRow)));
     }
 
-    public void setManagerAvailable(ArrayList<Manager> newManagerList, ArrayList<Manager> managerList, ArrayList<PuntoVendita> shopList, PuntoVendita managerShop){
-        boolean found;
-        for(int i=0;i<managerList.size();i++){
-            found = false;
-            for(int j=0;j<shopList.size() && !found;j++){
-                if(managerList.get(i).getIdUtente() == shopList.get(j).getManager().getIdUtente()){
-                    if(shopList.get(j).getIdPuntoVendita() != managerShop.getIdPuntoVendita()) {
-                        found = true;
-                    }
-                }
-            }
-            if(!found)  newManagerList.add(managerList.get(i));
-        }
-    }
 
-    public void setManagerFree(ArrayList<Manager> newManagerList, ArrayList<Manager> managerList, ArrayList<PuntoVendita> shopList){
-        boolean found;
-        for(int i=0;i<managerList.size();i++){
-            found = false;
-            for(int j=0;j<shopList.size() && !found;j++){
-                if(managerList.get(i).getIdUtente() == shopList.get(j).getManager().getIdUtente()){
-                    found = true;
-                }
-            }
-            if(!found)  newManagerList.add(managerList.get(i));
-        }
-    }
 
-    public void modifica(){
-        selectedRow = currentTable.convertRowIndexToModel(currentTable.getSelectedRow());
-        managerTableField = new JComboBox<>();
-        mtList = new ArrayList<>();
-        setManagerAvailable(mtList, mList, lista, currentTableModel.getLista().get(selectedRow));
-        comboList = (ArrayList<Nameable>) mtList.clone();
-        HelpFunctions.setComboBox(managerTableField, HelpFunctions.fromArraytoString(comboList));
-        managerColumn.setCellEditor(new DefaultCellEditor(managerTableField));
 
-        currentTableModel.setEditableRow(selectedRow);
-        operazioniPanel.remove(btnModifica);
-        operazioniPanel.add(btnSalva);
-        operazioniPanel.add(btnAnnulla);
-        cercaField.setEditable(false);
-        cittaField.setEditable(false);
-        indirizzoField.setEditable(false);
-        managerField.setEditable(false);
-        btnAggiungi.setEnabled(false);
-        btnCerca.setEnabled(false);
-        btnGestioneMagazzino.setEnabled(false);
-        btnElimina.setEnabled(false);
-        btnSfoglia.setEnabled(false);
-        revalidate();
-        repaint();
-    }
+
+
 
     public void salva(){
         PuntoVendita p = currentTableModel.getLista().get(currentTableModel.getEditableRow());
@@ -199,28 +138,6 @@ public class ModifyShopPanel extends JPanel {
         repaint();
     }
 
-    public void annulla(){
-        currentTableModel.setEditableRow(-1);
-        ArrayList<PuntoVendita> lista;
-        lista = listaBackup;
-        currentTableModel.setLista(lista);
-        listaBackup = (ArrayList<PuntoVendita>)lista.clone();
-        currentTableModel.fireTableDataChanged();
-        operazioniPanel.add(btnModifica);
-        operazioniPanel.remove(btnSalva);
-        operazioniPanel.remove(btnAnnulla);
-        cercaField.setEditable(true);
-        cittaField.setEditable(true);
-        indirizzoField.setEditable(true);
-        managerField.setEditable(true);
-        btnAggiungi.setEnabled(true);
-        btnCerca.setEnabled(true);
-        btnGestioneMagazzino.setEnabled(true);
-        btnElimina.setEnabled(true);
-        btnSfoglia.setEnabled(true);
-        revalidate();
-        repaint();
-    }
 
     public void cerca(){
         ArrayList<PuntoVendita> lista = new ArrayList<>();

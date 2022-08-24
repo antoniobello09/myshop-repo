@@ -1,7 +1,7 @@
 package View.Listener.Amministratore.GestionePuntiVendita.Shop;
 
 import View.AppFrame;
-import View.Center.Amministratore.GestionePuntiVenditaPanels.Shop.ModifyShopPanel;
+import View.Center.Amministratore.GestionePuntiVenditaPanels.AggiungiShopPanel.AddShopPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,9 +9,9 @@ import java.awt.event.ActionListener;
 public class ModifyShopListener implements ActionListener {
 
     AppFrame appFrame;
-    ModifyShopPanel modifyShopPanel;
+    AddShopPanel modifyShopPanel;
 
-    public ModifyShopListener(ModifyShopPanel modifyShopPanel, AppFrame appFrame){
+    public ModifyShopListener(AddShopPanel modifyShopPanel, AppFrame appFrame){
         this.modifyShopPanel = modifyShopPanel;
         this.appFrame = appFrame;
     }

@@ -35,8 +35,7 @@ public class LoginListener implements ActionListener {
             if(u == null) {
                 //login fallito: avvisare l'utente
                 String reason = res.getMessage(); // da mostrare all'utente
-                System.out.println(reason);
-                //dalle slide su java swing, prendere l'istruzione JDialog
+
                 JOptionPane.showMessageDialog(appFrame,
                         reason,
                         "Login error",

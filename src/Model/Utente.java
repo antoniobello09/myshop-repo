@@ -11,7 +11,7 @@ import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Utente implements Nameable, Cloneable {
+public class Utente implements Nameable{
 
     private int idUtente;
     private String username;
@@ -143,39 +143,13 @@ public class Utente implements Nameable, Cloneable {
         this.job = job;
     }
 
-    public int getAge(){
-        LocalDate today = LocalDate.now();
-        LocalDate birthday = LocalDate.of(Integer.parseInt(birthdate.substring(0, 4)), Integer.parseInt(birthdate.substring(5, 7)),  Integer.parseInt(birthdate.substring(8, 10)));
-
-        Period period = Period.between(birthday, today);
-
-        return period.getYears();
-    }
 
     public String toString() {
         return name + " " + surname + " " + email + " " + birthdate;
     }
 
-
     @Override
     public String getNome() {
-        return name;
-
-    }
-
-    @Override
-    protected Object clone(){
-        try {
-            Utente u = (Utente)super.clone();
-            u.setIdUtente(idUtente);
-            u.setUsername(username);    u.setPassword(password);
-            u.setName(name);    u.setSurname(surname);
-            u.setEmail(email);  u.setBirthdate(birthdate);
-            u.setTelephone(telephone);  u.setAddress(address);
-            u.setJob(job);
-            return u;
-        }catch (CloneNotSupportedException e){
-            return null;
-        }
+        return null;
     }
 }

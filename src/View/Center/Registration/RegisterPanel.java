@@ -32,8 +32,10 @@ public class RegisterPanel extends JPanel {
             private JTextField emailField = new JTextField();
             private JLabel inserisciTelefono = new JLabel("Inserisci telefono: ");
             private JTextField telefonoField = new JTextField();
-            private JLabel inserisciResidenza = new JLabel("Inserisci residenza: ");
+            private JLabel inserisciResidenza = new JLabel("Inserisci indirizzo: ");
             private JTextField residenzaField = new JTextField();
+            private JLabel inserisciCitta = new JLabel("Inserisci città di residenza: ");
+            private JTextField cittaField = new JTextField();
             private JLabel inserisciProfessione = new JLabel("Inserisci professione: ");
             private JTextField professioneField = new JTextField();
             private JLabel inserisciCanalePreferito = new JLabel("Inserisci il tuo canale preferito: ");
@@ -81,23 +83,7 @@ public class RegisterPanel extends JPanel {
 
 
 
-    public void setMonthSelected(){
-        if(monthField.getSelectedItem().toString().equals("--")) {
-            month_chosen = false;
-            return;
-        }
-        month_chosen = true;
-        ricalcolaGiorni();
-    }
 
-    public void setYearSelected(){
-        if(yearField.getSelectedItem().toString().equals("--")) {
-            year_chosen = false;
-            return;
-        }
-        year_chosen = true;
-        ricalcolaGiorni();
-    }
 
     public void iscriviti(){
         if(!isIscrivitiOK()) return;
@@ -110,7 +96,7 @@ public class RegisterPanel extends JPanel {
         if( usernameField.getText().equals("")|| passwordField.getText().equals("")||
                 nomeField.getText().equals("")||cognomeField.getText().equals("")||emailField.getText().equals("")||
                 yearField.getSelectedItem().toString().equals("--")||monthField.getSelectedItem().toString().equals("--")||dayField.getSelectedItem().toString().equals("--")||
-                telefonoField.getText().equals("")||residenzaField.getText().equals("--")||professioneField.getText().equals("--")){
+                telefonoField.getText().equals("")||residenzaField.getText().equals("")||residenzaField.getText().equals("")||professioneField.getText().equals("")){
             JOptionPane.showMessageDialog(appFrame,
                     "Riempi tutte le caselle!",
                     "Register error",
@@ -181,6 +167,25 @@ public class RegisterPanel extends JPanel {
         monthField.setActionCommand("month");
         yearField.addActionListener(registerListener);
         yearField.setActionCommand("year");
+    }
+
+
+    public void setMonthSelected(){
+        if(monthField.getSelectedItem().toString().equals("--")) {
+            month_chosen = false;
+            return;
+        }
+        month_chosen = true;
+        ricalcolaGiorni();
+    }
+
+    public void setYearSelected(){
+        if(yearField.getSelectedItem().toString().equals("--")) {
+            year_chosen = false;
+            return;
+        }
+        year_chosen = true;
+        ricalcolaGiorni();
     }
 
 }

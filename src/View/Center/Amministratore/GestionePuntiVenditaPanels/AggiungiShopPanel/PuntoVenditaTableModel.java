@@ -1,4 +1,4 @@
-package View.Center.Amministratore.GestionePuntiVenditaPanels.Shop;
+package View.Center.Amministratore.GestionePuntiVenditaPanels.AggiungiShopPanel;
 
 import DAO.Classi.ManagerDAO;
 import Model.PuntoVendita;

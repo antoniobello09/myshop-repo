@@ -34,8 +34,9 @@ public class AppFrame extends JFrame {
                 null,
                 null);
         String[] indirizzo = nomePuntoVendita.split(", ");
-        PuntoVendita puntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0], indirizzo[1]);
-        SessionManager.getInstance().getSession().put("loggedShop", puntoVendita);
+        //PuntoVendita puntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0], indirizzo[1]);
+        SessionManager.getInstance().getSession().put("loggedShopAddress", indirizzo[0]);
+        SessionManager.getInstance().getSession().put("loggedShopCity", indirizzo[1]);
 
     //----------------HEADER--------------------------------------------------------------//
         header = new Header(this);

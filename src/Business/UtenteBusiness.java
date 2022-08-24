@@ -36,14 +36,7 @@ public class UtenteBusiness {
             res.setMessage("La password è errata.");
             return res;
         }
-
-        // 3. ottenere i dati dell'utente
         Utente u = uDao.findByUsername(username);
-        if(uDao.clientExists(u)){
-            Cliente cliente = ClienteDAO.getInstance().findByID(u.getIdUtente());
-        }
-        //alternativa: restituire istanza specifica di Cliente, Manager o Amministratore
-
         if(u != null) {
             res.setMessage("Benvenuto "+u.getName()+"!");
             res.setUtente(u);
@@ -89,3 +82,13 @@ public class UtenteBusiness {
 
 
 }
+
+
+/*// 3. ottenere i dati dell'utente
+
+        if(uDao.clientExists(u)){
+            Cliente cliente = ClienteDAO.getInstance().findByID(u.getIdUtente());
+        }
+        //alternativa: restituire istanza specifica di Cliente, Manager o Amministratore
+
+ */

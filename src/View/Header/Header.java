@@ -13,8 +13,6 @@ public class Header extends JPanel {
 
     private JLabel welcome = new JLabel("Benvenuto _____");
     private JPanel loggedIn = new JPanel();
-        private JLabel lblShop = new JLabel("Punto Vendita: ");
-        private JComboBox<String> comboShop = new JComboBox<>();
         private JLabel lblUsername = new JLabel("username: ");
         private JTextField username = new JTextField(20);
         private JLabel lblPassword = new JLabel("password: ");

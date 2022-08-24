@@ -1,11 +1,11 @@
-package View.Center.Amministratore.GestionePuntiVenditaPanels.Shop;
+package View.Center.Amministratore.GestionePuntiVenditaPanels;
 
 import DAO.Classi.*;
-import Model.Magazzino;
 import Model.PuntoVendita;
 import Model.SchedaProdotto;
 import Model.SchedaServizio;
 import View.AppFrame;
+import View.Center.Amministratore.GestionePuntiVenditaPanels.AggiungiShopPanel.AddShopPanel;
 import View.Listener.Amministratore.GestionePuntiVendita.Shop.AssociaArticoliListener;
 
 import javax.swing.*;
@@ -111,7 +111,7 @@ public class AssociaArticoliPanel extends JPanel {
     }
 
     public void annulla(){
-        appFrame.getCenter().setCurrentPanel(new ModifyShopPanel(appFrame));
+        appFrame.getCenter().setCurrentPanel(new AddShopPanel(appFrame));
     }
 
     public void tableSetting(){

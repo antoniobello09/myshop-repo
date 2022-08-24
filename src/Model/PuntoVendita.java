@@ -7,24 +7,13 @@ import java.util.List;
 public class PuntoVendita implements Cloneable{
 
     private int idPuntoVendita;
-    private Manager manager;
-    private Magazzino magazzino;
+    private int idManager;
     private String citta;
     private String indirizzo;
 
-    private ArrayList<SchedaServizio> servizi = new ArrayList<>();
-    private ArrayList<Cliente> clienti = new ArrayList<>();
 
     public void sendMsgToClienti(/* Messaggio messaggio */) {
 
-    }
-
-    public Manager getManager() {
-        return manager;
-    }
-
-    public void setManager(Manager manager) {
-        this.manager = manager;
     }
 
     public int getIdPuntoVendita() {
@@ -35,15 +24,35 @@ public class PuntoVendita implements Cloneable{
         this.idPuntoVendita = idPuntoVendita;
     }
 
-    public Magazzino getMagazzino() {
-        return magazzino;
+
+    public String getCitta() {
+        return citta;
     }
 
-    public void setMagazzino(Magazzino magazzino) {
-        this.magazzino = magazzino;
+    public void setCitta(String citta) {
+        this.citta = citta;
     }
 
-    public static ArrayList<PuntoVendita> cloneList(ArrayList<PuntoVendita> lista){
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
+    }
+
+    public int getIdManager() {
+        return idManager;
+    }
+
+    public void setIdManager(int idManager) {
+        this.idManager = idManager;
+    }
+}
+
+
+/*
+public static ArrayList<PuntoVendita> cloneList(ArrayList<PuntoVendita> lista){
         Iterator<PuntoVendita> it = lista.iterator();
         ArrayList<PuntoVendita> clonedList = new ArrayList<>();
         while(it.hasNext()){
@@ -68,38 +77,4 @@ public class PuntoVendita implements Cloneable{
     }
 
 
-
-
-    public String getCitta() {
-        return citta;
-    }
-
-    public void setCitta(String citta) {
-        this.citta = citta;
-    }
-
-    public String getIndirizzo() {
-        return indirizzo;
-    }
-
-    public void setIndirizzo(String indirizzo) {
-        this.indirizzo = indirizzo;
-    }
-
-
-    public ArrayList<SchedaServizio> getServizi() {
-        return servizi;
-    }
-
-    public void setServizi(ArrayList<SchedaServizio> servizi) {
-        this.servizi = servizi;
-    }
-
-    public ArrayList<Cliente> getClienti() {
-        return clienti;
-    }
-
-    public void setClienti(ArrayList<Cliente> clienti) {
-        this.clienti = clienti;
-    }
-}
+ */

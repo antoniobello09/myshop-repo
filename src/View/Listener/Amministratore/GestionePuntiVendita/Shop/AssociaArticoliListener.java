@@ -1,7 +1,7 @@
 package View.Listener.Amministratore.GestionePuntiVendita.Shop;
 
 import View.AppFrame;
-import View.Center.Amministratore.GestionePuntiVenditaPanels.Shop.AssociaArticoliPanel;
+import View.Center.Amministratore.GestionePuntiVenditaPanels.AssociaArticoliPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

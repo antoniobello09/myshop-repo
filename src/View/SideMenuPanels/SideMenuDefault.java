@@ -20,13 +20,8 @@ public class SideMenuDefault extends JPanel{
 
     public SideMenuDefault(AppFrame appFrame) {
         this.appFrame = appFrame;
-        Dimension d = new Dimension(300,800);
         setLayout(new GridLayout(10,1,0,15));
-        //setPreferredSize(d);
-        //listener = new AmministratoreSideMenuListener(appFrame);
-        //setLayout(new GridLayout(20,1));
         refresh();
-
     }
 
     public void refresh() {

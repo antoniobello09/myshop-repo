@@ -34,7 +34,7 @@ public class AmministratoreDAO implements IAmministratoreDAO {
     @Override
     public int update(Amministratore amministratore) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + amministratore.getUsername() + "', password = '" + amministratore.getPassword() + "'name = '" + amministratore.getName() + "', surname = '" + amministratore.getSurname() + "', birthdate = " + amministratore.getBirthdate() + "', telephone = '" + amministratore.getTelephone() + "', address = '" + amministratore.getAddress() + "', job = '" + amministratore.getJob() +"' WHERE idUtente = '" + amministratore.getIdUtente() + "';");
+        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + amministratore.getUsername() + "', password = '" + amministratore.getPassword() + "' WHERE idUtente = '" + amministratore.getIdUtente() + "';");
         conn.close();
         return rowCount;
     }
@@ -56,12 +56,6 @@ public class AmministratoreDAO implements IAmministratoreDAO {
             amministratore.setEmail(rs.getString("email"));
             amministratore.setUsername(rs.getString("username"));
             amministratore.setPassword(rs.getString("password"));
-            amministratore.setName(rs.getString("name"));
-            amministratore.setSurname(rs.getString("surname"));
-            amministratore.setBirthdate(rs.getString("birthdate"));
-            amministratore.setTelephone(rs.getString("telephone"));
-            amministratore.setAddress(rs.getString("address"));
-            amministratore.setJob(rs.getString("job"));
             return amministratore;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
