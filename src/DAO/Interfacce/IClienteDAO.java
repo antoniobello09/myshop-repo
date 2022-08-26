@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface IClienteDAO {
 
-    int add(Cliente cliente, PuntoVendita puntoVendita);
+    int add(Cliente cliente);
     int update(Cliente cliente);
     int delete(Cliente cliente);
     Cliente findByID(int idCliente);

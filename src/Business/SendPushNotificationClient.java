@@ -1,8 +1,8 @@
 package Business;
 
 import Model.Cliente;
-import Model.Notifica;
-import Model.NotificaPush;
+import Model.Other.Notifica;
+import Model.Other.NotificaPush;
 
 public class SendPushNotificationClient extends SendNotificationClient {
 

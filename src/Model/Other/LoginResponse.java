@@ -1,4 +1,6 @@
-package Model;
+package Model.Other;
+
+import Model.Utente;
 
 public class LoginResponse {
 

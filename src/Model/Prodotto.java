@@ -4,8 +4,9 @@ package Model;
 
 public class Prodotto extends Articolo implements IProdotto, Cloneable {
 
-    private CategoriaProdotto categoria;
-    private Produttore produttore;
+    private int idCategoria;
+    private int idProduttore;
+    private int idPosizione;
 
 
     public Prodotto(){
@@ -14,36 +15,32 @@ public class Prodotto extends Articolo implements IProdotto, Cloneable {
 
     public Prodotto(Prodotto prodotto){
         super(prodotto);
-        this.categoria = prodotto.getCategoria();
-        this.produttore = prodotto.getProduttore();
+        this.idCategoria = prodotto.getIdCategoria();
+        this.idPosizione = prodotto.getIdPosizione();
+        this.idProduttore = prodotto.getIdProduttore();
     }
 
-    public CategoriaProdotto getCategoria() {
-        return categoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(CategoriaProdotto categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
-    @Override
-    public Float getPrezzo() {
-        return prezzo;
+    public int getIdProduttore() {
+        return idProduttore;
     }
 
-    public Produttore getProduttore() {
-        return produttore;
+    public void setIdProduttore(int idProduttore) {
+        this.idProduttore = idProduttore;
     }
 
-    public void setProduttore(Produttore produttore) {
-        this.produttore = produttore;
+    public int getIdPosizione() {
+        return idPosizione;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Prodotto p = new Prodotto(this);
-        p.setCategoria((CategoriaProdotto) categoria.clone());
-        p.setProduttore((Produttore) produttore.clone());
-        return p;
+    public void setIdPosizione(int idPosizione) {
+        this.idPosizione = idPosizione;
     }
 }

@@ -1,4 +1,7 @@
-package Model;
+package Model.Other;
+
+import Model.Cliente;
+import Model.Other.Notifica;
 
 public class NotificaSMS extends Notifica {
 

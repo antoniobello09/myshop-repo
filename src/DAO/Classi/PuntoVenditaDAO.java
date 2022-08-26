@@ -31,35 +31,25 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     @Override
     public int add(PuntoVendita puntoVendita) {
-        MagazzinoDAO.getInstance().add();
         conn = DbConnection.getInstance();
-        int rowCount = 0;
-        rs = conn.executeQuery("SELECT idMagazzino FROM magazzino WHERE idMagazzino = (SELECT max(idMagazzino) FROM magazzino)");
-        try {
-            rs.next();
-            rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo, idMagazzino) VALUES ('"+ ManagerDAO.getInstance().findByUsername(puntoVendita.getManager().getUsername(),1).getIdUtente() + "','" + puntoVendita.getCitta() + "','" + puntoVendita.getIndirizzo() +
-                    "','" + rs.getInt("idMagazzino") + "');");
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-
-
+        int rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + puntoVendita.getIdManager() + "','" + puntoVendita.getCitta() + "','" + puntoVendita.getIndirizzo() + "');");
+        conn.close();
         return rowCount;
     }
 
+    @Override
+    public int add(PuntoVendita puntoVendita, Manager manager) {
+        ManagerDAO.getInstance().add(manager);
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + ManagerDAO.getInstance().findByUsername(manager.getUsername(),0).getIdUtente() + "','" + puntoVendita.getCitta() + "','" + puntoVendita.getIndirizzo() + "');");
+        conn.close();
+        return rowCount;
+    }
 
     @Override
     public int update(PuntoVendita puntoVendita) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE puntovendita SET idManager = '" + puntoVendita.getManager().getIdUtente() + "', citta = '" + puntoVendita.getCitta() + "', indirizzo = '" + puntoVendita.getIndirizzo() + "' WHERE idPuntoVendita = '" + puntoVendita.getIdPuntoVendita() + "';");
+        int rowCount = conn.executeUpdate("UPDATE puntovendita SET citta = '" + puntoVendita.getCitta() + "', indirizzo = '" + puntoVendita.getIndirizzo() + "' WHERE idPuntoVendita = '" + puntoVendita.getIdPuntoVendita() + "';");
         conn.close();
         return rowCount;
     }
@@ -85,11 +75,9 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             rs.next();
             puntoVendita = new PuntoVendita();
             puntoVendita.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-            puntoVendita.setManager(ManagerDAO.getInstance().findByID(rs.getInt("idManager")));
+            puntoVendita.setIdManager(rs.getInt("idManager"));
             puntoVendita.setCitta(rs.getString("citta"));
             puntoVendita.setIndirizzo(rs.getString("indirizzo"));
-            puntoVendita.setMagazzino(MagazzinoDAO.getInstance().findByID(rs.getInt("idMagazzino")));
-            puntoVendita.setServizi(SchedaServizioDAO.getInstance().findServicesShop(rs.getInt("idPuntoVendita")));
             return puntoVendita;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -119,11 +107,9 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             rs.next();
             puntoVendita = new PuntoVendita();
             puntoVendita.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-            puntoVendita.setManager(ManagerDAO.getInstance().findByID(rs.getInt("idManager")));
+            puntoVendita.setIdManager(rs.getInt("idManager"));
             puntoVendita.setCitta(rs.getString("citta"));
             puntoVendita.setIndirizzo(rs.getString("indirizzo"));
-            puntoVendita.setMagazzino(MagazzinoDAO.getInstance().findByID(rs.getInt("idMagazzino")));
-            puntoVendita.setServizi(SchedaServizioDAO.getInstance().findServicesShop(rs.getInt("idPuntoVendita")));
             return puntoVendita;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -153,11 +139,9 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             rs.next();
             puntoVendita = new PuntoVendita();
             puntoVendita.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-            puntoVendita.setManager(ManagerDAO.getInstance().findByID(rs.getInt("idManager")));
+            puntoVendita.setIdManager(rs.getInt("idManager"));
             puntoVendita.setCitta(rs.getString("citta"));
             puntoVendita.setIndirizzo(rs.getString("indirizzo"));
-            puntoVendita.setMagazzino(MagazzinoDAO.getInstance().findByID(rs.getInt("idMagazzino")));
-            puntoVendita.setServizi(SchedaServizioDAO.getInstance().findServicesShop(rs.getInt("idPuntoVendita")));
             return puntoVendita;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -187,11 +171,9 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             while(rs.next()) {
                 PuntoVendita puntoVendita = new PuntoVendita();
                 puntoVendita.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-                puntoVendita.setManager(ManagerDAO.getInstance().findByID(rs.getInt("idManager"),1));
+                puntoVendita.setIdManager(rs.getInt("idManager"));
                 puntoVendita.setCitta(rs.getString("citta"));
                 puntoVendita.setIndirizzo(rs.getString("indirizzo"));
-                puntoVendita.setMagazzino(MagazzinoDAO.getInstance().findByID(rs.getInt("idMagazzino"),1));
-                puntoVendita.setServizi(SchedaServizioDAO.getInstance().findServicesShop(rs.getInt("idPuntoVendita")));
                 puntiVendita.add(puntoVendita);
             }
             return puntiVendita;

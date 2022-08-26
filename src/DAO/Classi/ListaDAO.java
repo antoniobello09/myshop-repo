@@ -3,7 +3,7 @@ package DAO.Classi;
 import DAO.Interfacce.IListaDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
-import Model.Acquisto;
+
 import Model.Lista;
 
 import java.sql.ResultSet;
@@ -30,13 +30,7 @@ public class ListaDAO implements IListaDAO {
     @Override
     public int add(Lista lista) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO lista(idCliente, nome, idPuntoVendita) VALUES ('" + lista.getIdCliente() + "','" + lista.getNome() + "','" + lista.getIdPuntoVendita() + "');");
-        for(int i=0;i<lista.getProdotti().size();i++){
-            Lista_has_ArticoloDAO.getInstance().add(findByInfo(lista.getIdPuntoVendita(), lista.getNome(), lista.getIdCliente(),1), lista.getProdotti().get(i));
-        }
-        for(int i=0;i<lista.getServizi().size();i++){
-            Lista_has_ArticoloDAO.getInstance().add(findByInfo(lista.getIdPuntoVendita(), lista.getNome(), lista.getIdCliente(),1), lista.getServizi().get(i));
-        }
+        int rowCount = conn.executeUpdate("INSERT INTO lista(idCliente, nome, acquistata) VALUES ('" + lista.getIdCliente() + "','" + lista.getNome() + "','0');");
         conn.close();
         return rowCount;
     }
@@ -44,7 +38,7 @@ public class ListaDAO implements IListaDAO {
     @Override
     public int update(Lista lista) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE lista SET nome = '"+ lista.getNome() + "' WHERE idLista ='" + lista.getIdLista() + "';");
+        int rowCount = conn.executeUpdate("UPDATE lista SET nome = '"+ lista.getNome() + "', acquistata = '" + lista.isAcquistata() + "' WHERE idLista ='" + lista.getIdLista() + "';");
         conn.close();
         return rowCount;
     }
@@ -72,10 +66,7 @@ public class ListaDAO implements IListaDAO {
             lista.setIdLista(rs.getInt("idLista"));
             lista.setIdCliente(rs.getInt("idCliente"));
             lista.setNome(rs.getString("nome"));
-            lista.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-            lista.setServizi(Lista_has_ArticoloDAO.getInstance().findAllServizi(lista.getIdLista()));
-            lista.setProdotti(Lista_has_ArticoloDAO.getInstance().findAllProdotti(lista.getIdLista()));
-            lista.setAcquisto(AcquistoDAO.getInstance().findByID(lista.getIdLista()));
+            lista.setAcquistata(rs.getBoolean("acquistata"));
             return lista;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -106,7 +97,7 @@ public class ListaDAO implements IListaDAO {
             lista.setIdLista(rs.getInt("idLista"));
             lista.setIdCliente(rs.getInt("idCliente"));
             lista.setNome(rs.getString("nome"));
-            lista.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
+            lista.setAcquistata(rs.getBoolean("acquistata"));
             return lista;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -134,10 +125,7 @@ public class ListaDAO implements IListaDAO {
                 lista.setIdLista(rs.getInt("idLista"));
                 lista.setIdCliente(rs.getInt("idCliente"));
                 lista.setNome(rs.getString("nome"));
-                lista.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-                lista.setServizi(Lista_has_ArticoloDAO.getInstance().findAllServizi(lista.getIdLista()));
-                lista.setProdotti(Lista_has_ArticoloDAO.getInstance().findAllProdotti(lista.getIdLista()));
-                lista.setAcquisto(AcquistoDAO.getInstance().findByID(lista.getIdLista()));
+                lista.setAcquistata(rs.getBoolean("acquistata"));
                 liste.add(lista);
             }
             return liste;
@@ -166,10 +154,7 @@ public class ListaDAO implements IListaDAO {
                 lista.setIdLista(rs.getInt("idLista"));
                 lista.setIdCliente(rs.getInt("idCliente"));
                 lista.setNome(rs.getString("nome"));
-                lista.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
-                lista.setServizi(Lista_has_ArticoloDAO.getInstance().findAllServizi(lista.getIdLista()));
-                lista.setProdotti(Lista_has_ArticoloDAO.getInstance().findAllProdotti(lista.getIdLista()));
-                lista.setAcquisto(AcquistoDAO.getInstance().findByID(lista.getIdLista()));
+                lista.setAcquistata(rs.getBoolean("acquistata"));
                 liste.add(lista);
             }
             return liste;

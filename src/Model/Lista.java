@@ -7,21 +7,8 @@ public class Lista {
 
     private int idLista;
     private String nome;
-    private int idPuntoVendita;
     private int idCliente;
-    private ArrayList<Prodotto_Quantita> prodotti = new ArrayList<>();
-    private ArrayList<Servizio> servizi = new ArrayList<>();
-    private Acquisto acquisto;
-    private boolean acquistato;
-    private float totale = 0;
-
-    public int getIdPuntoVendita() {
-        return idPuntoVendita;
-    }
-
-    public void setIdPuntoVendita(int idPuntoVendita) {
-        this.idPuntoVendita = idPuntoVendita;
-    }
+    private boolean acquistata;
 
     public int getIdLista() {
         return idLista;
@@ -39,36 +26,13 @@ public class Lista {
         this.nome = nome;
     }
 
-    public ArrayList<Prodotto_Quantita> getProdotti() {
-        return prodotti;
+
+    public boolean isAcquistata() {
+        return acquistata;
     }
 
-    public void setProdotti(ArrayList<Prodotto_Quantita> prodotti) {
-        this.prodotti = prodotti;
-    }
-
-    public ArrayList<Servizio> getServizi() {
-        return servizi;
-    }
-
-    public void setServizi(ArrayList<Servizio> servizi) {
-        this.servizi = servizi;
-    }
-
-    public Acquisto getAcquisto() {
-        return acquisto;
-    }
-
-    public void setAcquisto(Acquisto acquisto) {
-        this.acquisto = acquisto;
-    }
-
-    public boolean isAcquistato() {
-        return acquistato;
-    }
-
-    public void setAcquistato(boolean acquistato) {
-        this.acquistato = acquistato;
+    public void setAcquistata(boolean acquistata) {
+        this.acquistata = acquistata;
     }
 
     public int getIdCliente() {
@@ -79,13 +43,4 @@ public class Lista {
         this.idCliente = idCliente;
     }
 
-    public float getTotale(){
-        for(int i=0;i<prodotti.size();i++){
-            totale += prodotti.get(i).getTotale();
-        }
-        for(int i=0;i<servizi.size();i++){
-            totale += servizi.get(i).getPrezzo();
-        }
-        return totale;
-    }
 }

@@ -2,7 +2,7 @@ package View.Listener.HeaderListeners;
 
 import Business.SessionManager;
 import Business.UtenteBusiness;
-import Model.LoginResponse;
+import Model.Other.LoginResponse;
 import Model.Utente;
 import View.AppFrame;
 import View.Center.Registration.RegisterPanel;

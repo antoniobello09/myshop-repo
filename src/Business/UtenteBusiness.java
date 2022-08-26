@@ -4,6 +4,8 @@ import DAO.Classi.ClienteDAO;
 import DAO.IUtenteDAO;
 import DAO.UtenteDAO;
 import Model.*;
+import Model.Other.LoginResponse;
+import Model.Other.RegistrationResponse;
 
 public class UtenteBusiness {
 

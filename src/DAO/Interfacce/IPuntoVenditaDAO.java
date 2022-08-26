@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public interface IPuntoVenditaDAO {
     int add(PuntoVendita puntoVendita);
+    int add(PuntoVendita puntoVendita, Manager manager);
     int update(PuntoVendita puntoVendita);
     int delete(PuntoVendita puntoVendita);
     PuntoVendita findByID(int idPuntoVendita);

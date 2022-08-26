@@ -1,7 +1,7 @@
 package Business;
 
 import Model.Cliente;
-import Model.Notifica;
+import Model.Other.Notifica;
 
 public abstract class SendNotificationClient {
 

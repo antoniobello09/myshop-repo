@@ -1,13 +1,9 @@
 package View;
 
 import Business.SessionManager;
-import DAO.Classi.PuntoVenditaDAO;
-import Model.PuntoVendita;
-import View.Center.Amministratore.GestionePuntiVenditaPanels.Manager.ListDialog;
 import View.Center.Center;
 import View.Footer.Footer;
 import View.Header.Header;
-import View.Listener.HeaderListeners.LoginListener;
 import View.SideMenuPanels.SideMenu;
 
 import javax.swing.*;

@@ -13,6 +13,5 @@ public interface IManagerDAO {
     Manager findByID(int idManager);
     Manager findByUsername(String username);
     ArrayList<Manager> findAll();
-    ArrayList<Manager> findFree(int idPuntoVendita);
 
 }

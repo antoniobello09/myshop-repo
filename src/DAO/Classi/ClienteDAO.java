@@ -29,10 +29,10 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public int add(Cliente cliente, PuntoVendita puntoVendita) {
+    public int add(Cliente cliente) {
         conn = DbConnection.getInstance();
         int rowCount = conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getJob() + "');");
-        conn.executeUpdate("INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + puntoVendita.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');");
+        conn.executeUpdate("INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + cliente.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');");
         conn.close();
         return rowCount;
     }
@@ -49,9 +49,9 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public int delete(Cliente cliente) {
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE c FROM commento c INNER JOIN acquisto a INNER JOIN lista l ON c.idAcquisto = a.idAcquisto AND a.idLista = l.idLista WHERE idCliente = '" + cliente.getIdUtente() + "';");
-        conn.executeUpdate("DELETE la FROM lista_has_articolo la INNER JOIN lista l INNER JOIN cliente c ON la.idLista = l.idLista AND l.idCliente = c.idCliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
-        conn.executeUpdate("DELETE l FROM lista l INNER JOIN cliente c ON l.idCliente = c.idCliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("DELETE FROM commento WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("DELETE la FROM lista_has_articolo la INNER JOIN lista l ON la.idLista = l.idLista WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        conn.executeUpdate("DELETE FROM lista WHERE idCliente = '" + cliente.getIdUtente() + "';");
         int rowCount = conn.executeUpdate("DELETE FROM cliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
         conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + cliente.getIdUtente() + "';");
         conn.close();
@@ -76,6 +76,7 @@ public class ClienteDAO implements IClienteDAO {
             cliente.setTelephone(rs.getString("telephone"));
             cliente.setAddress(rs.getString("address"));
             cliente.setJob(rs.getString("job"));
+            cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
             cliente.setCanalePreferito(rs.getString("canale_preferito"));
             cliente.setAbilitato(rs.getBoolean("abilitato"));
             return cliente;
@@ -111,6 +112,7 @@ public class ClienteDAO implements IClienteDAO {
             cliente.setTelephone(rs.getString("telephone"));
             cliente.setAddress(rs.getString("address"));
             cliente.setJob(rs.getString("job"));
+            cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
             cliente.setCanalePreferito(rs.getString("canale_preferito"));
             cliente.setAbilitato(rs.getBoolean("abilitato"));
             return cliente;
@@ -146,6 +148,7 @@ public class ClienteDAO implements IClienteDAO {
                 cliente.setTelephone(rs.getString("telephone"));
                 cliente.setAddress(rs.getString("address"));
                 cliente.setJob(rs.getString("job"));
+                cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 cliente.setCanalePreferito(rs.getString("canale_preferito"));
                 cliente.setAbilitato(rs.getBoolean("abilitato"));
                 clienti.add(cliente);

@@ -30,8 +30,8 @@ public class ManagerDAO implements IManagerDAO {
     @Override
     public int add(Manager manager) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES ('"+ manager.getUsername() + "','" + manager.getPassword() + "','" + manager.getName() + "','" + manager.getSurname() + "','" + manager.getEmail() + "','" + manager.getBirthdate() + "','" + manager.getTelephone() + "','" + manager.getAddress() + "','" + manager.getJob() + "');");
-        conn.executeUpdate("INSERT INTO manager VALUES ('" + UtenteDAO.getInstance().findByUsername(manager.getUsername()).getIdUtente() +"');");
+        int rowCount = conn.executeUpdate("INSERT INTO utente(username, password, email) VALUES ('"+ manager.getUsername() + "','" + manager.getPassword() + "','" + manager.getEmail() + "');");
+        conn.executeUpdate("INSERT INTO manager VALUES ('" + ManagerDAO.getInstance().findByUsername(manager.getUsername(),1).getIdUtente() +"');");
         conn.close();
         return rowCount;
     }
@@ -39,18 +39,14 @@ public class ManagerDAO implements IManagerDAO {
     @Override
     public int update(Manager manager) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + manager.getUsername() + "', password = '" + manager.getPassword() + "', email = '" + manager.getEmail() + "', name = '" + manager.getName() + "', surname = '" + manager.getSurname() + "', birthdate = '" + manager.getBirthdate() + "', telephone = '" + manager.getTelephone() + "', address = '" + manager.getAddress() + "', job = '" + manager.getJob() +"' WHERE idUtente = '" + manager.getIdUtente() + "';");
+        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + manager.getUsername() + "', password = '" + manager.getPassword() + "', email = '" + manager.getEmail() + "' WHERE idUtente = '" + manager.getIdUtente() + "';");
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(Manager manager) {
-        conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM manager WHERE idManager = '" + manager.getIdUtente() + "';");
-        conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + manager.getIdUtente() + "';");
-        conn.close();
-        return rowCount;
+        return 0;
     }
 
     @Override
@@ -68,12 +64,6 @@ public class ManagerDAO implements IManagerDAO {
             manager.setEmail(rs.getString("email"));
             manager.setUsername(rs.getString("username"));
             manager.setPassword(rs.getString("password"));
-            manager.setName(rs.getString("name"));
-            manager.setSurname(rs.getString("surname"));
-            manager.setBirthdate(rs.getString("birthdate"));
-            manager.setTelephone(rs.getString("telephone"));
-            manager.setAddress(rs.getString("address"));
-            manager.setJob(rs.getString("job"));
             return manager;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -106,13 +96,6 @@ public class ManagerDAO implements IManagerDAO {
                 manager.setEmail(rs.getString("email"));
                 manager.setUsername(rs.getString("username"));
                 manager.setPassword(rs.getString("password"));
-                manager.setName(rs.getString("name"));
-                manager.setSurname(rs.getString("surname"));
-                manager.setBirthdate(rs.getString("birthdate"));
-                manager.setTelephone(rs.getString("telephone"));
-                manager.setAddress(rs.getString("address"));
-                manager.setJob(rs.getString("job"));
-                return manager;
             }else{
                 return null;
             }
@@ -143,12 +126,6 @@ public class ManagerDAO implements IManagerDAO {
                 manager.setEmail(rs.getString("email"));
                 manager.setUsername(rs.getString("username"));
                 manager.setPassword(rs.getString("password"));
-                manager.setName(rs.getString("name"));
-                manager.setSurname(rs.getString("surname"));
-                manager.setBirthdate(rs.getString("birthdate"));
-                manager.setTelephone(rs.getString("telephone"));
-                manager.setAddress(rs.getString("address"));
-                manager.setJob(rs.getString("job"));
                 managers.add(manager);
             }
             return managers;
@@ -166,44 +143,5 @@ public class ManagerDAO implements IManagerDAO {
         return null;
     }
 
-    @Override
-    public ArrayList<Manager> findFree(int idPuntoVendita) {
-        conn = DbConnection.getInstance();
-        if(idPuntoVendita == 0){
-            rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN manager m ON u.idUtente = m.idManager " +
-                    "LEFT JOIN puntovendita p ON m.idManager = p.idManager WHERE p.idManager IS NULL;");
-        }else {
-            rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN manager m ON u.idUtente = m.idManager " +
-                    "LEFT JOIN puntovendita p ON m.idManager = p.idManager WHERE p.idManager IS NULL OR p.idManager = '" + idPuntoVendita + "';");
-        }
-        ArrayList<Manager> managers = new ArrayList<>();
-        try {
-            while(rs.next()) {
-                manager = new Manager();
-                manager.setIdUtente(rs.getInt("idUtente"));
-                manager.setEmail(rs.getString("email"));
-                manager.setUsername(rs.getString("username"));
-                manager.setPassword(rs.getString("password"));
-                manager.setName(rs.getString("name"));
-                manager.setSurname(rs.getString("surname"));
-                manager.setBirthdate(rs.getString("birthdate"));
-                manager.setTelephone(rs.getString("telephone"));
-                manager.setAddress(rs.getString("address"));
-                manager.setJob(rs.getString("job"));
-                managers.add(manager);
-            }
-            return managers;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-        return null;
-    }
+
 }

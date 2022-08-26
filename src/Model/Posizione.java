@@ -3,7 +3,6 @@ package Model;
 public class Posizione {
 
     private int idPosizione;
-    private int idMagazzino;
     private int corsia;
     private int scaffale;
     private int piano;
@@ -40,11 +39,4 @@ public class Posizione {
         this.piano = piano;
     }
 
-    public int getIdMagazzino() {
-        return idMagazzino;
-    }
-
-    public void setIdMagazzino(int idMagazzino) {
-        this.idMagazzino = idMagazzino;
-    }
 }

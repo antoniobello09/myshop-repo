@@ -1,4 +1,6 @@
-package Model;
+package Model.Other;
+
+import Model.Cliente;
 
 public abstract class Notifica {
 

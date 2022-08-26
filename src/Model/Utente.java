@@ -51,6 +51,13 @@ public class Utente implements Nameable{
         this.job = job;
     }
 
+    public Utente(int idUtente, String username, String password, String email) {
+        this.idUtente = idUtente;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     public Utente(String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String job) {
         this.username = username;
         this.password = password;
@@ -61,6 +68,12 @@ public class Utente implements Nameable{
         this.telephone = telephone;
         this.address = address;
         this.job = job;
+    }
+
+    public Utente(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     public int getIdUtente() {

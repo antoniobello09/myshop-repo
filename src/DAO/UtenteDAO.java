@@ -36,15 +36,17 @@ public class UtenteDAO implements IUtenteDAO {
     @Override
     public int update(Utente utente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "'name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = " + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + utente.getIdUtente() + "'");
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(Utente utente) {
-        //...
-        return 0;
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "'name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = " + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';");
+        conn.close();
+        return rowCount;
     }
 
     @Override

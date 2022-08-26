@@ -5,39 +5,32 @@ import java.util.Iterator;
 
 public class Servizio extends Articolo implements Cloneable{
 
-    private CategoriaServizio categoria;
+    private int idCategoria;
+    private int idFornitoreServizio;
 
 
     public Servizio(Servizio servizio) {
         super(servizio);
-        this.categoria = servizio.getCategoria();
+        this.idCategoria = servizio.getIdCategoria();
     }
 
     public Servizio(){
 
     }
 
-    public CategoriaServizio getCategoria() {
-        return categoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(CategoriaServizio categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
-    @Override
-    protected Object clone(){
-        Servizio s = new Servizio(this);
-        s.setCategoria((CategoriaServizio) categoria.clone());
-        return s;
+    public int getIdFornitoreServizio() {
+        return idFornitoreServizio;
     }
 
-    public static ArrayList<Servizio> cloneList(ArrayList<Servizio> lista) {
-        Iterator<Servizio> it = lista.iterator();
-        ArrayList<Servizio> newList = new ArrayList<>();
-        while(it.hasNext()){
-            newList.add((Servizio) it.next().clone());
-        }
-        return newList;
+    public void setIdFornitoreServizio(int idFornitoreServizio) {
+        this.idFornitoreServizio = idFornitoreServizio;
     }
 }
