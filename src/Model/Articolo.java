@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Other.ICategoria;
+
 import java.sql.Blob;
 import java.util.List;
 
@@ -10,14 +12,23 @@ public class Articolo {
     private String nome;
     private String descrizione;
     private Blob immagine;
-    private List<FeedBack> feedbacks;
+    private int idCategoria;
 
-    public Articolo(Articolo articolo){
-        this.idArticolo = articolo.getIdArticolo();
-        this.nome = articolo.getNome();
-        this.descrizione = articolo.getDescrizione();
-        this.prezzo = articolo.getPrezzo();
-        this.immagine = articolo.getImmagine();
+    public Articolo(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria) {
+        this.idArticolo = idArticolo;
+        this.prezzo = prezzo;
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.immagine = immagine;
+        this.idCategoria = idCategoria;
+    }
+
+    public Articolo(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria) {
+        this.prezzo = prezzo;
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.immagine = immagine;
+        this.idCategoria = idCategoria;
     }
 
     public Articolo(){
@@ -38,14 +49,6 @@ public class Articolo {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public int getId() {
-        return idArticolo;
-    }
-
-    public void setId(int idArticolo) {
-        this.idArticolo = idArticolo;
     }
 
     public String getDescrizione() {
@@ -72,15 +75,11 @@ public class Articolo {
         this.idArticolo = idArticolo;
     }
 
-    public List<FeedBack> getFeedbacks() {
-        return feedbacks;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setFeedbacks(List<FeedBack> feedbacks) {
-        this.feedbacks = feedbacks;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
-
-
-
-
 }

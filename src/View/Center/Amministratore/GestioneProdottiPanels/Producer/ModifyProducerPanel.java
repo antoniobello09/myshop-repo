@@ -1,7 +1,7 @@
 package View.Center.Amministratore.GestioneProdottiPanels.Producer;
 
-import DAO.Classi.ProduttoreDAO;
-import Model.Produttore;
+import DAO.Classi.FornitoreDAO;
+import Model.Fornitore;
 import View.AppFrame;
 import View.Listener.Amministratore.GestioneProdottiListeners.Producer.ModifyProducerListener;
 
@@ -28,15 +28,15 @@ public class ModifyProducerPanel extends JPanel {
         private JButton btnSfoglia = new JButton("Sfoglia");
         private JButton btnAnnulla = new JButton("Annulla");
 
-    private ArrayList<Produttore> lista;
+    private ArrayList<Fornitore> lista;
     private int selectedRow;
-    private ArrayList<Produttore> listaBackup;
+    private ArrayList<Fornitore> listaBackup;
 
     public ModifyProducerPanel(AppFrame appFrame){
 
         this.appFrame = appFrame;
         modifyProducerListener = new ModifyProducerListener(this, this.appFrame);
-        lista = ProduttoreDAO.getInstance().findAll();
+        lista = FornitoreDAO.getInstance().findAll();
 
         tableSetting();
 
@@ -52,7 +52,7 @@ public class ModifyProducerPanel extends JPanel {
 
     public void cerca(){
         if(!isCercaOK()) return;
-        ArrayList<Produttore> p = new ArrayList<>();
+        ArrayList<Fornitore> p = new ArrayList<>();
         p.add(currentTableModel.searchProduttore(produttoreField.getText()));
         currentTableModel.setLista(p);
         currentTableModel.fireTableDataChanged();
@@ -61,8 +61,8 @@ public class ModifyProducerPanel extends JPanel {
 
     public void elimina(){
         if(!isEliminaOK()) return;
-        Produttore p = currentTableModel.getLista().get(currentTable.convertRowIndexToModel(currentTable.getSelectedRow()));
-        ProduttoreDAO.getInstance().delete(p);
+        Fornitore p = currentTableModel.getLista().get(currentTable.convertRowIndexToModel(currentTable.getSelectedRow()));
+        FornitoreDAO.getInstance().delete(p);
         currentTableModel.getLista().remove(p);
         currentTableModel.fireTableDataChanged();
     }
@@ -83,7 +83,7 @@ public class ModifyProducerPanel extends JPanel {
 
     public void salva() {
         if(currentTable.getCellEditor() != null) currentTable.getCellEditor().stopCellEditing();
-        ProduttoreDAO.getInstance().update(currentTableModel.getLista().get(selectedRow));
+        FornitoreDAO.getInstance().update(currentTableModel.getLista().get(selectedRow));
         operationPanel.remove(btnAnnulla);
         operationPanel.remove(btnSalva);
         operationPanel.add(btnElimina);
@@ -94,7 +94,7 @@ public class ModifyProducerPanel extends JPanel {
     }
 
     public void sfoglia(){
-        ArrayList<Produttore> p = new ArrayList<>(ProduttoreDAO.getInstance().findAll());
+        ArrayList<Fornitore> p = new ArrayList<>(FornitoreDAO.getInstance().findAll());
         currentTableModel.setLista(p);
         currentTableModel.fireTableDataChanged();
     }

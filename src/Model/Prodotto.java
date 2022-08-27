@@ -1,10 +1,12 @@
 package Model;
 
 
+import Model.Other.IProdotto;
+
+import java.sql.Blob;
 
 public class Prodotto extends Articolo implements IProdotto, Cloneable {
 
-    private int idCategoria;
     private int idProduttore;
     private int idPosizione;
 
@@ -13,19 +15,16 @@ public class Prodotto extends Articolo implements IProdotto, Cloneable {
 
     }
 
-    public Prodotto(Prodotto prodotto){
-        super(prodotto);
-        this.idCategoria = prodotto.getIdCategoria();
-        this.idPosizione = prodotto.getIdPosizione();
-        this.idProduttore = prodotto.getIdProduttore();
+    public Prodotto(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idProduttore, int idPosizione) {
+        super(idArticolo, prezzo, nome, descrizione, immagine, idCategoria);
+        this.idProduttore = idProduttore;
+        this.idPosizione = idPosizione;
     }
 
-    public int getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
+    public Prodotto(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idProduttore, int idPosizione) {
+        super(prezzo, nome, descrizione, immagine, idCategoria);
+        this.idProduttore = idProduttore;
+        this.idPosizione = idPosizione;
     }
 
     public int getIdProduttore() {

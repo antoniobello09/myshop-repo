@@ -3,6 +3,7 @@ package DAO.Classi;
 import DAO.Interfacce.IServizioDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
+import Model.Articolo;
 import Model.CategoriaServizio;
 import Model.Prodotto;
 import Model.Servizio;
@@ -31,17 +32,19 @@ public class ServizioDAO implements IServizioDAO {
 
     @Override
     public int add(Servizio servizio) {
+        ArticoloDAO.getInstance().add(servizio);
+        int idServizio =  ArticoloDAO.getInstance().findByName(servizio.getNome()).getIdArticolo();
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO articolo(idCategoria,prezzo,nome,descrizione) VALUES ('"+ CategoriaServizioDAO.getInstance().findByName(servizio.getCategoria().getNome(),1).getIdCategoria() + "','" + servizio.getPrezzo() + "','" + servizio.getNome() + "','" + servizio.getDescrizione() + "');");
-        conn.executeUpdate("INSERT INTO servizio VALUES ('"+  ArticoloDAO.getInstance().findByName(servizio.getNome(),1).getId() + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO servizio VALUES ('"+ idServizio + "','" + servizio.getIdFornitoreServizio() + "');");
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(Servizio servizio) {
+        ArticoloDAO.getInstance().update(servizio);
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE articolo SET idCategoria = '"+ CategoriaServizioDAO.getInstance().findByName(servizio.getCategoria().getNome(),1).getIdCategoria() + "', prezzo = '" + servizio.getPrezzo() + "', nome = '" + servizio.getNome() + "', immagine = '" + servizio.getImmagine() + "', descrizione = '" + servizio.getDescrizione() + "' WHERE idArticolo = '" + servizio.getId() + "';");
+        int rowCount = conn.executeUpdate("UPDATE servizio SET idFornitoreServizio = '"+ servizio.getIdFornitoreServizio() + "' WHERE idServizio = '" + servizio.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
@@ -49,11 +52,9 @@ public class ServizioDAO implements IServizioDAO {
     @Override
     public int delete(Servizio servizio) {
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE FROM servizio WHERE idServizio = '" + servizio.getId() + "';");
-        conn.executeUpdate("DELETE FROM commento WHERE idArticolo = '" + servizio.getId() + "';");
-        conn.executeUpdate("DELETE FROM lista_has_articolo WHERE idArticolo = '" + servizio.getId() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM articolo WHERE idArticolo = '"+ servizio.getId() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM servizio WHERE idServizio = '" + servizio.getIdArticolo() + "';");
         conn.close();
+        ArticoloDAO.getInstance().delete(servizio);
         return rowCount;
     }
 
@@ -69,12 +70,12 @@ public class ServizioDAO implements IServizioDAO {
         try {
             rs.next();
             servizio = new Servizio();
-            servizio.setId(rs.getInt("idServizio"));
+            servizio.setIdArticolo(rs.getInt("idServizio"));
             servizio.setNome(rs.getString("nome"));
-            servizio.setCategoria(CategoriaServizioDAO.getInstance().findByID(rs.getInt("idCategoria"),1));
+            servizio.setIdCategoria(rs.getInt("idCategoria"));
             servizio.setPrezzo(rs.getFloat("prezzo"));
-            servizio.setImmagine(rs.getBlob("immagine"));
             servizio.setDescrizione(rs.getString("descrizione"));
+            servizio.setIdFornitoreServizio(rs.getInt("idFornitore"));
             return servizio;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -103,12 +104,12 @@ public class ServizioDAO implements IServizioDAO {
         try {
             rs.next();
             servizio = new Servizio();
-            servizio.setId(rs.getInt("idServizio"));
+            servizio.setIdArticolo(rs.getInt("idServizio"));
             servizio.setNome(rs.getString("nome"));
-            servizio.setCategoria(CategoriaServizioDAO.getInstance().findByID(rs.getInt("idCategoria"),1));
+            servizio.setIdCategoria(rs.getInt("idCategoria"));
             servizio.setPrezzo(rs.getFloat("prezzo"));
-            servizio.setImmagine(rs.getBlob("immagine"));
             servizio.setDescrizione(rs.getString("descrizione"));
+            servizio.setIdFornitoreServizio(rs.getInt("idFornitore"));
             return servizio;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -133,12 +134,12 @@ public class ServizioDAO implements IServizioDAO {
         try {
             while(rs.next()) {
                 servizio = new Servizio();
-                servizio.setId(rs.getInt("idServizio"));
+                servizio.setIdArticolo(rs.getInt("idServizio"));
                 servizio.setNome(rs.getString("nome"));
-                servizio.setCategoria(CategoriaServizioDAO.getInstance().findByID(rs.getInt("idCategoria"), 1));
+                servizio.setIdCategoria(rs.getInt("idCategoria"));
                 servizio.setPrezzo(rs.getFloat("prezzo"));
-                servizio.setImmagine(rs.getBlob("immagine"));
                 servizio.setDescrizione(rs.getString("descrizione"));
+                servizio.setIdFornitoreServizio(rs.getInt("idFornitore"));
                 servizi.add(servizio);
             }
             return servizi;
@@ -156,34 +157,5 @@ public class ServizioDAO implements IServizioDAO {
         return null;
     }
 
-    @Override
-    public ArrayList<Servizio> findByShop(int idPuntoVendita) {
-        conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM scheda_servizio SS INNER JOIN servizio S ON S.idServizio = SS.idServizio INNER JOIN puntovendita P ON P.idPuntovendita = SS.idPuntoVendita INNER JOIN articolo ON S.idServizio = articolo.idArticolo;");
-        ArrayList<Servizio> servizi = new ArrayList<>();
-        try {
-            while(rs.next()) {
-                servizio = new Servizio();
-                servizio.setId(rs.getInt("idServizio"));
-                servizio.setNome(rs.getString("nome"));
-                servizio.setCategoria(CategoriaServizioDAO.getInstance().findByID(rs.getInt("idCategoria"), 1));
-                servizio.setPrezzo(rs.getFloat("prezzo"));
-                servizio.setImmagine(rs.getBlob("immagine"));
-                servizio.setDescrizione(rs.getString("descrizione"));
-                servizi.add(servizio);
-            }
-            return servizi;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-        return null;
-    }
+
 }

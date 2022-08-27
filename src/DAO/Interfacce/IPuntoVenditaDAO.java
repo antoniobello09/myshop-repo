@@ -6,10 +6,9 @@ import Model.PuntoVendita;
 import java.util.ArrayList;
 
 public interface IPuntoVenditaDAO {
-    int add(PuntoVendita puntoVendita);
-    int add(PuntoVendita puntoVendita, Manager manager);
-    int update(PuntoVendita puntoVendita);
-    int delete(PuntoVendita puntoVendita);
+    int add(int idManager, String citta, String indirizzo);
+    int update(int idPuntoVendita, String citta, String indirizzo);
+    int delete(int idPuntoVendita);
     PuntoVendita findByID(int idPuntoVendita);
     PuntoVendita findByName(String indirizzo, String citta);
     PuntoVendita findByManager(int idManager);

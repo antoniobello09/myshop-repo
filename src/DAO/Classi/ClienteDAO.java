@@ -167,4 +167,42 @@ public class ClienteDAO implements IClienteDAO {
         }
         return null;
     }
+
+    @Override
+    public ArrayList<Cliente> findByPuntoVendita(int idPuntoVendita) {
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE idPuntoVendita = '" + idPuntoVendita + "';");
+        ArrayList<Cliente> clienti = new ArrayList<>();
+        try {
+            while(rs.next()) {
+                cliente = new Cliente();
+                cliente.setIdUtente(rs.getInt("idUtente"));
+                cliente.setEmail(rs.getString("email"));
+                cliente.setUsername(rs.getString("username"));
+                cliente.setPassword(rs.getString("password"));
+                cliente.setName(rs.getString("name"));
+                cliente.setSurname(rs.getString("surname"));
+                cliente.setBirthdate(rs.getString("birthdate"));
+                cliente.setTelephone(rs.getString("telephone"));
+                cliente.setAddress(rs.getString("address"));
+                cliente.setJob(rs.getString("job"));
+                cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
+                cliente.setCanalePreferito(rs.getString("canale_preferito"));
+                cliente.setAbilitato(rs.getBoolean("abilitato"));
+                clienti.add(cliente);
+            }
+            return clienti;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
 }

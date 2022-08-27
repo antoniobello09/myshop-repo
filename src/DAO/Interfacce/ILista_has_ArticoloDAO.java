@@ -1,20 +1,17 @@
 package DAO.Interfacce;
 
-import Model.Articolo;
-import Model.Lista;
-import Model.Prodotto_Quantita;
-import Model.Servizio;
+import Model.*;
 
 import java.util.ArrayList;
 
 public interface ILista_has_ArticoloDAO {
 
-    int add(Lista lista, Articolo articolo);
-    int update(Lista lista, Articolo articolo);
-    int delete(Lista lista, Articolo articolo);
-    Articolo findByID(int idLista, int idArticolo);
-    ArrayList<Articolo> findAll(int idLista);
-    ArrayList<Servizio> findAllServizi(int idLista);
-    ArrayList<Prodotto_Quantita> findAllProdotti(int idLista);
+    int add(int idLista, int idArticolo, int quantita);
+    int update(int idLista, int idArticolo, int quantita);
+    int delete(int idLista, int idArticolo);
+    Lista_has_Articolo findByID(int idLista, int idArticolo);
+    ArrayList<Lista_has_Articolo> findAll();
+    ArrayList<Lista_has_Articolo> findAllListArticles(int idLista);
+
 
 }

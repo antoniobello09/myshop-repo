@@ -1,7 +1,5 @@
 package View.Center.Amministratore.GestioneServiziPanels.ServiceProvider;
 
-import DAO.Classi.FornitoreServiziDAO;
-import Model.FornitoreServizi;
 import View.AppFrame;
 import View.Listener.Amministratore.GestioneServiziListener.ServiceProvider.ModifyServiceProviderListener;
 

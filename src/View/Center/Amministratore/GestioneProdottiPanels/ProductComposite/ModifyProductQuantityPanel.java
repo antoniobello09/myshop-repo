@@ -115,7 +115,7 @@ public class ModifyProductQuantityPanel extends JPanel {
         categoriaProdotto.setNome(currentTableModel.getValueAt(indexModel, 3).toString());
         categoriaProdotto.getSottocategorie().add(new CategoriaProdotto());
         categoriaProdotto.getSottocategorie().get(0).setNome(currentTableModel.getValueAt(indexModel, 4).toString());
-        Produttore produttore = new Produttore("Vario");
+        Fornitore produttore = new Fornitore("Vario");
         pUpdated.setId(prodottoComposito.getId());
         pUpdated.setNome(currentTableModel.getValueAt(indexModel, 0).toString());
         pUpdated.setPrezzo(Float.parseFloat(currentTableModel.getValueAt(indexModel, 1).toString()));

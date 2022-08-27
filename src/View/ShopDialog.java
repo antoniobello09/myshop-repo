@@ -26,6 +26,41 @@ public class ShopDialog extends JDialog
 
     private ArrayList<PuntoVendita> shopsList;
 
+    private ShopDialog(Frame frame,
+                       Component locationComp,
+                       String labelText,
+                       String title,
+                       Object[] data,
+                       String initialValue,
+                       String longValue) {
+        super(frame, title, true);
+
+        contentPane = getContentPane();
+        getRootPane().setDefaultButton(setButton);
+
+
+        shopsList = PuntoVenditaDAO.getInstance().findAll();
+        for(int i=0;i<shopsList.size();i++){
+            String shopAddress = shopsList.get(i).getIndirizzo() + ", " + shopsList.get(i).getCitta();
+            comboShops.addItem(shopAddress);
+        }
+
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+        layoutSetting();
+
+        componentsAdding();
+
+        componentsSizing();
+
+        listenerSettings();
+
+        setValue("");
+        pack();
+        setLocationRelativeTo(locationComp);
+    }
+
+
     public static String showDialog(Component frameComp,
                                     Component locationComp,
                                     String labelText,
@@ -49,38 +84,7 @@ public class ShopDialog extends JDialog
         value = newValue;
     }
 
-    private ShopDialog(Frame frame,
-                       Component locationComp,
-                       String labelText,
-                       String title,
-                       Object[] data,
-                       String initialValue,
-                       String longValue) {
-        super(frame, title, true);
 
-        contentPane = getContentPane();
-        getRootPane().setDefaultButton(setButton);
-
-        shopsList = PuntoVenditaDAO.getInstance().findAll();
-        for(int i=0;i<shopsList.size();i++){
-            String shopAddress = shopsList.get(i).getIndirizzo() + ", " + shopsList.get(i).getCitta();
-            comboShops.addItem(shopAddress);
-        }
-
-        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
-        layoutSetting();
-
-        componentsAdding();
-
-        componentsSizing();
-
-        listenerSettings();
-
-        setValue("");
-        pack();
-        setLocationRelativeTo(locationComp);
-    }
 
     public void actionPerformed(ActionEvent e) {
         if ("imposta".equals(e.getActionCommand())) {

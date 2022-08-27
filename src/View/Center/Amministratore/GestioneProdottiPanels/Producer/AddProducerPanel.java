@@ -1,7 +1,7 @@
 package View.Center.Amministratore.GestioneProdottiPanels.Producer;
 
-import DAO.Classi.ProduttoreDAO;
-import Model.Produttore;
+import DAO.Classi.FornitoreDAO;
+import Model.Fornitore;
 import View.AppFrame;
 import View.Listener.Amministratore.GestioneProdottiListeners.Producer.AddProducerListener;
 
@@ -44,12 +44,12 @@ public class AddProducerPanel extends JPanel {
 
     public void aggiungi(){
         if(!isFormOK()) return;
-        Produttore produttore = new Produttore();
+        Fornitore produttore = new Fornitore();
         produttore.setNome(nomeField.getText());
         produttore.setSitoweb(sitowebField.getText());
         produttore.setCitta(cittaField.getText());
         produttore.setNazione(nazioneField.getText());
-        ProduttoreDAO.getInstance().add(produttore);
+        FornitoreDAO.getInstance().add(produttore);
         nomeField.setText("");  sitowebField.setText("");   cittaField.setText(""); nazioneField.setText("");
     }
 

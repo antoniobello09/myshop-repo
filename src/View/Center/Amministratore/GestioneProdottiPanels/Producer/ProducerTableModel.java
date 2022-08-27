@@ -1,16 +1,16 @@
 package View.Center.Amministratore.GestioneProdottiPanels.Producer;
 
-import Model.Produttore;
+import Model.Fornitore;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class ProducerTableModel extends AbstractTableModel {
 
-    private ArrayList<Produttore> lista;
+    private ArrayList<Fornitore> lista;
     private int editableRow = -1;
 
-    public ProducerTableModel(ArrayList<Produttore> lista){
+    public ProducerTableModel(ArrayList<Fornitore> lista){
         this.lista = lista;
     }
 
@@ -42,7 +42,7 @@ public class ProducerTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Produttore p = lista.get(rowIndex);
+        Fornitore p = lista.get(rowIndex);
         switch(columnIndex) {
             case 0: return p.getNome();
             case 1: return p.getSitoweb();
@@ -63,11 +63,11 @@ public class ProducerTableModel extends AbstractTableModel {
         }
     }
 
-    public void setLista(ArrayList<Produttore> lista){
+    public void setLista(ArrayList<Fornitore> lista){
         this.lista = lista;
     }
 
-    public Produttore searchProduttore(String nome){
+    public Fornitore searchProduttore(String nome){
         for(int i=0;i<lista.size();i++){
             if(lista.get(i).getNome().equals(nome)) return lista.get(i);
         }
@@ -78,15 +78,15 @@ public class ProducerTableModel extends AbstractTableModel {
         this.editableRow = editableRow;
     }
 
-    public ArrayList<Produttore> cloneList(){
-        ArrayList<Produttore> clonedList = new ArrayList<>();
+    public ArrayList<Fornitore> cloneList(){
+        ArrayList<Fornitore> clonedList = new ArrayList<>();
         for(int i=0; i<lista.size();i++){
-            clonedList.add((Produttore) lista.get(i).clone());
+            clonedList.add((Fornitore) lista.get(i).clone());
         }
         return clonedList;
     }
 
-    public ArrayList<Produttore> getLista(){
+    public ArrayList<Fornitore> getLista(){
         return lista;
     }
 }

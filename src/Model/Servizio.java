@@ -1,29 +1,26 @@
 package Model;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Servizio extends Articolo implements Cloneable{
 
-    private int idCategoria;
     private int idFornitoreServizio;
 
 
-    public Servizio(Servizio servizio) {
-        super(servizio);
-        this.idCategoria = servizio.getIdCategoria();
+    public Servizio(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idFornitoreServizio) {
+        super(idArticolo, prezzo, nome, descrizione, immagine, idCategoria);
+        this.idFornitoreServizio = idFornitoreServizio;
+    }
+
+    public Servizio(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idFornitoreServizio) {
+        super(prezzo, nome, descrizione, immagine, idCategoria);
+        this.idFornitoreServizio = idFornitoreServizio;
     }
 
     public Servizio(){
 
-    }
-
-    public int getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
     }
 
     public int getIdFornitoreServizio() {

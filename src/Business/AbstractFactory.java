@@ -1,7 +1,7 @@
 package Business;
 
 import Model.Articolo;
-import Model.ICategoria;
+import Model.Other.ICategoria;
 
 public interface AbstractFactory {
 

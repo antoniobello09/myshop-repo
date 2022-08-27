@@ -1,23 +1,40 @@
 package Model;
 
+
 import java.util.Date;
 
 public class FeedBack {
 
     private int idFeedBack;
-    private int idCliente;
     private int idAcquisto;
     private int idArticolo;
     private String commento;
-    private int punteggio;
-    private Risposta risposta;
+    private int indiceGradimento;
+    private String risposta;
+    private Date data;
 
-    public int getId() {
-        return idFeedBack;
+
+    public FeedBack() {
+
     }
 
-    public void setId(int idFeedBack) {
+    public FeedBack(int idFeedBack, int idAcquisto, int idArticolo, String commento, int indiceGradimento, String risposta, Date data) {
         this.idFeedBack = idFeedBack;
+        this.idAcquisto= idAcquisto;
+        this.idArticolo = idArticolo;
+        this.commento = commento;
+        this.indiceGradimento = indiceGradimento;
+        this.risposta = risposta;
+        this.data = data;
+    }
+
+    public FeedBack(int idAcquisto, int idArticolo, String commento, int indiceGradimento, String risposta, Date data) {
+        this.idAcquisto = idAcquisto;
+        this.idArticolo = idArticolo;
+        this.commento = commento;
+        this.indiceGradimento = indiceGradimento;
+        this.risposta = risposta;
+        this.data = data;
     }
 
     public int getIdFeedBack() {
@@ -26,14 +43,6 @@ public class FeedBack {
 
     public void setIdFeedBack(int idFeedBack) {
         this.idFeedBack = idFeedBack;
-    }
-
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
     }
 
     public int getIdAcquisto() {
@@ -60,20 +69,28 @@ public class FeedBack {
         this.commento = commento;
     }
 
-    public int getPunteggio() {
-        return punteggio;
+    public int getIndiceGradimento() {
+        return indiceGradimento;
     }
 
-    public void setPunteggio(int punteggio) {
-        this.punteggio = punteggio;
+    public void setIndiceGradimento(int indiceGradimento) {
+        this.indiceGradimento = indiceGradimento;
     }
 
 
-    public Risposta getRisposta() {
+    public String getRisposta() {
         return risposta;
     }
 
-    public void setRisposta(Risposta risposta) {
+    public void setRisposta(String risposta) {
         this.risposta = risposta;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 }

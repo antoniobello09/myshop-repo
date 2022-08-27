@@ -4,7 +4,6 @@ import DAO.Interfacce.IPosizioneDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Posizione;
-import Model.Produttore;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,18 +28,12 @@ public class PosizioneDAO implements IPosizioneDAO {
 
     @Override
     public int add(Posizione posizione) {
-        conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO posizione(idMagazzino, scaffale, corsa, piano) VALUES ('"+ posizione.getIdMagazzino() + "','" + posizione.getScaffale() + "','" + posizione.getCorsia() + "','"+ posizione.getPiano() + "');");
-        conn.close();
-        return rowCount;
+        return 0;
     }
 
     @Override
     public int update(Posizione posizione) {
-        conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE posizione SET idMagazzino = '"+ posizione.getIdMagazzino() + "', scaffale = '" + posizione.getScaffale() + "', corsia = '" + posizione.getCorsia() + "', piano = '" + posizione.getPiano() + "' WHERE idPosizione = '" + posizione.getIdPosizione() + "';");
-        conn.close();
-        return rowCount;
+        return 0;
     }
 
     @Override
@@ -63,42 +56,6 @@ public class PosizioneDAO implements IPosizioneDAO {
             rs.next();
             posizione = new Posizione();
             posizione.setIdPosizione(rs.getInt("idPosizione"));
-            posizione.setIdMagazzino(rs.getInt("idMagazzino"));
-            posizione.setPiano(rs.getInt("piano"));
-            posizione.setCorsia(rs.getInt("corsia"));
-            posizione.setScaffale(rs.getInt("scaffale"));
-            return posizione;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            if(closeConn == 0)
-                conn.close();
-        }
-        return null;
-    }
-
-    @Override
-    public Posizione findByPosition(int idMagazzino, int piano, int corsia, int scaffale){
-        return findByPosition(idMagazzino, piano, corsia, scaffale, 0);
-    }
-    public Posizione findByPosition(int idMagazzino, int piano, int corsia, int scaffale, int closeConn) {
-        conn = DbConnection.getInstance();
-        if(piano == 0 && corsia == 0 && scaffale == 0){
-            return null;
-        }
-        rs = conn.executeQuery("SELECT * FROM posizione WHERE idMagazzino = '" + idMagazzino + "' AND piano = '" + piano + "' AND corsia = '" + corsia + "' AND scaffale = '" + scaffale + "';");
-        Posizione posizione;
-        try {
-            rs.next();
-            posizione = new Posizione();
-            posizione.setIdPosizione(rs.getInt("idPosizione"));
-            posizione.setIdMagazzino(rs.getInt("idMagazzino"));
             posizione.setPiano(rs.getInt("piano"));
             posizione.setCorsia(rs.getInt("corsia"));
             posizione.setScaffale(rs.getInt("scaffale"));
@@ -127,7 +84,6 @@ public class PosizioneDAO implements IPosizioneDAO {
             while(rs.next()) {
                 posizione = new Posizione();
                 posizione.setIdPosizione(rs.getInt("idPosizione"));
-                posizione.setIdMagazzino(rs.getInt("idMagazzino"));
                 posizione.setPiano(rs.getInt("piano"));
                 posizione.setCorsia(rs.getInt("corsia"));
                 posizione.setScaffale(rs.getInt("scaffale"));

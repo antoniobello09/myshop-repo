@@ -4,10 +4,10 @@ package View.Center.Amministratore.GestioneProdottiPanels.Product;
 import Business.HelpFunctions;
 import DAO.Classi.CategoriaProdottoDAO;
 import DAO.Classi.ProdottoDAO;
-import DAO.Classi.ProduttoreDAO;
+import DAO.Classi.FornitoreDAO;
 import Model.CategoriaProdotto;
+import Model.Fornitore;
 import Model.Prodotto;
-import Model.Produttore;
 import View.AppFrame;
 import View.Listener.Amministratore.GestioneProdottiListeners.Product.ModifyProductListener;
 import View.Nameable;
@@ -45,7 +45,7 @@ public class ModifyProductPanel extends JPanel {
 
     private int tableChosen = 1; //0 se la tabella mostra un solo prodotto, 1 se mostra tutti i prodotti
     private ArrayList<CategoriaProdotto> cList;
-    private ArrayList<Produttore> pList;
+    private ArrayList<Fornitore> pList;
     private ArrayList<Nameable> comboList;
     private int selectedRow;
     private int indexModel;
@@ -140,9 +140,6 @@ public class ModifyProductPanel extends JPanel {
     }
 
     public void sfoglia(){
-        ArrayList<Prodotto> p = new ArrayList<>(ProdottoDAO.getInstance().findAllProducts());
-        setCurrentTable(p);
-        tableChosen = 1;
     }
 
     public void elimina(){
@@ -166,7 +163,7 @@ public class ModifyProductPanel extends JPanel {
 
         comboSottocategoria = new JComboBox<>();
 
-        pList = ProduttoreDAO.getInstance().findAll();
+        pList = FornitoreDAO.getInstance().findAll();
         comboList = (ArrayList<Nameable>) pList.clone();
         comboProduttori = new JComboBox<>(HelpFunctions.fromArraytoString(comboList));
 
@@ -176,7 +173,7 @@ public class ModifyProductPanel extends JPanel {
 
         produttoreColumn.setCellEditor(new DefaultCellEditor(comboProduttori));
         categoriaColumn.setCellEditor(new DefaultCellEditor(comboCategoria));
-        selectedCategory = lista.get(indexModel).getCategoria().getNome();
+        selectedCategory = p;
         setComboBoxSottoCategorie();
 
         operationsPanel.remove(btnModifica);
@@ -198,7 +195,7 @@ public class ModifyProductPanel extends JPanel {
         categoriaProdotto.setNome(currentTableModel.getValueAt(indexModel, 3).toString());
         categoriaProdotto.getSottocategorie().add(new CategoriaProdotto());
         categoriaProdotto.getSottocategorie().get(0).setNome(currentTableModel.getValueAt(indexModel, 4).toString());
-        Produttore produttore = new Produttore();
+        Fornitore produttore = new Fornitore();
         produttore.setNome(currentTableModel.getValueAt(indexModel, 5).toString());
         pUpdated.setNome(currentTableModel.getValueAt(indexModel, 0).toString());
         pUpdated.setPrezzo(Float.parseFloat(currentTableModel.getValueAt(indexModel, 1).toString()));

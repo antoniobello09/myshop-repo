@@ -1,7 +1,5 @@
 package View.Center.Amministratore.GestionePuntiVenditaPanels;
 
-import Model.SchedaServizio;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 

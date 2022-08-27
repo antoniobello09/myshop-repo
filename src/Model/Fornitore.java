@@ -3,45 +3,46 @@ package Model;
 
 import View.Nameable;
 
-import javax.naming.Name;
+public class Fornitore implements Nameable{
 
-public class Produttore implements Nameable, Cloneable {
-
-    private int idProduttore;
+    private int idFornitore;
     private String nome;
     private String sitoweb;
     private String citta;
     private String nazione;
+    private String prod_serv;
 
-    public Produttore(int idProduttore, String nome, String sitoweb, String citta, String nazione) {
-        this.idProduttore = idProduttore;
+    public Fornitore(int idFornitore, String nome, String sitoweb, String citta, String nazione,String prod_serv) {
+        this.idFornitore = idFornitore;
         this.nome = nome;
         this.sitoweb = sitoweb;
         this.citta = citta;
         this.nazione = nazione;
+        this.prod_serv = prod_serv;
     }
 
-    public Produttore(String nome, String sitoweb, String citta, String nazione) {
+    public Fornitore(String nome, String sitoweb, String citta, String nazione, String prod_serv) {
         this.nome = nome;
         this.sitoweb = sitoweb;
         this.citta = citta;
         this.nazione = nazione;
+        this.prod_serv = prod_serv;
     }
 
-    public Produttore(String nome) {
+    public Fornitore(String nome) {
         this.nome = nome;
     }
 
-    public Produttore() {
+    public Fornitore() {
 
     }
 
-    public int getIdProduttore() {
-        return idProduttore;
+    public int getIdFornitore() {
+        return idFornitore;
     }
 
-    public void setIdProduttore(int idProduttore) {
-        this.idProduttore = idProduttore;
+    public void setIdFornitore(int idProduttore) {
+        this.idFornitore = idFornitore;
     }
 
     @Override
@@ -77,8 +78,11 @@ public class Produttore implements Nameable, Cloneable {
         this.nazione = nazione;
     }
 
-    @Override
-    public Object clone(){
-        return new Produttore(nome, sitoweb, citta, nazione);
+    public String getProd_serv() {
+        return prod_serv;
+    }
+
+    public void setProd_serv(String prod_serv) {
+        this.prod_serv = prod_serv;
     }
 }

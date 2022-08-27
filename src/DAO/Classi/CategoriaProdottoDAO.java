@@ -31,27 +31,18 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     public int add(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
         int rowCount = 0;
-        if(isUnique(categoriaProdotto.getNome(), null)){
-            System.out.println("ciaooo");
-            rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
-            conn.executeUpdate("INSERT INTO categoria_prodotto VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "');");
-            for(int i=0;i<categoriaProdotto.getSottocategorie().size();i++){
-                if(isUnique(categoriaProdotto.getSottocategorie().get(i).getNome(),categoriaProdotto.getNome())){
-                    conn.executeUpdate("INSERT INTO categoria(nome, idCategoria_Padre) VALUES ('" + categoriaProdotto.getSottocategorie().get(i).getNome() + "','" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "')");
-                    conn.executeUpdate("INSERT INTO categoria_prodotto VALUES ('" + findByName2(categoriaProdotto.getSottocategorie().get(i).getNome(),categoriaProdotto.getNome(),1).getIdCategoria() + "');");
-                }
-            }
-
-        }
-
+        rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
+        conn.executeUpdate("INSERT INTO categoria_prodotto VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "');");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int addSub(CategoriaProdotto categoriaProdotto) {
+    public int addSub(CategoriaProdotto categoriaProdotto, int idCategoriaPadre) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO categoria(nome, idCategoria_Padre) VALUES ('"+ categoriaProdotto.getSottocategorie().get(categoriaProdotto.getSottocategorie().size()-1).getNome() + "', " + categoriaProdotto.getIdCategoria() + "');");
+        int rowCount = 0;
+        rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
+        conn.executeUpdate("INSERT INTO categoria_prodotto VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "','" + idCategoriaPadre + "');");
         conn.close();
         return rowCount;
     }
@@ -60,63 +51,26 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     public int update(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
         int rowCount = conn.executeUpdate("UPDATE categoria SET nome = '"+ categoriaProdotto.getNome() + "' WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() +"';");
-        rs = conn.executeQuery("SELECT count(*) AS C FROM categoria WHERE idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
-        rs2 = conn.executeQuery("SELECT * FROM categoria WHERE idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
-        try {
-            int found;
-            rs.next();
-            for(int j=0;j<rs.getInt("C");j++){
-                found = 0;
-                rs2.next();
-                for(int k=0;k<categoriaProdotto.getSottocategorie().size();k++){
-                    if(rs2.getInt("idCategoria") == categoriaProdotto.getSottocategorie().get(k).getIdCategoria()){
-                        conn.executeUpdate("UPDATE categoria SET nome = '" + categoriaProdotto.getSottocategorie().get(k).getNome() + "' WHERE idCategoria = '" + categoriaProdotto.getSottocategorie().get(k).getIdCategoria() + "';");
-                        found = 1;
-                    }
-                }
-                if(found == 0){
-                    conn.executeUpdate("DELETE FROM categoria_prodotto WHERE idCategoria = '" + rs2.getInt("idCategoria") + "';");
-                    conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + rs2.getInt("idCategoria") + "';");
-                }
-
-            }
-            for(int i = 0; i<categoriaProdotto.getSottocategorie().size();i++){
-                if(categoriaProdotto.getSottocategorie().get(i).getIdCategoria() == -1){
-                    conn.executeUpdate("INSERT INTO categoria(nome, idCategoria_Padre) VALUES ('" + categoriaProdotto.getSottocategorie().get(i).getNome() + "','" + categoriaProdotto.getIdCategoria() + "');");
-                    conn.executeUpdate("INSERT INTO categoria_prodotto VALUES ('" + CategoriaProdottoDAO.getInstance().findByName(categoriaProdotto.getSottocategorie().get(i).getNome(),1).getIdCategoria() + "');");
-
-                }
-            }
-        } catch (SQLException e) {
-            // handle any errors
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // handle any errors
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
         conn.close();
         return rowCount;
     }
 
-    @Override
-    public int updateSub(CategoriaProdotto categoriaProdotto) {
-        conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE categoria SET nome = '"+ categoriaProdotto.getSottocategorie().get(0).getNome() + "', idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "' WHERE idCategoria = '" + categoriaProdotto.getSottocategorie().get(0).getIdCategoria() +"';");
-        conn.close();
-        return rowCount;
-    }
 
     @Override
     public int delete(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE CP FROM categoria_prodotto CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM categoria_prodotto WHERE idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
         conn.executeUpdate("DELETE FROM categoria_prodotto WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
-        conn.executeUpdate("DELETE FROM categoria WHERE idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
+        conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
+        conn.close();
+        return rowCount;
+    }
+
+    @Override
+    public int deleteSub(CategoriaProdotto categoriaProdotto) {
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("DELETE FROM categoria_prodotto WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
+        conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
         conn.close();
         return rowCount;
     }
@@ -137,14 +91,6 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
-                ResultSet rs2 = conn.executeQuery("SELECT * FROM categoria C1 WHERE C1.idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
-                List<CategoriaProdotto> sottocategorie = new ArrayList<>();
-                int c=0;
-                while(rs2.next()){
-                    sottocategorie.add(findByID(rs2.getInt("idCategoria"),c));
-                    c++;
-                }
-                categoriaProdotto.setSottocategorie(sottocategorie);
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;
@@ -164,6 +110,33 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         return null;
     }
 
+    public ArrayList<CategoriaProdotto> findAllSons(int idCategoriaPadre){
+        IDbConnection  conn = DbConnection.getInstance();
+        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE idCategoriaPadre ='" + idCategoriaPadre + "';");
+        ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
+        CategoriaProdotto categoriaProdotto;
+        try {
+            if(rs.getRow() == 0)    return null;
+            while (rs.next()) {
+                categoriaProdotto = new CategoriaProdotto();
+                categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
+                categoriaProdotto.setNome(rs.getString("nome"));
+                categorieProdotti.add(categoriaProdotto);
+            }
+            return categorieProdotti;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
 
     @Override
     public CategoriaProdotto findByName(String nomeCategoria){
@@ -181,12 +154,6 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
-                ResultSet rs2 = conn.executeQuery("SELECT * FROM categoria C1 WHERE C1.idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
-                List<CategoriaProdotto> sottocategorie = new ArrayList<>();
-                while(rs2.next()){
-                    sottocategorie.add(findByID(rs2.getInt("idCategoria"),1));
-                }
-                categoriaProdotto.setSottocategorie(sottocategorie);
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;
@@ -207,6 +174,34 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     }
 
     @Override
+    public ArrayList<CategoriaProdotto> findAll() {
+        IDbConnection  conn = DbConnection.getInstance();
+        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria;");
+        ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
+        CategoriaProdotto categoriaProdotto;
+        try {
+            while (rs.next()) {
+                categoriaProdotto = new CategoriaProdotto();
+                categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
+                categoriaProdotto.setNome(rs.getString("nome"));
+                categorieProdotti.add(categoriaProdotto);
+            }
+            return categorieProdotti;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+/*
+    @Override
     public CategoriaProdotto findTopCategoria(String nomeCategoria){
         conn = DbConnection.getInstance();
         String sql = "SELECT * FROM categoria WHERE nome = '" + nomeCategoria + "';";
@@ -218,12 +213,6 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
-                ResultSet rs2 = conn.executeQuery("SELECT * FROM categoria C1 WHERE C1.idCategoria = '" + rs.getInt("idCategoria_Padre") + "';");
-                if(rs2.next()){
-                    categoriaProdotto.getSottocategorie().add(findByID(rs.getInt("idCategoria")));
-                    categoriaProdotto.setNome(rs2.getString("nome"));
-                    categoriaProdotto.setIdCategoria(rs2.getInt("idCategoria"));
-                }
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;
@@ -282,45 +271,9 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         }
         return null;
     }
+*/
 
-    @Override
-    public ArrayList<CategoriaProdotto> findAll() {
-        IDbConnection  conn = DbConnection.getInstance();
-        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria;");
-        ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
-        CategoriaProdotto categoriaProdotto;
-        try {
-            int i=0;
-            while (rs.next()) {
-                if(!isSubCategory(rs.getInt("idCategoria"))) {
-                    List<CategoriaProdotto> sottocategorie = new ArrayList<>();
-                    categoriaProdotto = new CategoriaProdotto();
-                    categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
-                    categoriaProdotto.setNome(rs.getString("nome"));
-                    ResultSet rs2 = conn.executeQuery("SELECT * FROM categoria C1 WHERE C1.idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';");
-                    while (rs2.next()) {
-                        sottocategorie.add(findByID(rs2.getInt("idCategoria"), i));
-                        i++;
-                    }
-                    categoriaProdotto.setSottocategorie(sottocategorie);
-                    categorieProdotti.add(categoriaProdotto);
-                }
-            }
-            return categorieProdotti;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-        return null;
-    }
-
+/*
     @Override
     public boolean hasProducts(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
@@ -399,5 +352,5 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         }
         return false;
     }
-
+*/
 }

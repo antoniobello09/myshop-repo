@@ -1,8 +1,5 @@
 package View.Center.Cliente;
 
-import Model.Prodotto;
-import Model.Prodotto_Quantita;
-import Model.SchedaServizio;
 import Model.Servizio;
 
 import javax.swing.table.AbstractTableModel;

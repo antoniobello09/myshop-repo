@@ -1,14 +1,11 @@
 package View.Center.Manager.GestioneSchedeServizio;
 
 import Business.HelpFunctions;
-import DAO.Classi.FornitoreServiziDAO;
 import DAO.Classi.MagazzinoDAO;
-import DAO.Classi.PuntoVenditaDAO;
 import DAO.Classi.SchedaServizioDAO;
 import Model.*;
 import View.AppFrame;
 import View.Center.Manager.GestioneSchedeProdotto.CommentiSchedeProdottoTableModel;
-import View.Listener.Manager.GestioneSchedeProdotto.DettagliSchedaProdottoListener;
 import View.Listener.Manager.GestioneSchedeServizio.DettagliSchedaServizioListener;
 import View.Nameable;
 

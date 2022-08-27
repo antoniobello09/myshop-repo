@@ -117,7 +117,7 @@ public class AddProductCompositePanel extends JPanel{
         p.setDescrizione(descrizioneField.getText());
         p.setCategoria(CategoriaProdottoDAO.getInstance().findTopCategoria(sottocategoriaField.getSelectedItem().toString()));
         p.setPrezzo(Float.parseFloat(prezzoField.getText()));
-        p.setProduttore(new Produttore("Vario"));
+        p.setProduttore(new Fornitore("Vario"));
         p.setSottoprodotti(currentTableModel.getLista());
         ProdottoCompositoDAO.getInstance().add(p);
     }

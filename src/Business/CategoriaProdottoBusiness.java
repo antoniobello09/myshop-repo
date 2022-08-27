@@ -1,5 +1,6 @@
 package Business;
 
+import DAO.Classi.CategoriaProdottoDAO;
 import Model.CategoriaProdotto;
 
 import java.util.ArrayList;
@@ -32,7 +33,11 @@ public class CategoriaProdottoBusiness {
         return sottocategorie;
     }
 
-
+    public CategoriaProdotto findById(int idCategoriaProdotto){
+        CategoriaProdotto categoriaProdotto = CategoriaProdottoDAO.getInstance().findByID(idCategoriaProdotto);
+        categoriaProdotto.setSottocategorie(CategoriaProdottoDAO.getInstance().findAllSons(idCategoriaProdotto));
+        return categoriaProdotto;
+    }
 
 
 

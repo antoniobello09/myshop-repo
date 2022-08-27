@@ -1,7 +1,5 @@
 package View.Center.Manager.GestioneSchedeServizio;
 
-import Model.SchedaServizio;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 

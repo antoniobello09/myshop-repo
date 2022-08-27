@@ -1,7 +1,6 @@
 package DAO.Interfacce;
 
 import Model.Posizione;
-import Model.Produttore;
 
 import java.util.ArrayList;
 
@@ -11,7 +10,6 @@ public interface IPosizioneDAO {
     int update(Posizione posizione);
     int delete(Posizione posizione);
     Posizione findByID(int idPosizione);
-    Posizione findByPosition(int idMagazzino, int piano, int corsia, int scaffale);
     ArrayList<Posizione> findAll();
 
 }

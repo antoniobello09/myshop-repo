@@ -14,4 +14,5 @@ public interface IClienteDAO {
     Cliente findByID(int idCliente);
     Cliente findByUsername(String username);
     ArrayList<Cliente> findAll();
+    ArrayList<Cliente> findByPuntoVendita(int idPuntoVendita);
 }

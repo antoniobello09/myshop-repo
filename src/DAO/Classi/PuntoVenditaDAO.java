@@ -3,10 +3,7 @@ package DAO.Classi;
 import DAO.Interfacce.IPuntoVenditaDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
-import Model.Magazzino;
-import Model.Manager;
 import Model.PuntoVendita;
-import Model.SchedaProdotto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,34 +27,25 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
     }
 
     @Override
-    public int add(PuntoVendita puntoVendita) {
+    public int add(int idManager, String citta, String indirizzo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + puntoVendita.getIdManager() + "','" + puntoVendita.getCitta() + "','" + puntoVendita.getIndirizzo() + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + idManager + "','" + citta + "','" + indirizzo + "');");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int add(PuntoVendita puntoVendita, Manager manager) {
-        ManagerDAO.getInstance().add(manager);
+    public int update(int idPuntoVendita, String citta, String indirizzo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + ManagerDAO.getInstance().findByUsername(manager.getUsername(),0).getIdUtente() + "','" + puntoVendita.getCitta() + "','" + puntoVendita.getIndirizzo() + "');");
+        int rowCount = conn.executeUpdate("UPDATE puntovendita SET citta = '" + citta + "', indirizzo = '" + indirizzo + "' WHERE idPuntoVendita = '" + idPuntoVendita + "';");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int update(PuntoVendita puntoVendita) {
+    public int delete(int idPuntoVendita) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE puntovendita SET citta = '" + puntoVendita.getCitta() + "', indirizzo = '" + puntoVendita.getIndirizzo() + "' WHERE idPuntoVendita = '" + puntoVendita.getIdPuntoVendita() + "';");
-        conn.close();
-        return rowCount;
-    }
-
-    @Override
-    public int delete(PuntoVendita puntoVendita) {
-        conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM puntovendita WHERE idPuntoVendita = '" + puntoVendita.getIdPuntoVendita());
+        int rowCount = conn.executeUpdate("DELETE FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita);
         conn.close();
         return rowCount;
     }

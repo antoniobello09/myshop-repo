@@ -4,7 +4,7 @@ package View.Center.Amministratore.GestioneProdottiPanels.ProductComposite;
 import DAO.Classi.ProdottoCompositoDAO;
 import Model.CategoriaProdotto;
 import Model.ProdottoComposito;
-import Model.Produttore;
+import Model.Fornitore;
 import View.AppFrame;
 import View.Listener.Amministratore.GestioneProdottiListeners.ProductComposite.ModifyProductCompositeListener;
 
@@ -36,7 +36,7 @@ public class ModifyProductCompositePanel extends JPanel {
         private TableColumn sottocategoriaColumn;
 
     private ArrayList<CategoriaProdotto> cList;
-    private ArrayList<Produttore> pList;
+    private ArrayList<Fornitore> pList;
     private int selectedRow;
     private int indexModel;
     private String selectedProductC;

@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Other.ICategoria;
 import View.Nameable;
 
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public class CategoriaProdotto implements ICategoria, Nameable, Cloneable {
     }
 
     public CategoriaProdotto(String nome){
-        idCategoria = -1;
         this.nome = nome;
     }
 

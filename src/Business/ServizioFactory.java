@@ -2,7 +2,7 @@ package Business;
 
 import Model.Articolo;
 import Model.CategoriaServizio;
-import Model.ICategoria;
+import Model.Other.ICategoria;
 import Model.Servizio;
 
 public class ServizioFactory implements AbstractFactory{

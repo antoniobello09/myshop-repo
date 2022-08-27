@@ -3,9 +3,22 @@ package Model;
 public class Prenotazione {
 
     private int idPrenotazione;
-    private SchedaProdotto schedaProdotto;
+    private int idProdotto;
     private int quantita_prenotata;
-    private Cliente cliente;
+    private int idAcquisto;
+
+    public Prenotazione(int idPrenotazione, int idProdotto, int quantita_prenotata, int idAcquisto) {
+        this.idPrenotazione = idPrenotazione;
+        this.idProdotto = idProdotto;
+        this.quantita_prenotata = quantita_prenotata;
+        this.idAcquisto = idAcquisto;
+    }
+
+    public Prenotazione(int idProdotto, int quantita_prenotata, int idAcquisto) {
+        this.idProdotto = idProdotto;
+        this.quantita_prenotata = quantita_prenotata;
+        this.idAcquisto = idAcquisto;
+    }
 
     public int getIdPrenotazione() {
         return idPrenotazione;
@@ -13,14 +26,6 @@ public class Prenotazione {
 
     public void setIdPrenotazione(int idPrenotazione) {
         this.idPrenotazione = idPrenotazione;
-    }
-
-    public SchedaProdotto getSchedaProdotto() {
-        return schedaProdotto;
-    }
-
-    public void setSchedaProdotto(SchedaProdotto schedaProdotto) {
-        this.schedaProdotto = schedaProdotto;
     }
 
     public int getQuantita_prenotata() {
@@ -31,11 +36,19 @@ public class Prenotazione {
         this.quantita_prenotata = quantita_prenotata;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public int getIdProdotto() {
+        return idProdotto;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setIdProdotto(int idProdotto) {
+        this.idProdotto = idProdotto;
+    }
+
+    public int getIdAcquisto() {
+        return idAcquisto;
+    }
+
+    public void setIdAcquisto(int idAcquisto) {
+        this.idAcquisto = idAcquisto;
     }
 }

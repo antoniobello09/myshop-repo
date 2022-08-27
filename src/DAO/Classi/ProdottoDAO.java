@@ -3,8 +3,9 @@ package DAO.Classi;
 import DAO.Interfacce.IProdottoDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
+import Model.Articolo;
 import Model.Prodotto;
-import Model.Produttore;
+import Model.Fornitore;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,18 +30,19 @@ public class ProdottoDAO implements IProdottoDAO {
 
     @Override
     public int add(Prodotto prodotto) {
+        ArticoloDAO.getInstance().add(prodotto);
+        int idProdotto = ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo();
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO articolo(idCategoria,prezzo,nome,descrizione) VALUES ('"+ CategoriaProdottoDAO.getInstance().findByName(prodotto.getCategoria().getSottocategorie().get(0).getNome(),1).getIdCategoria() + "','" + prodotto.getPrezzo() + "','" + prodotto.getNome() + "','" + prodotto.getDescrizione() + "');");System.out.println(ArticoloDAO.getInstance().findByName(prodotto.getNome(),1).getId() + "," + ProduttoreDAO.getInstance().findByName(prodotto.getProduttore().getNome(),1).getIdProduttore());
-        conn.executeUpdate("INSERT INTO prodotto(idProdotto,idProduttore) VALUES ('"+  ArticoloDAO.getInstance().findByName(prodotto.getNome(),1).getId() + "','" + ProduttoreDAO.getInstance().findByName(prodotto.getProduttore().getNome(),1).getIdProduttore() +"');");
+        int rowCount = conn.executeUpdate("INSERT INTO prodotto(idProdotto,idProduttore,idPosizione) VALUES ('" +  idProdotto + "','" + prodotto.getIdProduttore() +"','" + prodotto.getIdPosizione() + "');");
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(Prodotto prodotto) {
+        ArticoloDAO.getInstance().update(prodotto);
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE articolo SET idCategoria = '"+ CategoriaProdottoDAO.getInstance().findByName(prodotto.getCategoria().getSottocategorie().get(0).getNome(),1).getIdCategoria() + "', prezzo = '" + prodotto.getPrezzo() + "', nome = '" + prodotto.getNome() + "', immagine = '" + prodotto.getImmagine() + "', descrizione = '" + prodotto.getDescrizione() + " WHERE idArticolo = '" + prodotto.getId() + "';");
-        conn.executeUpdate("UPDATE prodotto SET idProduttore = '" + ProduttoreDAO.getInstance().findByName(prodotto.getProduttore().getNome(),1).getIdProduttore() + "' WHERE idProdotto = '" + prodotto.getId() + "';");
+        int rowCount = conn.executeUpdate("UPDATE prodotto SET idProduttore = '" + prodotto.getIdProduttore() + "' WHERE idProdotto = '" + prodotto.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
@@ -48,11 +50,8 @@ public class ProdottoDAO implements IProdottoDAO {
     @Override
     public int delete(Prodotto prodotto) {
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE FROM prodottocomposito WHERE idProdotto = '" + prodotto.getId() + "' OR idProdottoComposito = '" + prodotto.getId() + "';");
-        conn.executeUpdate("DELETE FROM prodotto WHERE idProdotto = '" + prodotto.getId() + "';");
-        conn.executeUpdate("DELETE FROM commento WHERE idArticolo = '" + prodotto.getId() + "';");
-        conn.executeUpdate("DELETE FROM lista_has_articolo WHERE idArticolo = '" + prodotto.getId() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM articolo WHERE idArticolo = '"+ prodotto.getId() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM prodotto WHERE idProdotto = '" + prodotto.getIdArticolo() + "';");
+        ArticoloDAO.getInstance().delete(prodotto);
         conn.close();
         return rowCount;
     }
@@ -70,13 +69,13 @@ public class ProdottoDAO implements IProdottoDAO {
         try {
             rs.next();
             prodotto = new Prodotto();
-            prodotto.setId(rs.getInt("idProdotto"));
+            prodotto.setIdArticolo(rs.getInt("idProdotto"));
             prodotto.setNome(rs.getString("nome"));
-            prodotto.setCategoria(CategoriaProdottoDAO.getInstance().findTopCategoria(CategoriaProdottoDAO.getInstance().findByID(rs.getInt("idCategoria"),1).getNome()));
+            prodotto.setIdCategoria(rs.getInt("idCategoria"));
             prodotto.setPrezzo(rs.getFloat("prezzo"));
-            prodotto.setImmagine(rs.getBlob("immagine"));
             prodotto.setDescrizione(rs.getString("descrizione"));
-            prodotto.setProduttore(ProduttoreDAO.getInstance().findByID(rs.getInt("idProduttore"),1));
+            prodotto.setIdProduttore(rs.getInt("idFornitore"));
+            prodotto.setIdPosizione(rs.getInt("idPosizione"));
             return prodotto;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -104,13 +103,13 @@ public class ProdottoDAO implements IProdottoDAO {
         Prodotto prodotto = new Prodotto();
         try {
             rs.next();
-            prodotto.setId(rs.getInt("idArticolo"));
+            prodotto.setIdArticolo(rs.getInt("idProdotto"));
             prodotto.setNome(rs.getString("nome"));
-            prodotto.setCategoria(CategoriaProdottoDAO.getInstance().findTopCategoria(CategoriaProdottoDAO.getInstance().findByID(rs.getInt("idCategoria"),1).getNome()));
+            prodotto.setIdCategoria(rs.getInt("idCategoria"));
             prodotto.setPrezzo(rs.getFloat("prezzo"));
-            prodotto.setImmagine(rs.getBlob("immagine"));
             prodotto.setDescrizione(rs.getString("descrizione"));
-            prodotto.setProduttore(ProduttoreDAO.getInstance().findByID(rs.getInt("idProduttore"),1));
+            prodotto.setIdProduttore(rs.getInt("idFornitore"));
+            prodotto.setIdPosizione(rs.getInt("idPosizione"));
             return prodotto;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -135,84 +134,13 @@ public class ProdottoDAO implements IProdottoDAO {
         try {
             while (rs.next()) {
                 prodotto = new Prodotto();
-                prodotto.setId(rs.getInt("idArticolo"));
-                prodotto.setCategoria(CategoriaProdottoDAO.getInstance().findTopCategoria(CategoriaProdottoDAO.getInstance().findByID(rs.getInt("idCategoria")).getNome()));
-                prodotto.setPrezzo(rs.getFloat("prezzo"));
+                prodotto.setIdArticolo(rs.getInt("idProdotto"));
                 prodotto.setNome(rs.getString("nome"));
-                prodotto.setImmagine(rs.getBlob("immagine"));
-                prodotto.setDescrizione(rs.getString("descrizione"));
-                prodotto.setProduttore(findProduttore(rs.getInt("idProduttore")));
-                prodotti.add(prodotto);
-            }
-            return prodotti;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-        return null;
-    }
-
-
-    @Override
-    public ArrayList<Prodotto> findAllProducts() {
-        conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM articolo A INNER JOIN prodotto P ON A.idArticolo = P.idProdotto LEFT JOIN prodottocomposito PC ON P.idProdotto = PC.idProdottoComposito WHERE PC.idProdottoComposito IS NULL;");
-        ArrayList<Prodotto> prodotti = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                prodotto = new Prodotto();
-                prodotto.setId(rs.getInt("idArticolo"));
-                prodotto.setCategoria(CategoriaProdottoDAO.getInstance().findTopCategoria(CategoriaProdottoDAO.getInstance().findByID(rs.getInt("idCategoria")).getNome()));
+                prodotto.setIdCategoria(rs.getInt("idCategoria"));
                 prodotto.setPrezzo(rs.getFloat("prezzo"));
-                prodotto.setNome(rs.getString("nome"));
-                prodotto.setImmagine(rs.getBlob("immagine"));
                 prodotto.setDescrizione(rs.getString("descrizione"));
-                prodotto.setProduttore(findProduttore(rs.getInt("idProduttore")));
-                prodotti.add(prodotto);
-            }
-            return prodotti;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-        return null;
-    }
-
-    @Override
-    public Produttore findProduttore(int idProduttore){
-        ProduttoreDAO pDAO = ProduttoreDAO.getInstance();
-        return pDAO.findByID(idProduttore);
-    }
-
-    @Override
-    public ArrayList<Prodotto> findByShop(int idPuntoVendita) {
-        conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM magazzino M INNER JOIN puntovendita PV ON M.idMagazzino = PV.idMagazzino INNER JOIN scheda_prodotto SC ON M.idMagazzino = SC.idMagazzino INNER JOIN articolo A ON SC.idProdotto = A.idArticolo INNER JOIN prodotto P ON A.idArticolo = P.idProdotto LEFT JOIN prodottocomposito PC ON P.idProdotto = PC.idProdottoComposito WHERE PC.idProdottoComposito IS NULL;");
-        ArrayList<Prodotto> prodotti = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                prodotto = new Prodotto();
-                prodotto.setId(rs.getInt("idArticolo"));
-                prodotto.setCategoria(CategoriaProdottoDAO.getInstance().findTopCategoria(CategoriaProdottoDAO.getInstance().findByID(rs.getInt("idCategoria")).getNome()));
-                prodotto.setPrezzo(rs.getFloat("prezzo"));
-                prodotto.setNome(rs.getString("nome"));
-                prodotto.setImmagine(rs.getBlob("immagine"));
-                prodotto.setDescrizione(rs.getString("descrizione"));
-                prodotto.setProduttore(findProduttore(rs.getInt("idProduttore")));
+                prodotto.setIdProduttore(rs.getInt("idFornitore"));
+                prodotto.setIdPosizione(rs.getInt("idPosizione"));
                 prodotti.add(prodotto);
             }
             return prodotti;

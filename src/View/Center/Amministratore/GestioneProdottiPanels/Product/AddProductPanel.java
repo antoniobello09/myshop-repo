@@ -3,10 +3,10 @@ package View.Center.Amministratore.GestioneProdottiPanels.Product;
 import Business.HelpFunctions;
 import DAO.Classi.CategoriaProdottoDAO;
 import DAO.Classi.ProdottoDAO;
-import DAO.Classi.ProduttoreDAO;
+import DAO.Classi.FornitoreDAO;
 import Model.CategoriaProdotto;
+import Model.Fornitore;
 import Model.Prodotto;
-import Model.Produttore;
 import View.AppFrame;
 import View.Listener.Amministratore.GestioneProdottiListeners.Product.AddProductListener;
 import View.Nameable;
@@ -114,7 +114,7 @@ public class AddProductPanel extends JPanel {
 
     public void inviaN(){
         outputProdotto = getFormData2();
-        ProduttoreDAO.getInstance().add(outputProdotto.getProduttore());
+        FornitoreDAO.getInstance().add(outputProdotto.getProduttore());
         ProdottoDAO.getInstance().add(outputProdotto);
     }
 
@@ -132,7 +132,7 @@ public class AddProductPanel extends JPanel {
         prodotto.setCategoria(new CategoriaProdotto(categoriaField.getSelectedItem().toString(),sottocategoriaField.getSelectedItem().toString()));
         prodotto.setDescrizione(descrizioneField.getText().replace("\'","\\\'"));
         prodotto.setPrezzo(Float.parseFloat(prezzoField.getText()));
-        prodotto.setProduttore(new Produttore(nomeProduttoreField2.getText()));
+        prodotto.setProduttore(new Fornitore(nomeProduttoreField2.getText()));
         return prodotto;
     }
 
@@ -143,7 +143,7 @@ public class AddProductPanel extends JPanel {
         prodotto.setCategoria(new CategoriaProdotto(categoriaField.getSelectedItem().toString(),sottocategoriaField.getSelectedItem().toString()));
         prodotto.setDescrizione(descrizioneField.getText().replace("\'","\\\'"));
         prodotto.setPrezzo(Float.parseFloat(prezzoField.getText()));
-        prodotto.setProduttore(new Produttore(nomeProduttoreField.getText(),sitowebField.getText(),cittaField.getText(),nazioneField.getText()));
+        prodotto.setProduttore(new Fornitore(nomeProduttoreField.getText(),sitowebField.getText(),cittaField.getText(),nazioneField.getText()));
         return prodotto;
     }
 

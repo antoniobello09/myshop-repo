@@ -52,8 +52,8 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     @Override
     public int delete(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE idCategoria_Padre = '" + categoriaServizio.getIdCategoria() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM categoria_servizio WHERE idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
+        conn.executeUpdate("DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE CP.idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
         conn.close();
         return rowCount;
     }
@@ -139,7 +139,6 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
         try {
             int i=0;
             while (rs.next()) {
-                List<CategoriaServizio> sottocategorie = new ArrayList<>();
                 categoriaServizio = new CategoriaServizio();
                 categoriaServizio.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaServizio.setNome(rs.getString("nome"));

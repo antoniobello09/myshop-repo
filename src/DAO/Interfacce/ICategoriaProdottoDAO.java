@@ -7,19 +7,14 @@ import java.util.ArrayList;
 public interface ICategoriaProdottoDAO {
 
     int add(CategoriaProdotto categoriaProdotto);
-    int addSub(CategoriaProdotto categoriaProdotto);
-
+    int addSub(CategoriaProdotto categoriaProdotto, int idCategoriaPadre);
     int update(CategoriaProdotto categoriaProdotto);
-    int updateSub(CategoriaProdotto categoriaProdotto);
     int delete(CategoriaProdotto categoriaProdotto);
+    int deleteSub(CategoriaProdotto categoriaProdotto);
     CategoriaProdotto findByID(int idCategoria);
+    ArrayList<CategoriaProdotto> findAllSons(int idCategoriaPadre);
     CategoriaProdotto findByName(String nomeCategoria);
-    CategoriaProdotto findByName2(String nomeCategoria, String nomeCategoriaPadre);
-    CategoriaProdotto findTopCategoria(String nomeCategoria);
     ArrayList<CategoriaProdotto> findAll();
-    boolean hasProducts(CategoriaProdotto categoriaProdotto);
-    boolean isSubCategory(int idCategoria);
-    boolean isUnique(String nomeCategoria, String nomeCategoriaPadre);
 
 
 }

@@ -8,7 +8,6 @@ public class Lista {
     private int idLista;
     private String nome;
     private int idCliente;
-    private boolean acquistata;
 
     public int getIdLista() {
         return idLista;
@@ -26,14 +25,6 @@ public class Lista {
         this.nome = nome;
     }
 
-
-    public boolean isAcquistata() {
-        return acquistata;
-    }
-
-    public void setAcquistata(boolean acquistata) {
-        this.acquistata = acquistata;
-    }
 
     public int getIdCliente() {
         return idCliente;

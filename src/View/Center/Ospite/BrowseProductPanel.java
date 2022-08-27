@@ -33,7 +33,7 @@ public class BrowseProductPanel extends JPanel {
     public BrowseProductPanel(AppFrame appFrame) {
 
         PuntoVendita puntoVendita = (PuntoVendita) SessionManager.getInstance().getSession().get("loggedShop");
-        lista = ProdottoDAO.getInstance().findByShop(puntoVendita.getIdPuntoVendita());
+        lista = ProdottoDAO.getInstance().finByShop(puntoVendita.getIdPuntoVendita());
 
         this.appFrame = appFrame;
         browseProductListener = new BrowseProductListener(this, this.appFrame);

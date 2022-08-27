@@ -1,9 +1,7 @@
 package View.Center.Manager.GestioneSchedeProdotto;
 
-import Model.CategoriaProdotto;
 import Model.Magazzino;
 import Model.SchedaProdotto;
-import Model.SchedaServizio;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

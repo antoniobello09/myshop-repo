@@ -1,7 +1,5 @@
 package View.Center.Amministratore.GestioneServiziPanels.ServiceProvider;
 
-import Model.FornitoreServizi;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 

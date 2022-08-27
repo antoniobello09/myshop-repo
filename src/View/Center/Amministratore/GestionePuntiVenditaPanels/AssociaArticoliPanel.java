@@ -3,7 +3,6 @@ package View.Center.Amministratore.GestionePuntiVenditaPanels;
 import DAO.Classi.*;
 import Model.PuntoVendita;
 import Model.SchedaProdotto;
-import Model.SchedaServizio;
 import View.AppFrame;
 import View.Center.Amministratore.GestionePuntiVenditaPanels.AggiungiShopPanel.AddShopPanel;
 import View.Listener.Amministratore.GestionePuntiVendita.Shop.AssociaArticoliListener;

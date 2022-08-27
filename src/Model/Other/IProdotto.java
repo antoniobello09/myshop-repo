@@ -1,4 +1,4 @@
-package Model;
+package Model.Other;
 
 public interface IProdotto {
 

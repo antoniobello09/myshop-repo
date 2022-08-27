@@ -30,7 +30,7 @@ public class ListaDAO implements IListaDAO {
     @Override
     public int add(Lista lista) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO lista(idCliente, nome, acquistata) VALUES ('" + lista.getIdCliente() + "','" + lista.getNome() + "','0');");
+        int rowCount = conn.executeUpdate("INSERT INTO lista(idCliente, nome) VALUES ('" + lista.getIdCliente() + "','" + lista.getNome() + "');");
         conn.close();
         return rowCount;
     }
@@ -38,7 +38,7 @@ public class ListaDAO implements IListaDAO {
     @Override
     public int update(Lista lista) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE lista SET nome = '"+ lista.getNome() + "', acquistata = '" + lista.isAcquistata() + "' WHERE idLista ='" + lista.getIdLista() + "';");
+        int rowCount = conn.executeUpdate("UPDATE lista SET nome = '"+ lista.getNome() + "' WHERE idLista = '" + lista.getIdLista() + "';");
         conn.close();
         return rowCount;
     }
@@ -66,7 +66,6 @@ public class ListaDAO implements IListaDAO {
             lista.setIdLista(rs.getInt("idLista"));
             lista.setIdCliente(rs.getInt("idCliente"));
             lista.setNome(rs.getString("nome"));
-            lista.setAcquistata(rs.getBoolean("acquistata"));
             return lista;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -83,36 +82,6 @@ public class ListaDAO implements IListaDAO {
         return null;
     }
 
-    @Override
-    public Lista findByInfo(int idPuntoVendita, String nomeLista, int idCliente){
-        return findByInfo(idPuntoVendita, nomeLista, idCliente, 0);
-    }
-    public Lista findByInfo(int idPuntoVendita, String nomeLista, int idCliente, int closeConn) {
-        conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM lista WHERE idPuntoVendita = '" + idPuntoVendita + "' AND nome = '" + nomeLista + "' AND idCliente = '" + idCliente + "';");
-        Lista lista;
-        try {
-            rs.next();
-            lista = new Lista();
-            lista.setIdLista(rs.getInt("idLista"));
-            lista.setIdCliente(rs.getInt("idCliente"));
-            lista.setNome(rs.getString("nome"));
-            lista.setAcquistata(rs.getBoolean("acquistata"));
-            return lista;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            if(closeConn == 0)
-                conn.close();
-        }
-        return null;
-    }
 
     @Override
     public ArrayList<Lista> findAll() {
@@ -125,7 +94,6 @@ public class ListaDAO implements IListaDAO {
                 lista.setIdLista(rs.getInt("idLista"));
                 lista.setIdCliente(rs.getInt("idCliente"));
                 lista.setNome(rs.getString("nome"));
-                lista.setAcquistata(rs.getBoolean("acquistata"));
                 liste.add(lista);
             }
             return liste;
@@ -154,7 +122,6 @@ public class ListaDAO implements IListaDAO {
                 lista.setIdLista(rs.getInt("idLista"));
                 lista.setIdCliente(rs.getInt("idCliente"));
                 lista.setNome(rs.getString("nome"));
-                lista.setAcquistata(rs.getBoolean("acquistata"));
                 liste.add(lista);
             }
             return liste;

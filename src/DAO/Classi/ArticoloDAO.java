@@ -3,6 +3,7 @@ package DAO.Classi;
 import DAO.Interfacce.IArticoloDAO;
 import DbInterface.*;
 import Model.Articolo;
+import Model.Fornitore;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +26,30 @@ public class ArticoloDAO implements IArticoloDAO {
         return instance;
     }
 
+    @Override
+    public int add(Articolo articolo) {
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("INSERT INTO articolo(idCategoria, prezzo, nome, descrizione) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','"+ articolo.getDescrizione() + "');");
+        conn.close();
+        return rowCount;
+    }
+
+    @Override
+    public int update(Articolo articolo) {
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("UPDATE articolo SET nome = '"+ articolo.getNome() + "', idCategoria = '" + articolo.getIdCategoria() + "', prezzo = '" + articolo.getPrezzo() + "', decrizione = '" + articolo.getDescrizione() + "' WHERE idArticolo = '" + articolo.getIdArticolo() + "';");
+        conn.close();
+        return rowCount;
+    }
+
+    @Override
+    public int delete(Articolo articolo) {
+        conn = DbConnection.getInstance();
+        int rowCount = conn.executeUpdate("DELETE FROM articolo WHERE idArticolo = '" + articolo.getIdCategoria() + "';");
+        conn.close();
+        return rowCount;
+    }
+
 //----------------FIND BY ID-----------------------------------------------------------------------------------------//
     @Override
     public Articolo findById(int idArticolo) {
@@ -44,9 +69,10 @@ public class ArticoloDAO implements IArticoloDAO {
             if (rs.getRow()==1) {
                 articolo = new Articolo();
                 articolo.setId(rs.getInt("idArticolo"));
-                articolo.setNome(rs.getString("Nome"));
-                articolo.setDescrizione(rs.getString("Descrizione"));
-                articolo.setPrezzo(rs.getFloat("Costo"));
+                articolo.setNome(rs.getString("nome"));
+                articolo.setDescrizione(rs.getString("descrizione"));
+                articolo.setPrezzo(rs.getFloat("prezzo"));
+                articolo.setIdCategoria(rs.getInt("idCategoria"));
                 return articolo;
             }
         } catch (SQLException e) {
@@ -75,6 +101,7 @@ public class ArticoloDAO implements IArticoloDAO {
                 articolo.setNome(rs.getString("nome"));
                 articolo.setDescrizione(rs.getString("descrizione"));
                 articolo.setPrezzo(rs.getFloat("prezzo"));
+                articolo.setIdCategoria(rs.getInt("idCategoria"));
                 articoli.add(articolo);
             }
             return articoli;
@@ -93,6 +120,11 @@ public class ArticoloDAO implements IArticoloDAO {
     }
 
     @Override
+    public Articolo findByName(String nomeArticolo){
+        return findByName(nomeArticolo,0);
+    }
+
+    @Override
     public Articolo findByName(String nomeArticolo, int closeConn) {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM articolo WHERE articolo.nome = '" + nomeArticolo + "';");
@@ -102,8 +134,8 @@ public class ArticoloDAO implements IArticoloDAO {
             articolo.setId(rs.getInt("idArticolo"));
             articolo.setNome(rs.getString("nome"));
             articolo.setPrezzo(rs.getFloat("prezzo"));
-            articolo.setImmagine(rs.getBlob("immagine"));
             articolo.setDescrizione(rs.getString("descrizione"));
+            articolo.setIdCategoria(rs.getInt("idCategoria"));
             return articolo;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
