@@ -1,7 +1,6 @@
 package View.Listener.SideMenuListeners.Ospite;
 
 import View.AppFrame;
-import View.Center.Amministratore.GestioneProdottiPanels.Product.ModifyProductPanel;
 import View.Center.Ospite.BrowseProductPanel;
 import View.Center.Ospite.BrowseServicePanel;
 
@@ -22,9 +21,9 @@ public class SMSfogliaListener implements ActionListener {
 
         if ("indietro".equals(cmd)) {
             appFrame.getSideMenu().setPrecedentPanel();
-        } else if ("browseProduct".equals(cmd)) {
+        } else if ("sfogliaProdotti".equals(cmd)) {
             appFrame.getCenter().setCurrentPanel(new BrowseProductPanel(appFrame));
-        } else if ("browseServices".equals(cmd)) {
+        } else if ("sfogliaServizi".equals(cmd)) {
             appFrame.getCenter().setCurrentPanel(new BrowseServicePanel(appFrame));
         }
     }

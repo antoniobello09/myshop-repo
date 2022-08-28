@@ -10,6 +10,7 @@ public interface IPosizioneDAO {
     int update(Posizione posizione);
     int delete(Posizione posizione);
     Posizione findByID(int idPosizione);
+    Posizione findByNumbers(int piano, int corsia, int scaffale);
     ArrayList<Posizione> findAll();
 
 }

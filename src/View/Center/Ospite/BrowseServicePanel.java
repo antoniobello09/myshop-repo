@@ -1,23 +1,13 @@
 package View.Center.Ospite;
 
-import Business.SessionManager;
-import DAO.Classi.ProdottoDAO;
 import DAO.Classi.ServizioDAO;
-import Model.Prodotto;
-import Model.PuntoVendita;
 import Model.Servizio;
 import View.AppFrame;
-import View.Center.Amministratore.GestioneProdottiPanels.Product.ProdottoTableModel;
 import View.Center.Cliente.ServizioTableModel;
-import View.Listener.Amministratore.GestioneProdottiListeners.Product.ModifyProductListener;
 import View.Listener.Ospite.BrowseServiceListener;
 
 import javax.swing.*;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class BrowseServicePanel extends JPanel {
@@ -25,20 +15,20 @@ public class BrowseServicePanel extends JPanel {
     private BrowseServiceListener browseServiceListener;
     private AppFrame appFrame;
 
+    private JLabel labelTitle;
 
-        private JScrollPane currentScrollPane;
-        private JTable currentTable;
-        private ServizioTableModel currentTableModel;
+    private JScrollPane currentScrollPane;
+    private JTable currentTable;
+    private ServizioTableModel currentTableModel;
 
     private ArrayList<Servizio> lista;
 
     public BrowseServicePanel(AppFrame appFrame) {
 
-        PuntoVendita puntoVendita = (PuntoVendita)SessionManager.getInstance().getSession().get("loggedShop");
-        lista = ServizioDAO.getInstance().findByShop(puntoVendita.getIdPuntoVendita());
+        lista = ServizioDAO.getInstance().findAll();
 
         this.appFrame = appFrame;
-         browseServiceListener = new BrowseServiceListener(this, this.appFrame);
+        browseServiceListener = new BrowseServiceListener(this, this.appFrame);
 
         tableSetting();
 
@@ -64,6 +54,7 @@ public class BrowseServicePanel extends JPanel {
     }
 
     public void componentsAdding(){
+        add(labelTitle, BorderLayout.NORTH);
         add(currentScrollPane, BorderLayout.CENTER);
     }
 

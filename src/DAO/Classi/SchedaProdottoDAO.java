@@ -57,15 +57,17 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
     }
     public SchedaProdotto findByShop_Product(int idSchedaProdotto , int idPuntoVendita, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idSchedaProdotto = '" + idSchedaProdotto + "';");
+        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idSchedaProdotto = '" + idSchedaProdotto + "' AND idPuntoVendita = '" + idPuntoVendita + "';");
         SchedaProdotto schedaProdotto;
         try {
             rs.next();
-            schedaProdotto = new SchedaProdotto();
-            schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
-            schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
-            schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
-            return schedaProdotto;
+            if (rs.getRow()==1) {
+                schedaProdotto = new SchedaProdotto();
+                schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
+                schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
+                schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
+                return schedaProdotto;
+            }
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("SQLException: " + e.getMessage());

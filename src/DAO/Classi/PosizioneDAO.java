@@ -76,6 +76,35 @@ public class PosizioneDAO implements IPosizioneDAO {
     }
 
     @Override
+    public Posizione findByNumbers(int piano, int corsia, int scaffale){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM posizione WHERE piano = '" + piano + "', corsia = '" + corsia + "', scaffale = '" + scaffale + "';");
+        Posizione posizione;
+        try {
+            rs.next();
+            if(rs.getRow() == 1) {
+                posizione = new Posizione();
+                posizione.setIdPosizione(rs.getInt("idPosizione"));
+                posizione.setPiano(rs.getInt("piano"));
+                posizione.setCorsia(rs.getInt("corsia"));
+                posizione.setScaffale(rs.getInt("scaffale"));
+                return posizione;
+            }
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+
+    @Override
     public ArrayList<Posizione> findAll() {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM posizione;");

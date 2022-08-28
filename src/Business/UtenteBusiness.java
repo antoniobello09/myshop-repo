@@ -11,7 +11,7 @@ public class UtenteBusiness {
 
     private static UtenteBusiness instance;
 
-    public enum Privilegio { MANAGE_SHOP, ADMIN_SYSTEM }
+    public enum Privilegio { MANAGE_SHOP, ADMIN_SYSTEM, CLIENT }
 
     public static synchronized UtenteBusiness getInstance() {
         if(instance == null) instance = new UtenteBusiness();
@@ -60,13 +60,18 @@ public class UtenteBusiness {
             return uDao.administratorExists(u);
         }
 
+        if(Privilegio.CLIENT.equals(p)) {
+            // vediamo se u è un cliente
+            return uDao.clientExists(u);
+        }
+
         return false;
 
     }
 
     public RegistrationResponse registerClient(Cliente c, PuntoVendita puntoVendita){
         RegistrationResponse res = new RegistrationResponse();
-        res.setMessage("Errore non definito.");
+     /*   res.setMessage("Errore non definito.");
 
         ClienteDAO cDao = ClienteDAO.getInstance();
         int rowCount = cDao.add(c, puntoVendita);
@@ -75,7 +80,7 @@ public class UtenteBusiness {
             res.setMessage("Iscrizione avvenuta con successo");
             res.setUtente(c);
         }
-
+*/
         return res;
 
     }

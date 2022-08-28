@@ -15,5 +15,7 @@ public interface IFornitoreDAO {
     Fornitore findByName(String nomeFornitore);
     Fornitore findByName(String nomeFornitore, int closeConn);
     ArrayList<Fornitore> findAll();
+    ArrayList<Fornitore> findAllProd();
+    ArrayList<Fornitore> findAllServ();
 
 }

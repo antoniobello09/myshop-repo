@@ -3,8 +3,6 @@ package View.Center.Manager.GestioneSchedeServizio;
 import Business.SessionManager;
 import DAO.Classi.ManagerDAO;
 import DAO.Classi.PuntoVenditaDAO;
-import DAO.Classi.SchedaProdottoDAO;
-import DAO.Classi.SchedaServizioDAO;
 import Model.*;
 import View.AppFrame;
 import View.Center.Manager.GestioneSchedeProdotto.DettagliSchedaProdottoPanel;
@@ -32,7 +30,6 @@ public class GestioneSchedeServizioPanel extends JPanel {
     private JPanel operazioniPanel = new JPanel();
     private JButton btnDettagli = new JButton("Dettagli");
 
-    private ArrayList<SchedaServizio> lista;
     private int selectedRow;
     private PuntoVendita puntoVendita;
 
@@ -58,10 +55,10 @@ public class GestioneSchedeServizioPanel extends JPanel {
     }
 
     public void cerca(){
-        ArrayList<SchedaServizio> s = new ArrayList<>();
+        /*ArrayList<SchedaServizio> s = new ArrayList<>();
         s.add(SchedaServizioDAO.getInstance().findByName(schedaField.getText()));
         currentTableModel.setLista(s);
-        currentTableModel.fireTableDataChanged();
+        currentTableModel.fireTableDataChanged();*/
     }
 
     public void dettagli(){
@@ -70,9 +67,9 @@ public class GestioneSchedeServizioPanel extends JPanel {
     }
 
     public void tableSetting(){
-        currentTableModel = new SchedaServizioModel(puntoVendita.getServizi());
+        /*currentTableModel = new SchedaServizioModel(puntoVendita.getServizi());
         currentTable = new JTable(currentTableModel);
-        currentScrollPane = new JScrollPane(currentTable);
+        currentScrollPane = new JScrollPane(currentTable);*/
     }
 
     public void layoutSetting(){

@@ -1,39 +1,28 @@
 package View.Center.Ospite;
 
-import Business.SessionManager;
 import DAO.Classi.ProdottoDAO;
-import DAO.Classi.ServizioDAO;
 import Model.Prodotto;
-import Model.PuntoVendita;
-import Model.Servizio;
 import View.AppFrame;
-import View.Center.Amministratore.GestioneProdottiPanels.Product.ProdottoTableModel;
-import View.Center.Cliente.ServizioTableModel;
 import View.Listener.Ospite.BrowseProductListener;
-import View.Listener.Ospite.BrowseServiceListener;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class BrowseProductPanel extends JPanel {
     private BrowseProductListener browseProductListener;
     private AppFrame appFrame;
 
-
+    private JLabel labelTitle = new JLabel("Catalogo Prodotti");
     private JScrollPane currentScrollPane;
     private JTable currentTable;
-    private ProdottoTableModel currentTableModel;
+    private ProdottiTableModel currentTableModel;
 
     private ArrayList<Prodotto> lista;
 
     public BrowseProductPanel(AppFrame appFrame) {
 
-        PuntoVendita puntoVendita = (PuntoVendita) SessionManager.getInstance().getSession().get("loggedShop");
-        lista = ProdottoDAO.getInstance().finByShop(puntoVendita.getIdPuntoVendita());
+        lista = ProdottoDAO.getInstance().findAll();
 
         this.appFrame = appFrame;
         browseProductListener = new BrowseProductListener(this, this.appFrame);
@@ -50,7 +39,7 @@ public class BrowseProductPanel extends JPanel {
     }
 
     public void tableSetting(){
-        currentTableModel = new ProdottoTableModel(lista);
+        currentTableModel = new ProdottiTableModel(lista);
         currentTable = new JTable(currentTableModel);
         currentScrollPane = new JScrollPane(currentTable);
     }
@@ -62,6 +51,7 @@ public class BrowseProductPanel extends JPanel {
     }
 
     public void componentsAdding(){
+        add(labelTitle, BorderLayout.NORTH);
         add(currentScrollPane, BorderLayout.CENTER);
     }
 

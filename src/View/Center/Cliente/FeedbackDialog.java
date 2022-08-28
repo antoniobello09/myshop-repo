@@ -91,7 +91,7 @@ public class FeedbackDialog extends JDialog
     public void actionPerformed(ActionEvent e) {
         if ("imposta".equals(e.getActionCommand())) {
             value.setCommento(feedbackField.getText());
-            value.setPunteggio(Integer.parseInt(comboStars.getSelectedItem().toString()));
+            value.setIndiceGradimento(Integer.parseInt(comboStars.getSelectedItem().toString()));
         }
         FeedbackDialog.dialog.setVisible(false);
     }

@@ -68,7 +68,7 @@ public class ArticoloDAO implements IArticoloDAO {
             rs.next();
             if (rs.getRow()==1) {
                 articolo = new Articolo();
-                articolo.setId(rs.getInt("idArticolo"));
+                articolo.setIdArticolo(rs.getInt("idArticolo"));
                 articolo.setNome(rs.getString("nome"));
                 articolo.setDescrizione(rs.getString("descrizione"));
                 articolo.setPrezzo(rs.getFloat("prezzo"));
@@ -97,7 +97,7 @@ public class ArticoloDAO implements IArticoloDAO {
         try {
             while (rs.next()) {
                 articolo = new Articolo();
-                articolo.setId(rs.getInt("idArticolo"));
+                articolo.setIdArticolo(rs.getInt("idArticolo"));
                 articolo.setNome(rs.getString("nome"));
                 articolo.setDescrizione(rs.getString("descrizione"));
                 articolo.setPrezzo(rs.getFloat("prezzo"));
@@ -131,7 +131,7 @@ public class ArticoloDAO implements IArticoloDAO {
         Articolo articolo = new Articolo();
         try {
             rs.next();
-            articolo.setId(rs.getInt("idArticolo"));
+            articolo.setIdArticolo(rs.getInt("idArticolo"));
             articolo.setNome(rs.getString("nome"));
             articolo.setPrezzo(rs.getFloat("prezzo"));
             articolo.setDescrizione(rs.getString("descrizione"));

@@ -12,6 +12,7 @@ public class CategoriaProdotto implements ICategoria, Nameable, Cloneable {
     private int idCategoria;
     private String nome;
     private List<CategoriaProdotto> sottocategorie = new ArrayList<>();
+    private Integer idCategoriaPadre = null;
 
     public CategoriaProdotto() {
     }
@@ -20,11 +21,20 @@ public class CategoriaProdotto implements ICategoria, Nameable, Cloneable {
         this.nome = nome;
     }
 
+    public CategoriaProdotto(int idCategoria, String nome, List<CategoriaProdotto> sottocategorie, int idCategoriaPadre) {
+        this.idCategoria = idCategoria;
+        this.nome = nome;
+        this.sottocategorie = sottocategorie;
+        this.idCategoriaPadre = idCategoriaPadre;
+    }
+
     public CategoriaProdotto(int idCategoria, String nomeCategoria, List<CategoriaProdotto> sottocategorie){
         this.idCategoria = idCategoria;
         nome = nomeCategoria;
         this.sottocategorie = new ArrayList<>(sottocategorie);
     }
+
+
 
     public CategoriaProdotto(String nomeCategoria, String nomeSottoCategoria){
         nome = nomeCategoria;
@@ -58,7 +68,13 @@ public class CategoriaProdotto implements ICategoria, Nameable, Cloneable {
         this.sottocategorie = sottocategorie;
     }
 
+    public int getIdCategoriaPadre() {
+        return idCategoriaPadre;
+    }
 
+    public void setIdCategoriaPadre(int idCategoriaPadre) {
+        this.idCategoriaPadre = idCategoriaPadre;
+    }
 
     //Verifica se c è una sua sottocategoria
     public boolean hasSottoCategoria(CategoriaProdotto c){

@@ -1,6 +1,8 @@
 package View;
 
 import Business.SessionManager;
+import DAO.Classi.PuntoVenditaDAO;
+import Model.PuntoVendita;
 import View.Center.Center;
 import View.Footer.Footer;
 import View.Header.Header;
@@ -30,9 +32,8 @@ public class AppFrame extends JFrame {
                 null,
                 null);
         String[] indirizzo = nomePuntoVendita.split(", ");
-        //PuntoVendita puntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0], indirizzo[1]);
-        SessionManager.getInstance().getSession().put("loggedShopAddress", indirizzo[0]);
-        SessionManager.getInstance().getSession().put("loggedShopCity", indirizzo[1]);
+        PuntoVendita puntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0], indirizzo[1]);
+        SessionManager.getInstance().getSession().put("idPuntoVendita", puntoVendita.getIdPuntoVendita());
 
     //----------------HEADER--------------------------------------------------------------//
         header = new Header(this);

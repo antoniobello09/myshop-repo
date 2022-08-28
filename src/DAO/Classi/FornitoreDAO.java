@@ -151,4 +151,66 @@ public class FornitoreDAO implements IFornitoreDAO {
         return null;
     }
 
+
+    public ArrayList<Fornitore> findAllProd(){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM fornitore WHERE prod_serv = 'p';");
+        ArrayList<Fornitore> produttori = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                fornitore = new Fornitore();
+                fornitore.setIdFornitore(rs.getInt("idFornitore"));
+                fornitore.setNome(rs.getString("nome"));
+                fornitore.setSitoweb(rs.getString("sito_web"));
+                fornitore.setCitta(rs.getString("citta"));
+                fornitore.setNazione(rs.getString("nazione"));
+                fornitore.setProd_serv(rs.getString("prod_serv"));
+                produttori.add(fornitore);
+            }
+            return produttori;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+    public ArrayList<Fornitore> findAllServ(){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM fornitore WHERE prod_serv = 's';");
+        ArrayList<Fornitore> produttori = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                fornitore = new Fornitore();
+                fornitore.setIdFornitore(rs.getInt("idFornitore"));
+                fornitore.setNome(rs.getString("nome"));
+                fornitore.setSitoweb(rs.getString("sito_web"));
+                fornitore.setCitta(rs.getString("citta"));
+                fornitore.setNazione(rs.getString("nazione"));
+                fornitore.setProd_serv(rs.getString("prod_serv"));
+                produttori.add(fornitore);
+            }
+            return produttori;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+
 }

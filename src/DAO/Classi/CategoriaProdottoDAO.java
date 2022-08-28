@@ -75,6 +75,8 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         return rowCount;
     }
 
+
+
     @Override
     public CategoriaProdotto findByID(int idCategoria){
         return findByID(idCategoria, 0);
@@ -91,6 +93,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
+                categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;

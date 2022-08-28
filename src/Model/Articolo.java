@@ -31,6 +31,13 @@ public class Articolo {
         this.idCategoria = idCategoria;
     }
 
+    public Articolo(String nome, String descrizione, Float prezzo, int idCategoria) {
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.prezzo = prezzo;
+        this.idCategoria = idCategoria;
+    }
+
     public Articolo(){
 
     }

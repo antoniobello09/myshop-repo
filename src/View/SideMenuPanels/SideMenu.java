@@ -2,6 +2,8 @@ package View.SideMenuPanels;
 
 import View.AppFrame;
 import View.ChangeablePanel;
+import View.SideMenuPanels.Home.SideMenuLogin;
+import View.WelcomePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +37,7 @@ public class SideMenu extends ChangeablePanel {
     @Override
     public void setCurrentPanel() {
         if(currentPanel!=null) remove(currentPanel);
-        SideMenuDefault sideMenuDefaultPanel = new SideMenuDefault(appFrame);
+        SideMenuLogin sideMenuDefaultPanel = new SideMenuLogin(appFrame);
         add(sideMenuDefaultPanel);
 
         currentPanel = sideMenuDefaultPanel;
@@ -51,7 +53,7 @@ public class SideMenu extends ChangeablePanel {
         sideMenuCronologia.remove(sideMenuCronologia.size()-1);
         currentPanel = sideMenuCronologia.get(sideMenuCronologia.size()-1);
         add(currentPanel);
-
+        appFrame.getCenter().setCurrentPanel(new WelcomePanel());
 
         invalidate();
         validate();

@@ -24,8 +24,8 @@ public class SMSfoglia extends JPanel {
         sfogliaProdotti.addActionListener(smSfogliaListener);
         indietro.addActionListener(smSfogliaListener);
 
-        sfogliaProdotti.setActionCommand("browseProduct");
-        sfogliaServizi.setActionCommand("browseServices");
+        sfogliaProdotti.setActionCommand("sfogliaProdotti");
+        sfogliaServizi.setActionCommand("sfogliaServizi");
         indietro.setActionCommand("indietro");
 
         add(sfogliaProdotti);

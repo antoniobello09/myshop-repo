@@ -4,6 +4,21 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class AssociaSchedaServizioTableModel extends AbstractTableModel {
+    @Override
+    public int getRowCount() {
+        return 0;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 0;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return null;
+    }
+/*
 
     private ArrayList<SchedaServizio> lista;
     private int selectedRow;
@@ -76,5 +91,6 @@ public class AssociaSchedaServizioTableModel extends AbstractTableModel {
     public int getEditableRow() {
         return editableRow;
     }
+*/
 
 }

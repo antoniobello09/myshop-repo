@@ -89,7 +89,7 @@ public class RegisterPanel extends JPanel {
         if(!isIscrivitiOK()) return;
         String dataCompleanno = yearField.getSelectedItem().toString() + "-" + HelpFunctions.convertMonth(monthField.getSelectedIndex()) + "-" + dayField.getSelectedItem().toString();
         ClienteDAO.getInstance().add(new Cliente(
-                usernameField.getText(), passwordField.getText(), nomeField.getText(), cognomeField.getText(), emailField.getText(), dataCompleanno, telefonoField.getText(), residenzaField.getText(), professioneField.getText(), String.valueOf(canaleField.getSelectedItem()), true), (PuntoVendita)SessionManager.getInstance().getSession().get("loggedShop"));
+                usernameField.getText(), passwordField.getText(), nomeField.getText(), cognomeField.getText(), emailField.getText(), dataCompleanno, telefonoField.getText(), residenzaField.getText(), professioneField.getText(), String.valueOf(canaleField.getSelectedItem()), true,(Integer)SessionManager.getInstance().getSession().get("idPuntoVendita")));
     }
 
     public boolean isIscrivitiOK(){
