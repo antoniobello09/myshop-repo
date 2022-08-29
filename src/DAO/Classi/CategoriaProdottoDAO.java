@@ -84,7 +84,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
 
     public CategoriaProdotto findByID(int idCategoria, int i) {
         conn = DbConnection.getInstance();
-        String sql = "SELECT * FROM categoria WHERE idCategoria = '" + idCategoria + "';";
+        String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE c.idCategoria = '" + idCategoria + "';";
         ResultSet rs = conn.executeQuery(sql);
         CategoriaProdotto categoriaProdotto;
         try {
@@ -115,15 +115,15 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
 
     public ArrayList<CategoriaProdotto> findAllSons(int idCategoriaPadre){
         IDbConnection  conn = DbConnection.getInstance();
-        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE idCategoriaPadre ='" + idCategoriaPadre + "';");
+        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE idCategoriaPadre = '" + idCategoriaPadre + "';");
         ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
-        CategoriaProdotto categoriaProdotto;
+        CategoriaProdotto categoriaProdotto = null;
         try {
-            if(rs.getRow() == 0)    return null;
             while (rs.next()) {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
+                categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
                 categorieProdotti.add(categoriaProdotto);
             }
             return categorieProdotti;
@@ -148,7 +148,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
 
     public CategoriaProdotto findByName(String nomeCategoria, int i) {
         conn = DbConnection.getInstance();
-        String sql = "SELECT * FROM categoria WHERE nome = '" + nomeCategoria + "';";
+        String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE nome = '" + nomeCategoria + "';";
         ResultSet rs = conn.executeQuery(sql);
         CategoriaProdotto categoriaProdotto;
         try {
@@ -157,6 +157,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
+                categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;
@@ -179,7 +180,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     @Override
     public ArrayList<CategoriaProdotto> findAll() {
         IDbConnection  conn = DbConnection.getInstance();
-        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria;");
+        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE categoria.idCategoria <> '0';");
         ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
         CategoriaProdotto categoriaProdotto;
         try {
@@ -187,6 +188,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
+                categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
                 categorieProdotti.add(categoriaProdotto);
             }
             return categorieProdotti;

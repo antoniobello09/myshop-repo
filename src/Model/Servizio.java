@@ -9,13 +9,18 @@ public class Servizio extends Articolo implements Cloneable{
     private int idFornitoreServizio;
 
 
-    public Servizio(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idFornitoreServizio) {
-        super(idArticolo, prezzo, nome, descrizione, immagine, idCategoria);
+    public Servizio(int idArticolo, String nome, String descrizione, Float prezzo,Blob immagine, int idCategoria, int idFornitoreServizio) {
+        super(idArticolo, nome, descrizione, prezzo, immagine, idCategoria);
         this.idFornitoreServizio = idFornitoreServizio;
     }
 
-    public Servizio(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idFornitoreServizio) {
-        super(prezzo, nome, descrizione, immagine, idCategoria);
+    public Servizio( String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria, int idFornitoreServizio) {
+        super(nome, descrizione, prezzo, immagine, idCategoria);
+        this.idFornitoreServizio = idFornitoreServizio;
+    }
+
+    public Servizio( String nome, String descrizione, Float prezzo, int idCategoria, int idFornitoreServizio) {
+        super(nome, descrizione, prezzo, idCategoria);
         this.idFornitoreServizio = idFornitoreServizio;
     }
 

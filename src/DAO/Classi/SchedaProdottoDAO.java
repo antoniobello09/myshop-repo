@@ -53,7 +53,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
 
     @Override
     public SchedaProdotto findByShop_Product(int idSchedaProdotto, int idPuntoVendita){
-        return findByShop_Product(idSchedaProdotto, 0);
+        return findByShop_Product(idSchedaProdotto, idPuntoVendita, 0);
     }
     public SchedaProdotto findByShop_Product(int idSchedaProdotto , int idPuntoVendita, int closeConn) {
         conn = DbConnection.getInstance();

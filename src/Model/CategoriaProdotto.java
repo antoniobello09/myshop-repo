@@ -1,13 +1,12 @@
 package Model;
 
 import Model.Other.ICategoria;
-import View.Nameable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CategoriaProdotto implements ICategoria, Nameable, Cloneable {
+public class CategoriaProdotto implements ICategoria {
 
     private int idCategoria;
     private String nome;
@@ -76,33 +75,5 @@ public class CategoriaProdotto implements ICategoria, Nameable, Cloneable {
         this.idCategoriaPadre = idCategoriaPadre;
     }
 
-    //Verifica se c è una sua sottocategoria
-    public boolean hasSottoCategoria(CategoriaProdotto c){
-        int i = 0;
-        boolean is_sottocategoria = false;
-        while((i<sottocategorie.size())&&(is_sottocategoria == false)){
-            if(sottocategorie.get(i).getIdCategoria()==c.getIdCategoria())
-                is_sottocategoria = true;
-            i++;
-        }
-        return is_sottocategoria;
-    }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new CategoriaProdotto(idCategoria, nome, sottocategorie);
-    }
-
-    public ArrayList<CategoriaProdotto> cloneList(){
-        Iterator<CategoriaProdotto> it = sottocategorie.iterator();
-        ArrayList<CategoriaProdotto> newList = new ArrayList<>();
-        while(it.hasNext()){
-            try {
-                newList.add((CategoriaProdotto) it.next().clone());
-            }catch(CloneNotSupportedException e){
-                return null;
-            }
-        }
-        return newList;
-    }
 }

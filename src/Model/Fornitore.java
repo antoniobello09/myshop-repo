@@ -1,9 +1,7 @@
 package Model;
 
 
-import View.Nameable;
-
-public class Fornitore implements Nameable{
+public class Fornitore{
 
     private int idFornitore;
     private String nome;
@@ -41,11 +39,10 @@ public class Fornitore implements Nameable{
         return idFornitore;
     }
 
-    public void setIdFornitore(int idProduttore) {
+    public void setIdFornitore(int idFornitore) {
         this.idFornitore = idFornitore;
     }
 
-    @Override
     public String getNome() {
         return nome;
     }

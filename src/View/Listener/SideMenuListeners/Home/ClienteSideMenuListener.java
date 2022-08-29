@@ -1,10 +1,10 @@
 package View.Listener.SideMenuListeners.Home;
 
 import View.AppFrame;
-import View.Center.Ospite.BrowseProductPanel;
-import View.Center.Cliente.GestioneListePanel;
-import View.SideMenuPanels.Ospite.SMSfoglia;
-import View.WelcomePanel;
+import View.Panels.Center.Cliente.ListsPanel;
+import View.Panels.NullPanel;
+import View.Panels.SideMenu.Ospite.SMSfoglia;
+import View.Panels.WelcomePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,9 +22,9 @@ public class ClienteSideMenuListener implements ActionListener {
         String cmd = e.getActionCommand();
         if("sfoglia".equals(cmd))                            {
             appFrame.getSideMenu().setCurrentPanel(new SMSfoglia(appFrame));
-            appFrame.getCenter().setCurrentPanel(new WelcomePanel());
+            appFrame.getCenter().setCurrentPanel(new NullPanel());
         }
-        else if("gestioneListe".equals(cmd))                 appFrame.getCenter().setCurrentPanel(new GestioneListePanel(appFrame));
+        else if("gestioneListe".equals(cmd))                 appFrame.getCenter().setCurrentPanel(new ListsPanel(appFrame));
 
         appFrame.invalidate();
         appFrame.validate();

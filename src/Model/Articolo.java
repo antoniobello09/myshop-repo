@@ -14,7 +14,7 @@ public class Articolo {
     private Blob immagine;
     private int idCategoria;
 
-    public Articolo(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria) {
+    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo,Blob immagine, int idCategoria) {
         this.idArticolo = idArticolo;
         this.prezzo = prezzo;
         this.nome = nome;
@@ -23,7 +23,7 @@ public class Articolo {
         this.idCategoria = idCategoria;
     }
 
-    public Articolo(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria) {
+    public Articolo(String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria) {
         this.prezzo = prezzo;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -38,6 +38,11 @@ public class Articolo {
         this.idCategoria = idCategoria;
     }
 
+    public Articolo(String nome, String descrizione, Float prezzo) {
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.prezzo = prezzo;
+    }
     public Articolo(){
 
     }
@@ -89,4 +94,6 @@ public class Articolo {
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
     }
+
+
 }

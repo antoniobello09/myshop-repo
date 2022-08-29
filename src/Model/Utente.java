@@ -1,17 +1,6 @@
 package Model;
 
-import View.Nameable;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Period;
-import java.util.Calendar;
-import java.util.Date;
-
-public class Utente implements Nameable{
+public class Utente {
 
     private int idUtente;
     private String username;
@@ -22,6 +11,7 @@ public class Utente implements Nameable{
     private String birthdate;
     private String telephone;
     private String address;
+    private String city;
     private String job;
 
 
@@ -35,10 +25,11 @@ public class Utente implements Nameable{
         this.birthdate = "";
         this.telephone = "";
         this.address = "";
+        this.city = "";
         this.job = "";
     }
 
-    public Utente(int idUtente, String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String job) {
+    public Utente(int idUtente, String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String city, String job) {
         this.idUtente = idUtente;
         this.username = username;
         this.password = password;
@@ -48,6 +39,7 @@ public class Utente implements Nameable{
         this.birthdate = birthdate;
         this.telephone = telephone;
         this.address = address;
+        this.city = city;
         this.job = job;
     }
 
@@ -58,7 +50,7 @@ public class Utente implements Nameable{
         this.email = email;
     }
 
-    public Utente(String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String job) {
+    public Utente(String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String city, String job) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -67,6 +59,7 @@ public class Utente implements Nameable{
         this.birthdate = birthdate;
         this.telephone = telephone;
         this.address = address;
+        this.city = city;
         this.job = job;
     }
 
@@ -156,13 +149,16 @@ public class Utente implements Nameable{
         this.job = job;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String toString() {
         return name + " " + surname + " " + email + " " + birthdate;
     }
 
-    @Override
-    public String getNome() {
-        return null;
-    }
 }

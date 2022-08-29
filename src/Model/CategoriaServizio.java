@@ -1,12 +1,11 @@
 package Model;
 
 import Model.Other.ICategoria;
-import View.Nameable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class CategoriaServizio implements ICategoria, Nameable, Cloneable {
+public class CategoriaServizio implements ICategoria{
 
     private int idCategoria;
     private String nome;
@@ -42,17 +41,4 @@ public class CategoriaServizio implements ICategoria, Nameable, Cloneable {
     }
 
 
-    @Override
-    protected Object clone(){
-        return new CategoriaServizio(idCategoria, nome);
-    }
-
-    public static ArrayList<CategoriaServizio> cloneList(ArrayList<CategoriaServizio> lista) {
-        Iterator<CategoriaServizio> it = lista.iterator();
-        ArrayList<CategoriaServizio> newList = new ArrayList<>();
-        while(it.hasNext()){
-            newList.add((CategoriaServizio) it.next().clone());
-        }
-        return newList;
-    }
 }

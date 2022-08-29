@@ -16,13 +16,13 @@ public class ProdottoComposito extends Prodotto implements IProdotto {
 
     }
 
-    public ProdottoComposito(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idProduttore, int idPosizione, ArrayList<Prodotto_Quantita> sottoprodotti) {
-        super(idArticolo, prezzo, nome, descrizione, immagine, idCategoria, idProduttore, idPosizione);
+    public ProdottoComposito(int idArticolo, String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria, int idProduttore, int idPosizione, ArrayList<Prodotto_Quantita> sottoprodotti) {
+        super(idArticolo, nome, descrizione, prezzo,immagine, idCategoria, idProduttore, idPosizione);
         this.sottoprodotti = sottoprodotti;
     }
 
-    public ProdottoComposito(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idProduttore, int idPosizione, ArrayList<Prodotto_Quantita> sottoprodotti) {
-        super(prezzo, nome, descrizione, immagine, idCategoria, idProduttore, idPosizione);
+    public ProdottoComposito(String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria, int idProduttore, int idPosizione, ArrayList<Prodotto_Quantita> sottoprodotti) {
+        super(nome, descrizione, prezzo,immagine, idCategoria, idProduttore, idPosizione);
         this.sottoprodotti = sottoprodotti;
     }
 

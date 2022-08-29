@@ -1,8 +1,8 @@
 package View.Listener.SideMenuListeners.Ospite;
 
 import View.AppFrame;
-import View.Center.Ospite.BrowseProductPanel;
-import View.Center.Ospite.BrowseServicePanel;
+import View.Panels.Center.Ospite.BrowseProductPanel;
+import View.Panels.Center.Ospite.BrowseServicePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

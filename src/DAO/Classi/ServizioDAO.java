@@ -75,7 +75,7 @@ public class ServizioDAO implements IServizioDAO {
             servizio.setIdCategoria(rs.getInt("idCategoria"));
             servizio.setPrezzo(rs.getFloat("prezzo"));
             servizio.setDescrizione(rs.getString("descrizione"));
-            servizio.setIdFornitoreServizio(rs.getInt("idFornitore"));
+            servizio.setIdFornitoreServizio(rs.getInt("idFornitoreServizio"));
             return servizio;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -109,7 +109,7 @@ public class ServizioDAO implements IServizioDAO {
             servizio.setIdCategoria(rs.getInt("idCategoria"));
             servizio.setPrezzo(rs.getFloat("prezzo"));
             servizio.setDescrizione(rs.getString("descrizione"));
-            servizio.setIdFornitoreServizio(rs.getInt("idFornitore"));
+            servizio.setIdFornitoreServizio(rs.getInt("idFornitoreServizio"));
             return servizio;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -139,7 +139,7 @@ public class ServizioDAO implements IServizioDAO {
                 servizio.setIdCategoria(rs.getInt("idCategoria"));
                 servizio.setPrezzo(rs.getFloat("prezzo"));
                 servizio.setDescrizione(rs.getString("descrizione"));
-                servizio.setIdFornitoreServizio(rs.getInt("idFornitore"));
+                servizio.setIdFornitoreServizio(rs.getInt("idFornitoreServizio"));
                 servizi.add(servizio);
             }
             return servizi;

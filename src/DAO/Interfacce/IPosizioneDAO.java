@@ -12,5 +12,6 @@ public interface IPosizioneDAO {
     Posizione findByID(int idPosizione);
     Posizione findByNumbers(int piano, int corsia, int scaffale);
     ArrayList<Posizione> findAll();
+    ArrayList<Posizione> findAllEmpty();
 
 }

@@ -1,14 +1,7 @@
 package View.Listener.SideMenuListeners.Amministratore;
 
 import View.*;
-import View.Center.Amministratore.GestioneArticoliPanels.Category.AddProductCategoryPanel;
-import View.Center.Amministratore.GestioneArticoliPanels.Category.ModifyProductCategoryPanel;
-import View.Center.Amministratore.GestioneArticoliPanels.Producer.AddProducerPanel;
-import View.Center.Amministratore.GestioneArticoliPanels.CreateProductPanel;
-import View.Center.Amministratore.GestioneArticoliPanels.Product.ModifyProductPanel;
-import View.Center.Amministratore.GestioneArticoliPanels.ProductComposite.AddProductCompositePanel;
-import View.Center.Amministratore.GestioneArticoliPanels.ProductComposite.ModifyProductCompositePanel;
-
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,17 +22,17 @@ public class SMGestioneArticoliListener implements ActionListener {
         }else if ("createProduct".equals(cmd)){
             appFrame.getCenter().setCurrentPanel(new CreateProductPanel(appFrame));
         }else if ("createCompositeProduct".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new ModifyProductPanel(appFrame));
+            appFrame.getCenter().setCurrentPanel(new CreateCompositeProductPanel(appFrame));
         }else if ("createService".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new AddProductCompositePanel(appFrame));
+            appFrame.getCenter().setCurrentPanel(new CreateServicePanel(appFrame));
         }else if ("deleteArticle".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new ModifyProductCompositePanel(appFrame));
+            appFrame.getCenter().setCurrentPanel(new DeleteArticlePanel(appFrame));
         }else if ("modifyArticle".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new AddProductCategoryPanel(appFrame));
+            appFrame.getCenter().setCurrentPanel(new ModifyArticlePanel(appFrame));
         }else if ("createSupplier".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new ModifyProductCategoryPanel(appFrame));
+            appFrame.getCenter().setCurrentPanel(new CreateSupplierPanel(appFrame));
         }else if ("createCategory".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new AddProducerPanel(appFrame));
+            appFrame.getCenter().setCurrentPanel(new CreateCategoryPanel(appFrame));
         }
     }
 }

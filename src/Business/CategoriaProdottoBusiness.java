@@ -15,7 +15,7 @@ public class CategoriaProdottoBusiness {
     }
 
 
-
+/*
     //Restituisce le sottocategorie di una data categoria
     public ArrayList<CategoriaProdotto> findSubCategories(String nomeC, ArrayList<CategoriaProdotto> cList){
         ArrayList<CategoriaProdotto> sottocategorie = new ArrayList<>();
@@ -40,6 +40,6 @@ public class CategoriaProdottoBusiness {
     }
 
 
-
+*/
 
 }

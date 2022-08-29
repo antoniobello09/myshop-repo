@@ -78,7 +78,7 @@ public class PosizioneDAO implements IPosizioneDAO {
     @Override
     public Posizione findByNumbers(int piano, int corsia, int scaffale){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM posizione WHERE piano = '" + piano + "', corsia = '" + corsia + "', scaffale = '" + scaffale + "';");
+        rs = conn.executeQuery("SELECT * FROM posizione WHERE piano = '" + piano + "' AND corsia = '" + corsia + "' AND scaffale = '" + scaffale + "';");
         Posizione posizione;
         try {
             rs.next();
@@ -108,6 +108,35 @@ public class PosizioneDAO implements IPosizioneDAO {
     public ArrayList<Posizione> findAll() {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM posizione;");
+        ArrayList<Posizione> posizioni = new ArrayList<>();
+        try {
+            while(rs.next()) {
+                posizione = new Posizione();
+                posizione.setIdPosizione(rs.getInt("idPosizione"));
+                posizione.setPiano(rs.getInt("piano"));
+                posizione.setCorsia(rs.getInt("corsia"));
+                posizione.setScaffale(rs.getInt("scaffale"));
+                posizioni.add(posizione);
+            }
+            return posizioni;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Posizione> findAllEmpty() {
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM posizione p LEFT OUTER JOIN prodotto pr ON pr.idPosizione = p.idPosizione WHERE pr.idProdotto IS NULL;");
         ArrayList<Posizione> posizioni = new ArrayList<>();
         try {
             while(rs.next()) {

@@ -1,7 +1,8 @@
 package View.Listener.SideMenuListeners.Amministratore;
 
 import View.AppFrame;
-import View.Center.Amministratore.GestionePuntiVenditaPanels.AggiungiShopPanel.AddShopPanel;
+import View.Panels.Center.Amministratore.GestionePuntiVenditaPanels.BindShopArticlePanel;
+import View.Panels.Center.Amministratore.GestionePuntiVenditaPanels.CreateShopPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,13 +21,11 @@ public class SMGestionePuntiVenditaListener implements ActionListener {
 
         if("indietro".equals(cmd)){
             appFrame.getSideMenu().setPrecedentPanel();
-        }else if("modifyPuntoVendita".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new AddShopPanel(appFrame));
-        }/*else if("addManager".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new AddManagerPanel(appFrame));
-        }else if("modifyManager".equals(cmd)){
-            appFrame.getCenter().setCurrentPanel(new ModifyManagerPanel(appFrame));
-        }*/
+        }else if("createShop".equals(cmd)) {
+            appFrame.getCenter().setCurrentPanel(new CreateShopPanel(appFrame));
+        }else if("bindShopArticle".equals(cmd)){
+            appFrame.getCenter().setCurrentPanel(new BindShopArticlePanel(appFrame));
+        }
 
     }
 }

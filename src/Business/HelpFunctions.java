@@ -1,11 +1,8 @@
 package Business;
 
-import View.Nameable;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 
 public class HelpFunctions {
 
@@ -15,38 +12,6 @@ public class HelpFunctions {
     private static String[] days = {"--","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
     private static String[] months = {"--","GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO", "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"};
 
-
-    //Converte un ArrayList di Oggetti in un semplice vettore di stringhe
-    public static String[] fromArraytoString(ArrayList<Nameable> arrayObjects){
-
-        String[] strings = new String[arrayObjects.size()];
-
-        for(int i=0;i<arrayObjects.size();i++){
-            strings[i] = arrayObjects.get(i).getNome();
-        }
-
-        return strings;
-    }
-
-    //Converte un ArrayList di Stringhe in un semplice vettore di stringhe
-    public static String[] fromArraytoString2(ArrayList<String> arrayObjects){
-
-        String[] strings = new String[arrayObjects.size()];
-
-        for(int i=0;i<arrayObjects.size();i++){
-            strings[i] = arrayObjects.get(i);
-        }
-
-        return strings;
-    }
-
-    public static void setComboBox(JComboBox comboBox, String[] items){
-        comboBox.removeAllItems();
-        comboBox.addItem("");
-        for(int i=0;i<items.length;i++){
-            comboBox.addItem(items[i]);
-        }
-    }
 
     public static void setDaysComboBox(JComboBox comboBox, String month, String year){
         comboBox.removeAllItems();

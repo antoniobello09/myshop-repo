@@ -1,13 +1,8 @@
 package View.Listener.HeaderListeners;
 
-import Business.UtenteBusiness;
-import Model.Cliente;
-import Model.Utente;
 import View.AppFrame;
-import View.Center.Registration.RegisterPanel;
-import View.WelcomePanel;
+import View.Panels.Center.Registration.RegisterPanel;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

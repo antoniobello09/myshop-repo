@@ -3,10 +3,10 @@ package View;
 import Business.SessionManager;
 import DAO.Classi.PuntoVenditaDAO;
 import Model.PuntoVendita;
-import View.Center.Center;
-import View.Footer.Footer;
-import View.Header.Header;
-import View.SideMenuPanels.SideMenu;
+import View.Panels.Center.Center;
+import View.Panels.Footer.Footer;
+import View.Panels.Header.Header;
+import View.Panels.SideMenu.SideMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +24,7 @@ public class AppFrame extends JFrame {
         super("MY SHOP");
         setLayout(new BorderLayout());
 
+        //Mostra il Dialog per la scelta del punto vendita
         nomePuntoVendita = ShopDialog.showDialog(this,
                 null,
                 "Punto Vendita",
@@ -33,7 +34,7 @@ public class AppFrame extends JFrame {
                 null);
         String[] indirizzo = nomePuntoVendita.split(", ");
         PuntoVendita puntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0], indirizzo[1]);
-        SessionManager.getInstance().getSession().put("idPuntoVendita", puntoVendita.getIdPuntoVendita());
+        SessionManager.getInstance().getSession().put("idPuntoVendita", puntoVendita.getIdPuntoVendita()); //salvataggio dell'ID del punto vendita dove si sta accedendo
 
     //----------------HEADER--------------------------------------------------------------//
         header = new Header(this);

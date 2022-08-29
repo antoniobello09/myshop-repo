@@ -92,16 +92,18 @@ public class FornitoreDAO implements IFornitoreDAO {
     public Fornitore findByName(String nomefornitore, int closeConn) {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM fornitore WHERE nome = '" + nomefornitore + "';");
-        Fornitore fornitore;
+        Fornitore fornitore = null;
         try {
             rs.next();
-            fornitore = new Fornitore();
-            fornitore.setIdFornitore(rs.getInt("idFornitore"));
-            fornitore.setNome(rs.getString("nome"));
-            fornitore.setSitoweb(rs.getString("sito_web"));
-            fornitore.setCitta(rs.getString("citta"));
-            fornitore.setNazione(rs.getString("nazione"));
-            fornitore.setProd_serv(rs.getString("prod_serv"));
+            if(rs.getRow()==1) {
+                fornitore = new Fornitore();
+                fornitore.setIdFornitore(rs.getInt("idFornitore"));
+                fornitore.setNome(rs.getString("nome"));
+                fornitore.setSitoweb(rs.getString("sito_web"));
+                fornitore.setCitta(rs.getString("citta"));
+                fornitore.setNazione(rs.getString("nazione"));
+                fornitore.setProd_serv(rs.getString("prod_serv"));
+            }
             return fornitore;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore

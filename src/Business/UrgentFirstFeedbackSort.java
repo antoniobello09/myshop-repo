@@ -13,7 +13,7 @@ public class UrgentFirstFeedbackSort implements IFeedbackSortStrategy {
         feedbackList.sort(new Comparator<FeedBack>() {
             @Override
             public int compare(FeedBack o1, FeedBack o2) {
-                return o1.getPunteggio() - o2.getPunteggio();
+                return o1.getIndiceGradimento() - o2.getIndiceGradimento();
             }
         });
 

@@ -21,7 +21,7 @@ public class FeedbackBusinessTest {
 
         feedBackList = new ArrayList<FeedBack>();
 
-        FeedBack f1 = new FeedBack();
+        /*FeedBack f1 = new FeedBack();
         f1.setId(1);
         f1.setPunteggio(5);
         Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse("2021-05-20");
@@ -42,6 +42,8 @@ public class FeedbackBusinessTest {
         feedBackList.add(f1);
         feedBackList.add(f2);
         feedBackList.add(f3);
+
+         */
     }
 
     @After
@@ -62,7 +64,7 @@ public class FeedbackBusinessTest {
         int[] expected = new int[] {1,2,3};
         int[] actual = new int[3];
 
-        for(int i=0;i<feedBackList.size();actual[i] = feedBackList.get(i++).getId());
+        for(int i=0;i<feedBackList.size();actual[i] = feedBackList.get(i++).getIdFeedBack());
 
         Assert.assertArrayEquals(expected, actual);
 
@@ -80,7 +82,7 @@ public class FeedbackBusinessTest {
         int[] expected = new int[] {3,2,1};
         int[] actual = new int[3];
 
-        for(int i=0;i<feedBackList.size();actual[i] = feedBackList.get(i++).getId());
+        for(int i=0;i<feedBackList.size();actual[i] = feedBackList.get(i++).getIdFeedBack());
 
         Assert.assertArrayEquals(expected, actual);
 

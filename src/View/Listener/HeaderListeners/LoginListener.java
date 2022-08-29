@@ -5,8 +5,9 @@ import Business.UtenteBusiness;
 import Model.Other.LoginResponse;
 import Model.Utente;
 import View.AppFrame;
-import View.Center.Registration.RegisterPanel;
-import View.WelcomePanel;
+import View.Panels.Center.Registration.RegisterPanel;
+import View.Panels.NullPanel;
+import View.Panels.WelcomePanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -46,7 +47,7 @@ public class LoginListener implements ActionListener {
                 SessionManager.getInstance().getSession().put("loggedUser", u);
                 appFrame.getHeader().refresh();
                 appFrame.getSideMenu().setCurrentPanel();
-                appFrame.getCenter().setCurrentPanel(new WelcomePanel());
+                appFrame.getCenter().setCurrentPanel(new NullPanel());
                 /*
                 if(u instanceof Manager) {
                     //metti i pulsanti per il manager

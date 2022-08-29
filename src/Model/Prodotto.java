@@ -15,14 +15,14 @@ public class Prodotto extends Articolo implements IProdotto, Cloneable {
 
     }
 
-    public Prodotto(int idArticolo, Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idProduttore, int idPosizione) {
-        super(idArticolo, prezzo, nome, descrizione, immagine, idCategoria);
+    public Prodotto(int idArticolo, String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria, int idProduttore, int idPosizione) {
+        super(idArticolo, nome, descrizione, prezzo,immagine, idCategoria);
         this.idProduttore = idProduttore;
         this.idPosizione = idPosizione;
     }
 
-    public Prodotto(Float prezzo, String nome, String descrizione, Blob immagine, int idCategoria, int idProduttore, int idPosizione) {
-        super(prezzo, nome, descrizione, immagine, idCategoria);
+    public Prodotto(String nome, String descrizione, Float prezzo,Blob immagine, int idCategoria, int idProduttore, int idPosizione) {
+        super(nome, descrizione, prezzo, immagine, idCategoria);
         this.idProduttore = idProduttore;
         this.idPosizione = idPosizione;
     }
@@ -32,6 +32,12 @@ public class Prodotto extends Articolo implements IProdotto, Cloneable {
         this.idProduttore = idProduttore;
         this.idPosizione = idPosizione;
     }
+
+    public Prodotto(String nome, String descrizione, float prezzo, int idPosizione) {
+        super(nome, descrizione, prezzo);
+        this.idPosizione = idPosizione;
+    }
+
 
     public int getIdProduttore() {
         return idProduttore;

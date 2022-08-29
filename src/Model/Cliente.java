@@ -13,15 +13,15 @@ public class Cliente extends Utente {
 
     }
 
-    public Cliente(String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String job, String canalePreferito, boolean abilitato, int idPuntoVendita) {
-        super(username, password, name, surname, email, birthdate, telephone, address, job);
+    public Cliente(String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String city, String job, String canalePreferito, boolean abilitato, int idPuntoVendita) {
+        super(username, password, name, surname, email, birthdate, telephone, address, city, job);
         this.canalePreferito = canalePreferito;
         this.abilitato = abilitato;
         this.idPuntoVendita = idPuntoVendita;
     }
 
-    public Cliente(int idCliente, String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String job, String canalePreferito, boolean abilitato, int idPuntoVendita) {
-        super(idCliente, username, password, name, surname, email, birthdate, telephone, address, job);
+    public Cliente(int idCliente, String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String city, String job, String canalePreferito, boolean abilitato, int idPuntoVendita) {
+        super(idCliente, username, password, name, surname, email, birthdate, telephone, address, city, job);
         this.canalePreferito = canalePreferito;
         this.abilitato = abilitato;
         this.idPuntoVendita = idPuntoVendita;
