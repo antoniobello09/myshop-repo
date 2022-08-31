@@ -8,7 +8,7 @@ public class DbUser {
 
     private DbUser() {
         userName = "root";
-        pwd = "arcobaleno00";
+        pwd = "12345";
         schemaName = "myshop5";
     }
 
