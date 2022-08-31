@@ -42,7 +42,7 @@ public class ProdottoDAO implements IProdottoDAO {
     public int update(Prodotto prodotto) {
         ArticoloDAO.getInstance().update(prodotto);
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE prodotto SET idProduttore = '" + prodotto.getIdProduttore() + "' WHERE idProdotto = '" + prodotto.getIdArticolo() + "';");
+        int rowCount = conn.executeUpdate("UPDATE prodotto SET idProduttore = '" + prodotto.getIdProduttore() + "', idPosizione = '" + prodotto.getIdPosizione() + "' WHERE idProdotto = '" + prodotto.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
@@ -74,7 +74,7 @@ public class ProdottoDAO implements IProdottoDAO {
             prodotto.setIdCategoria(rs.getInt("idCategoria"));
             prodotto.setPrezzo(rs.getFloat("prezzo"));
             prodotto.setDescrizione(rs.getString("descrizione"));
-            prodotto.setIdProduttore(rs.getInt("idFornitore"));
+            prodotto.setIdProduttore(rs.getInt("idProduttore"));
             prodotto.setIdPosizione(rs.getInt("idPosizione"));
             return prodotto;
         } catch (SQLException e) {

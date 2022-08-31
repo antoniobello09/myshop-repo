@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 
 public class ReadOperation implements IDbOperation {
 
-    private static DbConnection conn = DbConnection.getInstance();
+    private IDbConnection conn = DbConnection.getInstance();
     private String sql;
 
     public ReadOperation(String sql) {

@@ -8,16 +8,19 @@ import java.awt.event.ActionListener;
 
 public class GestioneDisponibilitaListener implements ActionListener {
 
-    GestioneDisponibilitaPanel gestioneDisponibilitaPanel;
-    AppFrame appFrame;
+    private GestioneDisponibilitaPanel gestioneDisponibilitaPanel;
+    private AppFrame appFrame;
 
-    public GestioneDisponibilitaListener(AppFrame appFrame) {
+    public GestioneDisponibilitaListener(GestioneDisponibilitaPanel gestioneDisponibilitaPanel, AppFrame appFrame) {
         this.appFrame = appFrame;
+        this.gestioneDisponibilitaPanel = gestioneDisponibilitaPanel;
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("rifornisci")){
+            gestioneDisponibilitaPanel.rifornisci();
+        }
     }
 }

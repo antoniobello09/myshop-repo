@@ -7,6 +7,7 @@ public class SchedaProdotto {
     private int idSchedaProdotto;
     private Prodotto prodotto;
     private int disponibilita = 0;
+    private int idPuntoVendita;
 
 
     public int getIdSchedaProdotto() {
@@ -33,4 +34,11 @@ public class SchedaProdotto {
         this.disponibilita = disponibilita;
     }
 
+    public int getIdPuntoVendita() {
+        return idPuntoVendita;
+    }
+
+    public void setIdPuntoVendita(int idPuntoVendita) {
+        this.idPuntoVendita = idPuntoVendita;
+    }
 }

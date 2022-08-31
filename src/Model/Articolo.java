@@ -8,9 +8,9 @@ import java.util.List;
 public class Articolo {
 
     private int idArticolo;
-    protected Float prezzo;
     private String nome;
     private String descrizione;
+    private Float prezzo;
     private Blob immagine;
     private int idCategoria;
 
@@ -20,6 +20,14 @@ public class Articolo {
         this.nome = nome;
         this.descrizione = descrizione;
         this.immagine = immagine;
+        this.idCategoria = idCategoria;
+    }
+
+    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo, int idCategoria) {
+        this.idArticolo = idArticolo;
+        this.prezzo = prezzo;
+        this.nome = nome;
+        this.descrizione = descrizione;
         this.idCategoria = idCategoria;
     }
 
@@ -39,6 +47,13 @@ public class Articolo {
     }
 
     public Articolo(String nome, String descrizione, Float prezzo) {
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.prezzo = prezzo;
+    }
+
+    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo) {
+        this.idArticolo = idArticolo;
         this.nome = nome;
         this.descrizione = descrizione;
         this.prezzo = prezzo;

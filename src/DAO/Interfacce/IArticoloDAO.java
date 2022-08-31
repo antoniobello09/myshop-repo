@@ -13,5 +13,7 @@ public interface IArticoloDAO {
     ArrayList<Articolo> findAll();
     Articolo findByName(String nomeArticolo);
     Articolo findByName(String nomeArticolo, int closeConn);
-
+    boolean isServizio(Articolo articolo);
+    boolean isProdotto(Articolo articolo);
+    boolean isProdottoComposito(Articolo articolo);
 }

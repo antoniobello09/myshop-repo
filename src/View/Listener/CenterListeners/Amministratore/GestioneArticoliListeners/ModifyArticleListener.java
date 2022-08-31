@@ -19,6 +19,8 @@ public class ModifyArticleListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("modifica")){
+            modifyArticlePanel.modifica();
+        }
     }
 }

@@ -66,6 +66,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
                 schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
                 schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
                 schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
+                schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 return schedaProdotto;
             }
         } catch (SQLException e) {
@@ -95,6 +96,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
                 schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
                 schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
                 schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
+                schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 schedeProdotto.add(schedaProdotto);
             }
             return schedeProdotto;
@@ -113,5 +115,34 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
     }
 
 
+    @Override
+    public ArrayList<SchedaProdotto> findAllByShop(int idPuntoVendita) {
+
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idPuntoVendita = '" + idPuntoVendita + "';");
+        ArrayList<SchedaProdotto> schedeProdotto = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                schedaProdotto = new SchedaProdotto();
+                schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
+                schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
+                schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
+                schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
+                schedeProdotto.add(schedaProdotto);
+            }
+            return schedeProdotto;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
 
 }

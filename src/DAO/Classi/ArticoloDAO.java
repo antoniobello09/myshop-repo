@@ -37,7 +37,7 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public int update(Articolo articolo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE articolo SET nome = '"+ articolo.getNome() + "', idCategoria = '" + articolo.getIdCategoria() + "', prezzo = '" + articolo.getPrezzo() + "', decrizione = '" + articolo.getDescrizione() + "' WHERE idArticolo = '" + articolo.getIdArticolo() + "';");
+        int rowCount = conn.executeUpdate("UPDATE articolo SET nome = '"+ articolo.getNome() + "', idCategoria = '" + articolo.getIdCategoria() + "', prezzo = '" + articolo.getPrezzo() + "', descrizione = '" + articolo.getDescrizione() + "' WHERE idArticolo = '" + articolo.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
@@ -53,6 +53,7 @@ public class ArticoloDAO implements IArticoloDAO {
 //----------------FIND BY ID-----------------------------------------------------------------------------------------//
     @Override
     public Articolo findById(int idArticolo) {
+        conn = DbConnection.getInstance();
     //--------------EXECUTOR------------------------------------------------------------------------//
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
     //-------------STRINGA SQL----------------------------------------------------------------------//
@@ -65,6 +66,7 @@ public class ArticoloDAO implements IArticoloDAO {
 
     //------------INSTANZA articolo CERCATO-----------------------------------------------------------//
         try {
+
             rs.next();
             if (rs.getRow()==1) {
                 articolo = new Articolo();
@@ -151,4 +153,68 @@ public class ArticoloDAO implements IArticoloDAO {
         }
         return null;
     }
+
+    @Override
+    public boolean isServizio(Articolo articolo){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM articolo a INNER JOIN servizio s ON a.idArticolo = s.idServizio  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';");
+        try {
+            rs.next();
+            if(rs.getRow()==1)  return true;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isProdotto(Articolo articolo){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM articolo a INNER JOIN prodotto p ON a.idArticolo = p.idProdotto  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';");
+        try {
+            rs.next();
+            if(rs.getRow()==1)  return true;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isProdottoComposito(Articolo articolo){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM articolo a INNER JOIN prodottocomposito p ON a.idArticolo = p.idProdottoComposito  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';");
+        try {
+            rs.next();
+            if(rs.getRow()==1)  return true;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return false;
+    }
+
 }

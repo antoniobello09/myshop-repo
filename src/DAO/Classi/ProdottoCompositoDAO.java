@@ -55,7 +55,7 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
     @Override
     public ArrayList<Prodotto_Quantita> findSonsByID(int idProdottoComposito){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM prodottocomposito WHERE idProdottoComposito = " + idProdottoComposito + "';");
+        rs = conn.executeQuery("SELECT * FROM prodottocomposito WHERE idProdottoComposito = '" + idProdottoComposito + "';");
         ArrayList<Prodotto_Quantita> sottoprodotti = new ArrayList<>();
         try {
             while(rs.next()) {
@@ -82,7 +82,7 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
 
     @Override
     public ProdottoComposito findByID(int idProdottoComposito) {
-        prodottoComposito = (ProdottoComposito) ProdottoDAO.getInstance().findByID(idProdottoComposito);
+        prodottoComposito = new ProdottoComposito(ProdottoDAO.getInstance().findByID(idProdottoComposito));
         prodottoComposito.setSottoprodotti(ProdottoCompositoDAO.getInstance().findSonsByID(idProdottoComposito));
         return prodottoComposito;
     }
@@ -113,7 +113,14 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
         return null;
     }
 
+
     @Override
+    public ProdottoComposito findByName(String nomeProdottoComposito) {
+        prodottoComposito = (ProdottoComposito) ProdottoDAO.getInstance().findByName(nomeProdottoComposito);
+        prodottoComposito.setSottoprodotti(ProdottoCompositoDAO.getInstance().findSonsByID(prodottoComposito.getIdArticolo()));
+        return prodottoComposito;
+    }
+    /*@Override
     public ProdottoComposito findByName(String nomeProdottoC) {
         prodottoComposito = (ProdottoComposito) ProdottoDAO.getInstance().findByName(nomeProdottoC);
         conn = DbConnection.getInstance();
@@ -137,5 +144,6 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
         }
         return null;
     }
+*/
 
 }
