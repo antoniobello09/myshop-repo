@@ -40,7 +40,7 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public int update(Cliente cliente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + cliente.getUsername() + "', password = '" + cliente.getPassword() + "', name = '" + cliente.getName() + "', surname = '" + cliente.getSurname() + "', birthdate = " + cliente.getBirthdate() + "', telephone = '" + cliente.getTelephone() + "', address = '" + cliente.getAddress() + "', job = '" + cliente.getJob() +"' WHERE idUtente = '" + cliente.getIdUtente() + "';");
+        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + cliente.getUsername() + "', password = '" + cliente.getPassword() + "', name = '" + cliente.getName() + "', surname = '" + cliente.getSurname() + "', birthdate = '" + cliente.getBirthdate() + "', telephone = '" + cliente.getTelephone() + "', address = '" + cliente.getAddress() + "', job = '" + cliente.getJob() +"' WHERE idUtente = '" + cliente.getIdUtente() + "';");
         conn.executeUpdate("UPDATE cliente SET canale_preferito = '" + cliente.getCanalePreferito() + "', abilitato = '" + (cliente.isAbilitato() ? 1 : 0) + "' WHERE idCliente = '" + cliente.getIdUtente() + "';");
         conn.close();
         return rowCount;
@@ -48,13 +48,29 @@ public class ClienteDAO implements IClienteDAO {
 
     @Override
     public int delete(Cliente cliente) {
+        int rowCount = 0;
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE FROM commento WHERE idCliente = '" + cliente.getIdUtente() + "';");
-        conn.executeUpdate("DELETE la FROM lista_has_articolo la INNER JOIN lista l ON la.idLista = l.idLista WHERE idCliente = '" + cliente.getIdUtente() + "';");
-        conn.executeUpdate("DELETE FROM lista WHERE idCliente = '" + cliente.getIdUtente() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM cliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
-        conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + cliente.getIdUtente() + "';");
-        conn.close();
+        rs = conn.executeQuery("SELECT * FROM lista l LEFT JOIN acquisto a ON l.idLista = a.idLista WHERE l.idCLiente = '" + cliente.getIdUtente() + "';");
+        try {
+            while (rs.next()) {
+                conn.executeUpdate("DELETE la FROM lista_has_articolo la INNER JOIN lista l ON la.idLista = l.idLista WHERE l.idLista = '" + rs.getInt("idLista") + "';");
+                conn.executeUpdate("DELETE FROM feedback WHERE idAcquisto = '" + rs.getInt("idAcquisto") + "';");
+                conn.executeUpdate("DELETE FROM acquisto WHERE idAcquisto = '" + rs.getInt("idAcquisto")+ "';");
+                conn.executeUpdate("DELETE FROM lista WHERE idLista = '" + rs.getInt("idLista") + "';");
+            }
+            rowCount = conn.executeUpdate("DELETE FROM cliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
+            conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + cliente.getIdUtente() + "';");
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
         return rowCount;
     }
 
@@ -75,6 +91,7 @@ public class ClienteDAO implements IClienteDAO {
             cliente.setBirthdate(rs.getString("birthdate"));
             cliente.setTelephone(rs.getString("telephone"));
             cliente.setAddress(rs.getString("address"));
+            cliente.setCity(rs.getString("city"));
             cliente.setJob(rs.getString("job"));
             cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
             cliente.setCanalePreferito(rs.getString("canale_preferito"));
@@ -111,6 +128,7 @@ public class ClienteDAO implements IClienteDAO {
             cliente.setBirthdate(rs.getString("birthdate"));
             cliente.setTelephone(rs.getString("telephone"));
             cliente.setAddress(rs.getString("address"));
+            cliente.setCity(rs.getString("city"));
             cliente.setJob(rs.getString("job"));
             cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
             cliente.setCanalePreferito(rs.getString("canale_preferito"));
@@ -147,6 +165,7 @@ public class ClienteDAO implements IClienteDAO {
                 cliente.setBirthdate(rs.getString("birthdate"));
                 cliente.setTelephone(rs.getString("telephone"));
                 cliente.setAddress(rs.getString("address"));
+                cliente.setCity(rs.getString("city"));
                 cliente.setJob(rs.getString("job"));
                 cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 cliente.setCanalePreferito(rs.getString("canale_preferito"));
@@ -185,6 +204,7 @@ public class ClienteDAO implements IClienteDAO {
                 cliente.setBirthdate(rs.getString("birthdate"));
                 cliente.setTelephone(rs.getString("telephone"));
                 cliente.setAddress(rs.getString("address"));
+                cliente.setCity(rs.getString("city"));
                 cliente.setJob(rs.getString("job"));
                 cliente.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 cliente.setCanalePreferito(rs.getString("canale_preferito"));

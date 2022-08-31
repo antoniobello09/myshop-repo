@@ -52,12 +52,12 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
     }
 
     @Override
-    public SchedaProdotto findByShop_Product(int idSchedaProdotto, int idPuntoVendita){
-        return findByShop_Product(idSchedaProdotto, idPuntoVendita, 0);
+    public SchedaProdotto findByShop_Product(int idProdotto, int idPuntoVendita){
+        return findByShop_Product(idProdotto, idPuntoVendita, 0);
     }
-    public SchedaProdotto findByShop_Product(int idSchedaProdotto , int idPuntoVendita, int closeConn) {
+    public SchedaProdotto findByShop_Product(int idProdotto , int idPuntoVendita, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idSchedaProdotto = '" + idSchedaProdotto + "' AND idPuntoVendita = '" + idPuntoVendita + "';");
+        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idProdotto = '" + idProdotto + "' AND idPuntoVendita = '" + idPuntoVendita + "';");
         SchedaProdotto schedaProdotto;
         try {
             rs.next();
