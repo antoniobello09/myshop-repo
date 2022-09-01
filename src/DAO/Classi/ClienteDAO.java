@@ -225,4 +225,30 @@ public class ClienteDAO implements IClienteDAO {
         }
         return null;
     }
+
+    public boolean isAbilitato(int idCliente){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT abilitato FROM cliente c WHERE c.idCliente = '" + idCliente + "';");
+        Cliente cliente;
+        try {
+            if(rs.next()){
+                if(rs.getBoolean("abilitato")){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return false;
+    }
 }

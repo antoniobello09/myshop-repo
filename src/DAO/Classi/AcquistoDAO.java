@@ -107,6 +107,31 @@ public class AcquistoDAO implements IAcquistoDAO {
         return null;
     }
 
-
+    public Acquisto findByIDLista(int idLista){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM acquisto WHERE idLista = '" + idLista + "';");
+        Acquisto acquisto;
+        try {
+            if(rs.next()) {
+                acquisto = new Acquisto();
+                acquisto.setIdAcquisto(rs.getInt("idAcquisto"));
+                acquisto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
+                acquisto.setData(rs.getDate("data"));
+                acquisto.setIdLista(rs.getInt("idLista"));
+                return acquisto;
+            }
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+    }
 
 }

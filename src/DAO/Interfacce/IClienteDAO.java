@@ -15,4 +15,5 @@ public interface IClienteDAO {
     Cliente findByUsername(String username);
     ArrayList<Cliente> findAll();
     ArrayList<Cliente> findByPuntoVendita(int idPuntoVendita);
+    boolean isAbilitato(int idCliente);
 }

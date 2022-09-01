@@ -9,6 +9,20 @@ public class Lista {
     private String nome;
     private int idCliente;
 
+    public Lista() {
+    }
+
+    public Lista(int idLista, String nome, int idCliente) {
+        this.idLista = idLista;
+        this.nome = nome;
+        this.idCliente = idCliente;
+    }
+
+    public Lista(String nome, int idCliente) {
+        this.nome = nome;
+        this.idCliente = idCliente;
+    }
+
     public int getIdLista() {
         return idLista;
     }

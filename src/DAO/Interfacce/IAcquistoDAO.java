@@ -12,5 +12,5 @@ public interface IAcquistoDAO {
     int delete(Acquisto acquisto);
     Acquisto findByID(int idAcquisto);
     ArrayList<Acquisto> findAll();
-
+    Acquisto findByIDLista(int idLista);
 }

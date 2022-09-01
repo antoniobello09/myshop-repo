@@ -19,6 +19,14 @@ public class ListsListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("crea")){
+            listsPanel.crea();
+        }else if(e.getActionCommand().equals("modifica")){
+            listsPanel.modifica();
+        }else if(e.getActionCommand().equals("acquista")){
+            listsPanel.acquista();
+        }else if(e.getActionCommand().equals("pdf")){
+            listsPanel.scaricaPDF();
+        }
     }
 }

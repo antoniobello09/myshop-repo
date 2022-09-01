@@ -148,4 +148,34 @@ public class FeedbackDAO implements IFeedbackDAO {
         }
         return null;
     }
+
+    public FeedBack findByIDAcquisto_Articolo(int idAcquisto, int idArticolo){
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM feedback WHERE idAcquisto = '" + idAcquisto + "' AND idArticolo = '" + idArticolo + "';");
+        FeedBack feedBack;
+        try {
+            rs.next();
+            feedBack = new FeedBack();
+            feedBack.setIdFeedBack(rs.getInt("idFeedback"));
+            feedBack.setIdAcquisto(rs.getInt("idAcquisto"));
+            feedBack.setIndiceGradimento(rs.getInt("indiceGradimento"));
+            feedBack.setIdArticolo(rs.getInt("idArticolo"));
+            feedBack.setCommento(rs.getString("commento"));
+            feedBack.setRisposta(rs.getString("risposta"));
+            return feedBack;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+        return null;
+
+
+    }
 }
