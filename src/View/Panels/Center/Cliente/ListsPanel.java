@@ -33,7 +33,7 @@ public class ListsPanel extends JPanel {
     private JTable currentTable;
     private ListsTableModel currentTableModel;
     private JPanel sidePanel = new JPanel();
-    private JButton btnModifica = new JButton("Modifica");
+    private JButton btnModifica = new JButton("Dettagli");
     private JButton btnAcquista = new JButton("Acquista");
     private JButton btnPDF = new JButton("Scarica PDF");
 
@@ -72,6 +72,7 @@ public class ListsPanel extends JPanel {
             ListaDAO.getInstance().add(l);
             currentTableModel.setLista(ListaDAO.getInstance().findAll(idCliente));
             currentTableModel.fireTableDataChanged();
+            listaField.setText("");
         }
     }
 
@@ -90,14 +91,19 @@ public class ListsPanel extends JPanel {
 
     public void acquista(){
         int selectedRow = currentTable.getSelectedRow();
+        selectedRow = currentTable.convertRowIndexToModel(selectedRow);
         if(selectedRow == -1){
             JOptionPane.showMessageDialog(appFrame,
                     "Seleziona la lista da acquistare!",
                     "List Selection Error",
                     JOptionPane.ERROR_MESSAGE);
+        }else if (AcquistoDAO.getInstance().findByIDLista(currentTableModel.getLista().get(selectedRow).getIdLista())!=null) {
+            JOptionPane.showMessageDialog(appFrame,
+                    "Lista già acquistata!",
+                    "Purchased List Error",
+                    JOptionPane.ERROR_MESSAGE);
         }else{
             int idPuntoVendita = (int)SessionManager.getInstance().getSession().get("idPuntoVendita");
-            selectedRow = currentTable.convertRowIndexToModel(selectedRow);
             Acquisto a = new Acquisto(idPuntoVendita, Date.valueOf(LocalDate.now()), currentTableModel.getLista().get(selectedRow).getIdLista());
             AcquistoDAO.getInstance().add(a);
             currentTableModel.setLista(ListaDAO.getInstance().findAll(idCliente));

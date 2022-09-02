@@ -37,6 +37,23 @@ public class FeedBack {
         this.data = data;
     }
 
+    public FeedBack(int idFeedBack, int idAcquisto, int idArticolo, String commento, int indiceGradimento, Date data) {
+        this.idFeedBack = idFeedBack;
+        this.idAcquisto = idAcquisto;
+        this.idArticolo = idArticolo;
+        this.commento = commento;
+        this.indiceGradimento = indiceGradimento;
+        this.data = data;
+    }
+
+    public FeedBack(int idAcquisto, int idArticolo, String commento, int indiceGradimento, Date data) {
+        this.idAcquisto = idAcquisto;
+        this.idArticolo = idArticolo;
+        this.commento = commento;
+        this.indiceGradimento = indiceGradimento;
+        this.data = data;
+    }
+
     public int getIdFeedBack() {
         return idFeedBack;
     }

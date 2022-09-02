@@ -45,12 +45,18 @@ public class ArticlesListPanel extends JPanel {
     public ArticlesListPanel(AppFrame appFrame, int idLista) {
         this.appFrame = appFrame;
         this.lista = lista;
+        this.idLista = idLista;
         articlesListListener = new ArticlesListListener(this, appFrame);
 
         lista = Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista);
 
         if(AcquistoDAO.getInstance().findByIDLista(idLista) == null){
             btnFeedBack.setEnabled(false);
+        }else{
+            articoloField.setEditable(false);
+            quantitaField.setEditable(false);
+            btnAggiungi.setEnabled(false);
+            btnElimina.setEnabled(false);
         }
 
 
@@ -84,6 +90,8 @@ public class ArticlesListPanel extends JPanel {
                 currentTableModel.setLista(Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista));
                 currentTableModel.fireTableDataChanged();
             }
+            articoloField.setText("");
+            quantitaField.setText("");
         }
     }
 
@@ -91,7 +99,7 @@ public class ArticlesListPanel extends JPanel {
         int selectedRow = currentTable.getSelectedRow();
         if(selectedRow == -1){
             JOptionPane.showMessageDialog(appFrame,
-                    "Seleziona l'articolo da recensire!",
+                    "Seleziona l'articolo da eliminare!",
                     "Article Selection Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{

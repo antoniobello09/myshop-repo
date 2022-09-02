@@ -29,7 +29,7 @@ public class FeedbackDAO implements IFeedbackDAO {
     @Override
     public int add(FeedBack feedBack) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO feedback(commento, indiceGradimento, idArticolo, idAcquisto, risposta) VALUES ('"+ feedBack.getCommento() + "','" + feedBack.getIndiceGradimento() + "','" + feedBack.getIdArticolo() + "','"+ feedBack.getIdAcquisto() + "','" + feedBack.getRisposta() + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO feedback(commento, indiceGradimento, idArticolo, idAcquisto, risposta, data) VALUES ('"+ feedBack.getCommento() + "','" + feedBack.getIndiceGradimento() + "','" + feedBack.getIdArticolo() + "','"+ feedBack.getIdAcquisto() + "','" + feedBack.getRisposta() + "','" + feedBack.getData() + "');");
         conn.close();
         return rowCount;
     }
@@ -37,7 +37,7 @@ public class FeedbackDAO implements IFeedbackDAO {
     @Override
     public int update(FeedBack feedBack) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE feedback SET commento = '"+ feedBack.getCommento() + "', indiceGradimento = '" + feedBack.getIndiceGradimento() + "', risposta = '" + feedBack.getRisposta() + "' WHERE idFeedback = '" + feedBack.getIdFeedBack() + "';");
+        int rowCount = conn.executeUpdate("UPDATE feedback SET commento = '"+ feedBack.getCommento() + "', indiceGradimento = '" + feedBack.getIndiceGradimento() + "', risposta = '" + feedBack.getRisposta() + "', data = '" + feedBack.getData() + "' WHERE idFeedback = '" + feedBack.getIdFeedBack() + "';");
         conn.close();
         return rowCount;
     }
@@ -67,6 +67,7 @@ public class FeedbackDAO implements IFeedbackDAO {
             feedBack.setIdArticolo(rs.getInt("idArticolo"));
             feedBack.setCommento(rs.getString("commento"));
             feedBack.setRisposta(rs.getString("risposta"));
+            feedBack.setData(rs.getDate("data"));
             return feedBack;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -100,6 +101,7 @@ public class FeedbackDAO implements IFeedbackDAO {
                 feedBack.setIdArticolo(rs.getInt("idArticolo"));
                 feedBack.setCommento(rs.getString("commento"));
                 feedBack.setRisposta(rs.getString("risposta"));
+                feedBack.setData(rs.getDate("data"));
                 feedBacks.add(feedBack);
             }
             return feedBacks;
@@ -132,6 +134,7 @@ public class FeedbackDAO implements IFeedbackDAO {
                 feedBack.setIdArticolo(rs.getInt("idArticolo"));
                 feedBack.setCommento(rs.getString("commento"));
                 feedBack.setRisposta(rs.getString("risposta"));
+                feedBack.setData(rs.getDate("data"));
                 feedBacks.add(feedBack);
             }
             return feedBacks;
@@ -162,6 +165,7 @@ public class FeedbackDAO implements IFeedbackDAO {
             feedBack.setIdArticolo(rs.getInt("idArticolo"));
             feedBack.setCommento(rs.getString("commento"));
             feedBack.setRisposta(rs.getString("risposta"));
+            feedBack.setData(rs.getDate("data"));
             return feedBack;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
