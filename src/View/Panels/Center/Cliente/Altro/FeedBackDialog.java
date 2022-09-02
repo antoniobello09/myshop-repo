@@ -40,16 +40,15 @@ public class FeedBackDialog extends JDialog implements ActionListener {
         super(frame, title, true);
         appFrame = frame;
 
-        feedBack = FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo);
         this.idAcquisto = idAcquisto;
         this.idArticolo = idArticolo;
 
         if (FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo) != null){
-            FeedBack f = FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo);
-            this.idFeedBack = f.getIdFeedBack();
-            commentoField.setText(f.getCommento());
-            indiceDiGradimentoField.setText(String.valueOf(f.getIndiceGradimento()));
-            rispostaField.setText(f.getRisposta());
+            feedBack = FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo);
+            this.idFeedBack = feedBack.getIdFeedBack();
+            commentoField.setText(feedBack.getCommento());
+            indiceDiGradimentoField.setText(String.valueOf(feedBack.getIndiceGradimento()));
+            rispostaField.setText(feedBack.getRisposta());
         }
 
 
@@ -97,7 +96,7 @@ public class FeedBackDialog extends JDialog implements ActionListener {
                         FeedbackDAO.getInstance().add(f);
                         FeedBackDialog.dialog.setVisible(false);
                     }else{
-                        FeedBack f = new FeedBack(idFeedBack, idAcquisto, idArticolo, commentoField.getText(), indiceDiGradimento, Date.valueOf(LocalDate.now()));
+                        FeedBack f = new FeedBack(idFeedBack, idAcquisto, idArticolo, commentoField.getText(), indiceDiGradimento, feedBack.getRisposta(), Date.valueOf(LocalDate.now()));
                         FeedbackDAO.getInstance().update(f);
                         FeedBackDialog.dialog.setVisible(false);
                     }
