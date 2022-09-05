@@ -1,4 +1,6 @@
-package Business;
+package Business.Bridge;
+
+import Business.Bridge.PdfAPI;
 
 public abstract class Documento {
 

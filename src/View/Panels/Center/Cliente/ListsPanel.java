@@ -1,14 +1,11 @@
 package View.Panels.Center.Cliente;
 
+import Business.Bridge.Documento;
+import Business.Bridge.DocumentoListaAcquisto;
+import Business.Bridge.PdfBoxAPI;
 import Business.SessionManager;
-import DAO.Classi.AcquistoDAO;
-import DAO.Classi.ClienteDAO;
-import DAO.Classi.ListaDAO;
-import DAO.Classi.PuntoVenditaDAO;
-import Model.Acquisto;
-import Model.Cliente;
-import Model.Lista;
-import Model.Utente;
+import DAO.Classi.*;
+import Model.*;
 import View.AppFrame;
 import View.Listener.CenterListeners.Cliente.ListsListener;
 import View.Panels.Center.Cliente.Altro.ListsTableModel;
@@ -112,7 +109,22 @@ public class ListsPanel extends JPanel {
     }
 
     public void scaricaPDF(){
-        //...
+        int selectedRow = currentTable.getSelectedRow();
+        if(selectedRow == -1){
+            JOptionPane.showMessageDialog(appFrame,
+                    "Seleziona la lista da scaricare!",
+                    "List Selection Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }else{
+            selectedRow = currentTable.convertRowIndexToModel(selectedRow);
+            int idLista = currentTableModel.getLista().get(selectedRow).getIdLista();
+            ArrayList<Lista_has_Articolo> l = Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista);
+            Documento listaAcquisto = new DocumentoListaAcquisto(l, new PdfBoxAPI());
+
+            //prendere l'utente loggato dalla sessione e ottenere la mail dall'oggetto cliente
+            Utente u = (Utente)SessionManager.getInstance().getSession().get("loggedUser");
+            listaAcquisto.invia(u.getEmail());
+        }
     }
 
     public void tableSetting(){

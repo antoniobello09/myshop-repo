@@ -1,16 +1,13 @@
-package Business;
+package Business.Bridge;
 
 
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.util.Matrix;
 
 public class PdfBoxAPI implements PdfAPI {
 
@@ -35,7 +32,7 @@ public class PdfBoxAPI implements PdfAPI {
             }
 
             doc.save(outFile);
-            System.out.println("File pdf generato con PdfBox salvato in: "+outFile);
+            System.out.println("File pdf generato con PdfBox salvato in: " + outFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
