@@ -18,6 +18,8 @@ public class DeleteArticleListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("cancella")){
+            deleteArticlePanel.cancella();
+        }
     }
 }
