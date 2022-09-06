@@ -3,9 +3,14 @@ package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 import DAO.Classi.*;
 import Model.Articolo;
 import Model.Prodotto;
+import Model.ProdottoComposito;
+import Model.Servizio;
 import View.AppFrame;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.DeleteArticleListener;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.ModifyArticleListener;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ModifyCompositeProductDialog;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ModifyProductDialog;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ModifyServiceDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +45,15 @@ public class DeleteArticlePanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             Articolo articolo = ArticoloDAO.getInstance().findByName(nomeField.getText());
+            Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
             if(articolo != null) {
-                //delete articolo 
+                if (ArticoloDAO.getInstance().isServizio(articolo)) {
+                    ServizioDAO.getInstance().delete((Servizio) articolo);
+                } else if (ArticoloDAO.getInstance().isProdottoComposito(articolo)) {
+                    ProdottoCompositoDAO.getInstance().delete(articolo.getIdArticolo());
+                } else if (ArticoloDAO.getInstance().isProdotto(articolo)) {
+                    ProdottoDAO.getInstance().delete(prodotto);
+                }
             }
             else {
                 JOptionPane.showMessageDialog(appFrame,
