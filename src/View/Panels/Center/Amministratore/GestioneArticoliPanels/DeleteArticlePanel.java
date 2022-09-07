@@ -45,14 +45,18 @@ public class DeleteArticlePanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             Articolo articolo = ArticoloDAO.getInstance().findByName(nomeField.getText());
-            Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
-            if(articolo != null) {
+
+            if (articolo != null) {
+                Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
                 if (ArticoloDAO.getInstance().isServizio(articolo)) {
                     ServizioDAO.getInstance().delete((Servizio) articolo);
+                    ArticoloDAO.getInstance().delete(articolo);
                 } else if (ArticoloDAO.getInstance().isProdottoComposito(articolo)) {
                     ProdottoCompositoDAO.getInstance().delete(articolo.getIdArticolo());
+                    ArticoloDAO.getInstance().delete(articolo);
                 } else if (ArticoloDAO.getInstance().isProdotto(articolo)) {
                     ProdottoDAO.getInstance().delete(prodotto);
+                    ArticoloDAO.getInstance().delete(articolo);
                 }
             }
             else {
