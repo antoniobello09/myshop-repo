@@ -32,7 +32,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         conn = DbConnection.getInstance();
         int rowCount = 0;
         rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
-        conn.executeUpdate("INSERT INTO categoria_prodotto VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "');");
+        conn.executeUpdate("INSERT INTO categoria_prodotto(idCategoria) VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "');");
         conn.close();
         return rowCount;
     }
