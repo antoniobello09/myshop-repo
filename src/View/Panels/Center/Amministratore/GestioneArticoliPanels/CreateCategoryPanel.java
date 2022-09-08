@@ -55,10 +55,10 @@ public class CreateCategoryPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }else{
-            if(sottocategoriaField.getSelectedItem() == "Prodotto"){
+            if(sottocategoriaField.getSelectedItem().equals("Prodotto")){
                 CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
                 CategoriaProdottoDAO.getInstance().add(categoriaProdotto);
-            }else if(sottocategoriaField.getSelectedItem() == "Servizio"){
+            }else if(sottocategoriaField.getSelectedItem().equals("Servizio")){
                 CategoriaServizio categoriaServizio = new CategoriaServizio(categoriaField.getText());
                 CategoriaServizioDAO.getInstance().add(categoriaServizio);
             }

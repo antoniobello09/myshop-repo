@@ -148,7 +148,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
 
     public CategoriaProdotto findByName(String nomeCategoria, int i) {
         conn = DbConnection.getInstance();
-        String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE nome = '" + nomeCategoria + "';";
+        String sql = "SELECT * FROM categoria c WHERE nome = '" + nomeCategoria + "';";
         ResultSet rs = conn.executeQuery(sql);
         CategoriaProdotto categoriaProdotto;
         try {
@@ -157,7 +157,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
-                categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
+                //categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;
