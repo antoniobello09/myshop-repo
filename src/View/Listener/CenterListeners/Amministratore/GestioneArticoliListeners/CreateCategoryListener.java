@@ -18,6 +18,8 @@ public class CreateCategoryListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("aggiungi")){
+            createCategoryPanel.aggiungi();
+        }
     }
 }

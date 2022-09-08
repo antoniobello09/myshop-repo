@@ -1,11 +1,16 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import DAO.Classi.CategoriaProdottoDAO;
+import DAO.Classi.CategoriaServizioDAO;
+import DAO.Classi.ProdottoDAO;
+import Model.*;
 import View.AppFrame;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateCategoryListener;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateProductListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class CreateCategoryPanel extends JPanel {
 
@@ -13,13 +18,24 @@ public class CreateCategoryPanel extends JPanel {
     CreateCategoryListener createCategoryListener;
 
     private JPanel formPanel = new JPanel();
-        private JLabel inserisciArticolo = new JLabel("Inserire il nome della categoria:");
-        private JTextField articoloField = new JTextField();
+        private JLabel inserisciCategoria = new JLabel("Inserire il nome della categoria da creare:");
+        private JTextField categoriaField = new JTextField();
+        private JLabel inserisciSottocategoria = new JLabel("Sottocategoria");
+        private JComboBox<String> sottocategoriaField;
+        private JLabel inserisciCategoriaPadre = new JLabel("Inserire il nome della categoria padre:");
+        private JTextField categoriaPadreField = new JTextField();
         private JButton btnModifica = new JButton("Aggiungi");
+
+    private String selectedItem;
+    private ArrayList<CategoriaProdotto> categorieList;     //Lista di categorie
 
     public CreateCategoryPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         createCategoryListener = new CreateCategoryListener(this, this.appFrame);
+
+        String[] sottocategorie = {"Prodotto", "Servizio"};
+        sottocategoriaField = new JComboBox<>(sottocategorie);
+
 
         layoutSetting();
 
@@ -32,7 +48,22 @@ public class CreateCategoryPanel extends JPanel {
     }
 
     public void aggiungi(){
+        if(categoriaField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(appFrame,
+                    "La compilazione è errata!",
+                    "Create Product Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }else{
+            if(sottocategoriaField.getSelectedItem() == "Prodotto"){
+                CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
+                CategoriaProdottoDAO.getInstance().add(categoriaProdotto);
+            }else if(sottocategoriaField.getSelectedItem() == "Servizio"){
+                CategoriaServizio categoriaServizio = new CategoriaServizio(categoriaField.getText());
+                CategoriaServizioDAO.getInstance().add(categoriaServizio);
+            }
 
+        }
     }
 
     public void layoutSetting(){
@@ -41,10 +72,13 @@ public class CreateCategoryPanel extends JPanel {
 
     public void componentsAdding(){
         add(formPanel);
-        formPanel.add(inserisciArticolo);
-        formPanel.add(articoloField);
+        formPanel.add(inserisciCategoria);
+        formPanel.add(categoriaField);
+        formPanel.add(inserisciSottocategoria);
+        formPanel.add(sottocategoriaField);
+        formPanel.add(inserisciCategoriaPadre);
+        formPanel.add(categoriaPadreField);
         formPanel.add(btnModifica);
-
 
     }
 
