@@ -29,7 +29,7 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public int add(Articolo articolo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO articolo(idCategoria, prezzo, nome, descrizione) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','"+ articolo.getDescrizione() + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO articolo(idCategoria, prezzo, nome, descrizione) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','" + articolo.getDescrizione() + "');");
         conn.close();
         return rowCount;
     }
@@ -45,7 +45,7 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public int delete(Articolo articolo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM articolo WHERE idArticolo = '" + articolo.getIdCategoria() + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM articolo WHERE idArticolo = '" + articolo.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }

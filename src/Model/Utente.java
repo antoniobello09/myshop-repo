@@ -29,6 +29,10 @@ public class Utente {
         this.job = "";
     }
 
+    public Utente(int idUtente) {
+        this.idUtente = idUtente;
+    }
+
     public Utente(int idUtente, String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String city, String job) {
         this.idUtente = idUtente;
         this.username = username;
@@ -48,6 +52,10 @@ public class Utente {
         this.username = username;
         this.password = password;
         this.email = email;
+    }
+
+    public Utente(String username) {
+        this.username = username;
     }
 
     public Utente(String username, String password, String name, String surname, String email, String birthdate, String telephone, String address, String city, String job) {

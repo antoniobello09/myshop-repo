@@ -34,7 +34,7 @@ public class UtenteDAO implements IUtenteDAO {
     }
 
     @Override
-    public int update(Utente utente) {
+    public int delete(Utente utente) {
         conn = DbConnection.getInstance();
         int rowCount = conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + utente.getIdUtente() + "'");
         conn.close();
@@ -42,9 +42,9 @@ public class UtenteDAO implements IUtenteDAO {
     }
 
     @Override
-    public int delete(Utente utente) {
+    public int update(Utente utente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "'name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = " + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';");
+        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "', name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = '" + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';");
         conn.close();
         return rowCount;
     }
@@ -74,6 +74,7 @@ public class UtenteDAO implements IUtenteDAO {
                 utente.setBirthdate(rs.getString("birthdate"));
                 utente.setTelephone(rs.getString("telephone"));
                 utente.setAddress(rs.getString("address"));
+                utente.setCity(rs.getString("city"));
                 utente.setJob(rs.getString("job"));
                 return utente;
             }
@@ -149,11 +150,12 @@ public class UtenteDAO implements IUtenteDAO {
                 utente.setEmail(rs.getString("email"));
                 utente.setUsername(rs.getString("username"));
                 utente.setPassword(rs.getString("password"));
-                utente.setName(rs.getString("Nome"));
-                utente.setSurname(rs.getString("Cognome"));
+                utente.setName(rs.getString("name"));
+                utente.setSurname(rs.getString("surname"));
                 utente.setBirthdate(rs.getString("birthdate"));
                 utente.setTelephone(rs.getString("telephone"));
                 utente.setAddress(rs.getString("address"));
+                utente.setCity(rs.getString("city"));
                 utente.setJob(rs.getString("job"));
                 utenti.add(utente);
             }
