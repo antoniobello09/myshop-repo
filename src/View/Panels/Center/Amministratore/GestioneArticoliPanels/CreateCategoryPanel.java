@@ -56,8 +56,21 @@ public class CreateCategoryPanel extends JPanel {
             return;
         }else{
             if(sottocategoriaField.getSelectedItem().equals("Prodotto")){
-                CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
-                CategoriaProdottoDAO.getInstance().add(categoriaProdotto);
+                if(categoriaPadreField.getText().isEmpty()){
+                    CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
+                    CategoriaProdottoDAO.getInstance().add(categoriaProdotto);
+                    if(CategoriaProdottoDAO.getInstance().add(categoriaProdotto) == 0){
+                        JOptionPane.showMessageDialog(appFrame,
+                                "La categoria è già esistente!",
+                                "Create Product Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }else{
+                    CategoriaProdotto categoriaPadreProdotto = new CategoriaProdotto(categoriaPadreField.getText());
+                    categoriaPadreProdotto = CategoriaProdottoDAO.getInstance().findByName(categoriaPadreProdotto.toString());
+                }
+
             }else if(sottocategoriaField.getSelectedItem().equals("Servizio")){
                 CategoriaServizio categoriaServizio = new CategoriaServizio(categoriaField.getText());
                 CategoriaServizioDAO.getInstance().add(categoriaServizio);
