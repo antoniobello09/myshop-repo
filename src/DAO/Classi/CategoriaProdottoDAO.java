@@ -177,9 +177,9 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     }
 
     @Override
-    public boolean isCategory(int idCategoriaProdotto) {
+    public boolean isCategory(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
-        String sql = "SELECT count(*) as c FROM categoria_prodotto WHERE idCategoriaPadre = '" + idCategoriaProdotto +"' ;"; //+ "' AND idCategoria_Padre IS NULL;";
+        String sql = "SELECT count(*) as c FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE nome = '" + categoriaProdotto.getNome() + "' AND idCategoriaPadre IS NULL;";
         ResultSet rs = conn.executeQuery(sql);
         try {
             rs.next();

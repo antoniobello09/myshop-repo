@@ -68,9 +68,16 @@ public class CreateCategoryPanel extends JPanel {
                     }
                 }else{
                     CategoriaProdotto categoriaPadreProdotto = new CategoriaProdotto(categoriaPadreField.getText());
-                    if(CategoriaProdottoDAO.getInstance().isCategory(categoriaPadreProdotto.getIdCategoria()) == false){
-                        System.out.println("Categoria Padre non esiste");
+                    if(CategoriaProdottoDAO.getInstance().isCategory(categoriaPadreProdotto) == false){
+                        JOptionPane.showMessageDialog(appFrame,
+                                "La categoria padre non esiste!",
+                                "Create Product Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
+                    CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
+
+                    CategoriaProdottoDAO.getInstance().addSub(categoriaProdotto, CategoriaProdottoDAO.getInstance().findByName(categoriaPadreProdotto.getNome()).getIdCategoria());
                 }
 
             }else if(sottocategoriaField.getSelectedItem().equals("Servizio")){
