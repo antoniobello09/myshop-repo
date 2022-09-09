@@ -58,7 +58,6 @@ public class CreateCategoryPanel extends JPanel {
             if(sottocategoriaField.getSelectedItem().equals("Prodotto")){
                 if(categoriaPadreField.getText().isEmpty()){
                     CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
-                    CategoriaProdottoDAO.getInstance().add(categoriaProdotto);
                     if(CategoriaProdottoDAO.getInstance().add(categoriaProdotto) == 0){
                         JOptionPane.showMessageDialog(appFrame,
                                 "La categoria è già esistente!",
