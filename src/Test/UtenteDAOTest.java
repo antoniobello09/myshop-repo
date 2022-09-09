@@ -49,15 +49,6 @@ public class UtenteDAOTest {
         Assert.assertEquals(1, utente.getIdUtente());
     }
 
-    /*@Test
-    public void removeByIdTest() {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        Utente u = new Utente();
-        u.setIdUtente(utenteDAO.findByUsername("UserTest").getIdUtente());
-        int rowCount = utenteDAO.delete(u);
-        Assert.assertEquals(1, rowCount);
-    }
-*/
     @Test
     public void updateTest() {
         IUtenteDAO utenteDAO = UtenteDAO.getInstance();
