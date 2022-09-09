@@ -1,9 +1,7 @@
 package Test;
 
-import Business.UtenteBusiness;
 import DAO.IUtenteDAO;
 import DAO.UtenteDAO;
-import Model.Other.LoginResponse;
 import Model.Utente;
 import org.junit.After;
 import org.junit.Assert;
@@ -12,7 +10,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-public class UtenteDAOTest {
+public class AcquistoDAOTest {
 
     @Before
     public void setUp() throws Exception {
@@ -64,7 +62,6 @@ public class UtenteDAOTest {
         Utente utente = new Utente("UserTest", "PswTest", "NomeTest", "CognomeTest", "valentino@vr46.com", "2000-09-17", "3245551234", "Via Test 122", "Lecce", "Tester");
         utente.setIdUtente(utenteDAO.findByUsername("UserTest").getIdUtente());
         utenteDAO.update(utente);
-        utente = utenteDAO.findByUsername("UserTest");
         Assert.assertEquals("valentino@vr46.com", utente.getEmail());
     }
 

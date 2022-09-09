@@ -1,6 +1,10 @@
 package DAO;
 
 import DbInterface.*;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import Model.Utente;
 
 import java.sql.ResultSet;
@@ -28,7 +32,10 @@ public class UtenteDAO implements IUtenteDAO {
     @Override
     public int add(Utente utente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES ('"+ utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getName() + "','" + utente.getSurname() + "','" + utente.getEmail() + "','" + utente.getBirthdate() + "','" + utente.getTelephone() + "','" + utente.getAddress() + "','" + utente.getJob() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES ('"+ utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getName() + "','" + utente.getSurname() + "','" + utente.getEmail() + "','" + utente.getBirthdate() + "','" + utente.getTelephone() + "','" + utente.getAddress() + "','" + utente.getJob() + "');";
+        IDbOperation dbOp = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -36,7 +43,10 @@ public class UtenteDAO implements IUtenteDAO {
     @Override
     public int delete(Utente utente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + utente.getIdUtente() + "'");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM utente WHERE idUtente = '" + utente.getIdUtente() + "';";
+        IDbOperation dbOp = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -44,7 +54,10 @@ public class UtenteDAO implements IUtenteDAO {
     @Override
     public int update(Utente utente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "', name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = '" + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "', name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = '" + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';";
+        IDbOperation dbOp = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -58,9 +71,8 @@ public class UtenteDAO implements IUtenteDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM utente WHERE idUtente = '" + idUtente + "';";
-        IDbOperation dbOp = new ReadOperation(sql); // --> executeQuery();
-        rs = dbOperationExecutor.executeOperation(dbOp);
-
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         try {
             rs.next();
             if (rs.getRow()==1) {
@@ -101,12 +113,9 @@ public class UtenteDAO implements IUtenteDAO {
     public Utente findByUsername(String username, int closeConn) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-
         String sql = "SELECT * FROM utente WHERE username = '" + username + "';";
-
-        IDbOperation dbOp = new ReadOperation(sql); // --> executeQuery();
-
-        rs = dbOperationExecutor.executeOperation(dbOp);
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         try {
             rs.next();
             if (rs.getRow()==1) {
@@ -141,7 +150,10 @@ public class UtenteDAO implements IUtenteDAO {
     @Override
     public ArrayList<Utente> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente;";
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         ArrayList<Utente> utenti = new ArrayList<>();
         try {
             while (rs.next()) {
@@ -182,7 +194,7 @@ public class UtenteDAO implements IUtenteDAO {
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT count(*) AS C FROM utente WHERE username = '" + username + "';";
         ReadOperation op = new ReadOperation(sql);
-        rs = dbOperationExecutor.executeOperation(op);
+        rs = dbOperationExecutor.executeOperation(op).getResultSet();
 
         try {
             rs.next();
@@ -202,7 +214,7 @@ public class UtenteDAO implements IUtenteDAO {
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT count(*) AS C FROM utente WHERE username = '" + username + "' and password = '"+password+"';";
         ReadOperation op = new ReadOperation(sql);
-        rs = dbOperationExecutor.executeOperation(op);
+        rs = dbOperationExecutor.executeOperation(op).getResultSet();
 
         try {
             rs.next();
@@ -223,7 +235,7 @@ public class UtenteDAO implements IUtenteDAO {
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT count(*) AS C FROM utente as U INNER JOIN cliente as C ON U.idUtente = C.idCliente WHERE U.username = '" + u.getUsername() + "';";
         ReadOperation op = new ReadOperation(sql);
-        rs = dbOperationExecutor.executeOperation(op);
+        rs = dbOperationExecutor.executeOperation(op).getResultSet();
 
         try {
             rs.next();
@@ -244,7 +256,7 @@ public class UtenteDAO implements IUtenteDAO {
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT count(*) AS C FROM utente as U INNER JOIN manager as M ON U.idUtente = M.idManager WHERE U.username = '" + u.getUsername() + "';";
         ReadOperation op = new ReadOperation(sql);
-        rs = dbOperationExecutor.executeOperation(op);
+        rs = dbOperationExecutor.executeOperation(op).getResultSet();
 
         try {
             rs.next();
@@ -265,7 +277,7 @@ public class UtenteDAO implements IUtenteDAO {
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT count(*) AS C FROM utente as U INNER JOIN amministratore as A ON U.idUtente = A.idAmministratore WHERE U.username = '" + u.getUsername() + "';";
         ReadOperation op = new ReadOperation(sql);
-        rs = dbOperationExecutor.executeOperation(op);
+        rs = dbOperationExecutor.executeOperation(op).getResultSet();
 
         try {
             rs.next();

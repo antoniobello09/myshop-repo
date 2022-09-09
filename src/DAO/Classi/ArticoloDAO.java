@@ -2,6 +2,10 @@ package DAO.Classi;
 
 import DAO.Interfacce.IArticoloDAO;
 import DbInterface.*;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import Model.Articolo;
 import Model.Fornitore;
 
@@ -29,7 +33,10 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public int add(Articolo articolo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO articolo(idCategoria, prezzo, nome, descrizione) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','" + articolo.getDescrizione() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO articolo(idCategoria, prezzo, nome, descrizione) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','" + articolo.getDescrizione() + "');";
+        IDbOperation dbOp = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -37,7 +44,10 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public int update(Articolo articolo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE articolo SET nome = '"+ articolo.getNome() + "', idCategoria = '" + articolo.getIdCategoria() + "', prezzo = '" + articolo.getPrezzo() + "', descrizione = '" + articolo.getDescrizione() + "' WHERE idArticolo = '" + articolo.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE articolo SET nome = '"+ articolo.getNome() + "', idCategoria = '" + articolo.getIdCategoria() + "', prezzo = '" + articolo.getPrezzo() + "', descrizione = '" + articolo.getDescrizione() + "' WHERE idArticolo = '" + articolo.getIdArticolo() + "';";
+        IDbOperation dbOp = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -45,28 +55,22 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public int delete(Articolo articolo) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM articolo WHERE idArticolo = '" + articolo.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM articolo WHERE idArticolo = '" + articolo.getIdArticolo() + "';";
+        IDbOperation dbOp = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
-//----------------FIND BY ID-----------------------------------------------------------------------------------------//
     @Override
     public Articolo findById(int idArticolo) {
         conn = DbConnection.getInstance();
-    //--------------EXECUTOR------------------------------------------------------------------------//
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-    //-------------STRINGA SQL----------------------------------------------------------------------//
         String sql = "SELECT * FROM articolo WHERE articolo.idArticolo = '" + idArticolo + "';";
-    //-------------OPERAZIONE-----------------------------------------------------------------------//
-        IDbOperation dbOp = new ReadOperation(sql); // --> executeQuery();
-    //-------------EXECUTOR ESEGUE OPERAZIONE-------------------------------------------------------//
-        rs = dbOperationExecutor.executeOperation(dbOp);
-    //----------------------------------------------------------------------------------------------//
-
-    //------------INSTANZA articolo CERCATO-----------------------------------------------------------//
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         try {
-
             rs.next();
             if (rs.getRow()==1) {
                 articolo = new Articolo();
@@ -90,11 +94,14 @@ public class ArticoloDAO implements IArticoloDAO {
         }
         return null;
     }
-//--------------FIND ALL-----------------------------------------------------------------------------------------------//
+
     @Override
     public ArrayList<Articolo> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM articolo;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM articolo;";
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         ArrayList<Articolo> articoli = new ArrayList<>();
         try {
             while (rs.next()) {
@@ -126,10 +133,12 @@ public class ArticoloDAO implements IArticoloDAO {
         return findByName(nomeArticolo,0);
     }
 
-    @Override
     public Articolo findByName(String nomeArticolo, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM articolo WHERE articolo.nome = '" + nomeArticolo + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM articolo WHERE articolo.nome = '" + nomeArticolo + "';";
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         Articolo articolo = new Articolo();
         try {
             rs.next();
@@ -157,7 +166,10 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public boolean isServizio(Articolo articolo){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM articolo a INNER JOIN servizio s ON a.idArticolo = s.idServizio  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM articolo a INNER JOIN servizio s ON a.idArticolo = s.idServizio  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';";
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         try {
             rs.next();
             if(rs.getRow()==1)  return true;
@@ -178,7 +190,10 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public boolean isProdotto(Articolo articolo){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM articolo a INNER JOIN prodotto p ON a.idArticolo = p.idProdotto  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM articolo a INNER JOIN prodotto p ON a.idArticolo = p.idProdotto  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';";
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         try {
             rs.next();
             if(rs.getRow()==1)  return true;
@@ -199,7 +214,10 @@ public class ArticoloDAO implements IArticoloDAO {
     @Override
     public boolean isProdottoComposito(Articolo articolo){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM articolo a INNER JOIN prodottocomposito p ON a.idArticolo = p.idProdottoComposito  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM articolo a INNER JOIN prodottocomposito p ON a.idArticolo = p.idProdottoComposito  WHERE a.idArticolo = '" + articolo.getIdArticolo() + "';";
+        IDbOperation dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
         try {
             rs.next();
             if(rs.getRow()==1)  return true;

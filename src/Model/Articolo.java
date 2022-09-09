@@ -14,7 +14,7 @@ public class Articolo {
     private Blob immagine;
     private int idCategoria;
 
-    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo,Blob immagine, int idCategoria) {
+    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria) {
         this.idArticolo = idArticolo;
         this.prezzo = prezzo;
         this.nome = nome;
@@ -58,6 +58,11 @@ public class Articolo {
         this.descrizione = descrizione;
         this.prezzo = prezzo;
     }
+
+    public Articolo(int idArticolo) {
+        this.idArticolo = idArticolo;
+    }
+
     public Articolo(){
 
     }
