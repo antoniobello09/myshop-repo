@@ -68,7 +68,9 @@ public class CreateCategoryPanel extends JPanel {
                     }
                 }else{
                     CategoriaProdotto categoriaPadreProdotto = new CategoriaProdotto(categoriaPadreField.getText());
-                    categoriaPadreProdotto = CategoriaProdottoDAO.getInstance().findByName(categoriaPadreProdotto.toString());
+                    if(CategoriaProdottoDAO.getInstance().isCategory(categoriaPadreProdotto.getIdCategoria()) == false){
+                        System.out.println("Categoria Padre non esiste");
+                    }
                 }
 
             }else if(sottocategoriaField.getSelectedItem().equals("Servizio")){

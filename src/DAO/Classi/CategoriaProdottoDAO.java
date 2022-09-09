@@ -177,6 +177,32 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     }
 
     @Override
+    public boolean isCategory(int idCategoriaProdotto) {
+        conn = DbConnection.getInstance();
+        String sql = "SELECT count(*) as c FROM categoria_prodotto WHERE idCategoriaPadre = '" + idCategoriaProdotto +"' ;"; //+ "' AND idCategoria_Padre IS NULL;";
+        ResultSet rs = conn.executeQuery(sql);
+        try {
+            rs.next();
+            if(rs.getInt("c")==0){
+                return false;
+            }else{
+                return true;
+            }
+        } catch (SQLException e) {
+            // handle any errors
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // handle any errors
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+
+        }
+        return false;
+    }
+
+    @Override
     public ArrayList<CategoriaProdotto> findAll() {
         IDbConnection  conn = DbConnection.getInstance();
         ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE categoria.idCategoria <> '0';");
@@ -304,31 +330,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         return false;
     }
 
-    @Override
-    public boolean isSubCategory(int idCategoria) {
-        conn = DbConnection.getInstance();
-        String sql = "SELECT count(*) as c FROM categoria WHERE idCategoria = '" + idCategoria + "' AND idCategoria_Padre IS NOT NULL;";
-        ResultSet rs = conn.executeQuery(sql);
-        try {
-            rs.next();
-            if(rs.getInt("c")==0){
-                return false;
-            }else{
-                return true;
-            }
-        } catch (SQLException e) {
-            // handle any errors
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // handle any errors
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
 
-        }
-        return false;
-    }
 
     public boolean isUnique(String nomeCategoria, String nomePadre){
         conn = DbConnection.getInstance();

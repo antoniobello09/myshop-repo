@@ -11,6 +11,7 @@ public interface ICategoriaProdottoDAO {
     int update(CategoriaProdotto categoriaProdotto);
     int delete(CategoriaProdotto categoriaProdotto);
     int deleteSub(CategoriaProdotto categoriaProdotto);
+    boolean isCategory(int idCategoriaProdotto);
     CategoriaProdotto findByID(int idCategoria);
     ArrayList<CategoriaProdotto> findAllSons(int idCategoriaPadre);
     CategoriaProdotto findByName(String nomeCategoria);
