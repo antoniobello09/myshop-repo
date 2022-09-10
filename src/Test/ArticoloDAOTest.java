@@ -50,8 +50,8 @@ public class ArticoloDAOTest {
     @Test
     public void findAllTest() {
         IArticoloDAO articoloDAO = ArticoloDAO.getInstance();
-        ArrayList<Articolo> utenti = articoloDAO.findAll();
-        Assert.assertEquals(11, utenti.size());
+        ArrayList<Articolo> articoli = articoloDAO.findAll();
+        Assert.assertEquals(11, articoli.size());
     }
 
     @Test

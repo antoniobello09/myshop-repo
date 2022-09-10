@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.ModelBusiness.ServizioBusiness;
 import DAO.Classi.*;
 import Model.*;
 import View.AppFrame;
@@ -76,7 +77,7 @@ public class CreateServicePanel extends JPanel {
             int idCategoria = CategoriaServizioDAO.getInstance().findByName(categoriaField.getSelectedItem().toString()).getIdCategoria();
             int idFornitore = FornitoreDAO.getInstance().findByName(fornitoreField.getSelectedItem().toString()).getIdFornitore();
             Servizio servizio = new Servizio(nomeField.getText(), descrizioneField.getText(), Float.parseFloat(prezzoField.getText()), idCategoria, idFornitore);
-            ServizioDAO.getInstance().add(servizio);
+            ServizioBusiness.getInstance().aggiungi(servizio);
         }
     }
 

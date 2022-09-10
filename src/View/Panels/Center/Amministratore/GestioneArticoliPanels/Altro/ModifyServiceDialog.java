@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro;
 
+import Business.ModelBusiness.ServizioBusiness;
 import DAO.Classi.*;
 import Model.*;
 
@@ -37,7 +38,7 @@ public class ModifyServiceDialog extends JDialog implements ActionListener {
 
         super(frame, title, true);
         appFrame = frame;
-        servizio = ServizioDAO.getInstance().findByID(articolo.getIdArticolo());
+        servizio = ServizioBusiness.getInstance().cercaIDServizio(articolo.getIdArticolo());
 
 
         nomeField.setText(servizio.getNome());
@@ -110,7 +111,7 @@ public class ModifyServiceDialog extends JDialog implements ActionListener {
                         Float.parseFloat(prezzoField.getText()),
                         idCategoria,
                         idFornitore);
-                ServizioDAO.getInstance().update(s);
+                ServizioBusiness.getInstance().aggiorna(s);
                 ModifyServiceDialog.dialog.setVisible(false);
             }
         }

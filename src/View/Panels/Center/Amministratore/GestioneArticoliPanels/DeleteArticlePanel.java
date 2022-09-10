@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.ModelBusiness.ServizioBusiness;
 import DAO.Classi.*;
 import Model.Articolo;
 import Model.Prodotto;
@@ -48,9 +49,9 @@ public class DeleteArticlePanel extends JPanel {
 
             if (articolo != null) {
                 Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
+                Servizio servizio = ServizioBusiness.getInstance().cercaIDServizio(articolo.getIdArticolo());
                 if (ArticoloDAO.getInstance().isServizio(articolo)) {
-                    ServizioDAO.getInstance().delete((Servizio) articolo);
-                    ArticoloDAO.getInstance().delete(articolo);
+                    ServizioBusiness.getInstance().cancella(servizio);
                 } else if (ArticoloDAO.getInstance().isProdottoComposito(articolo)) {
                     ProdottoCompositoDAO.getInstance().delete(articolo.getIdArticolo());
                     ArticoloDAO.getInstance().delete(articolo);

@@ -1,5 +1,6 @@
 package View.Panels.Center.Ospite;
 
+import Business.ModelBusiness.ServizioBusiness;
 import DAO.Classi.ServizioDAO;
 import Model.Servizio;
 import View.AppFrame;
@@ -24,7 +25,7 @@ public class BrowseServicePanel extends JPanel {
 
     public BrowseServicePanel(AppFrame appFrame) {
 
-        lista = ServizioDAO.getInstance().findAll();
+        lista = ServizioBusiness.getInstance().cercaTuttiServizi();
 
         this.appFrame = appFrame;
         browseServiceListener = new BrowseServiceListener(this, this.appFrame);

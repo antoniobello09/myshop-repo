@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IServizioDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Articolo;
@@ -32,19 +36,22 @@ public class ServizioDAO implements IServizioDAO {
 
     @Override
     public int add(Servizio servizio) {
-        ArticoloDAO.getInstance().add(servizio);
-        int idServizio =  ArticoloDAO.getInstance().findByName(servizio.getNome()).getIdArticolo();
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO servizio VALUES ('"+ idServizio + "','" + servizio.getIdFornitoreServizio() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO servizio VALUES ('"+ servizio.getIdArticolo() + "','" + servizio.getIdFornitoreServizio() + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(Servizio servizio) {
-        ArticoloDAO.getInstance().update(servizio);
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE servizio SET idFornitoreServizio = '"+ servizio.getIdFornitoreServizio() + "' WHERE idServizio = '" + servizio.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE servizio SET idFornitoreServizio = '"+ servizio.getIdFornitoreServizio() + "' WHERE idServizio = '" + servizio.getIdArticolo() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -52,9 +59,11 @@ public class ServizioDAO implements IServizioDAO {
     @Override
     public int delete(Servizio servizio) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM servizio WHERE idServizio = '" + servizio.getIdArticolo() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM servizio WHERE idServizio = '" + servizio.getIdArticolo() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
-        ArticoloDAO.getInstance().delete(servizio);
         return rowCount;
     }
 
@@ -65,7 +74,10 @@ public class ServizioDAO implements IServizioDAO {
 
     public Servizio findByID(int idServizio, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo WHERE servizio.idServizio = '" + idServizio + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo WHERE servizio.idServizio = '" + idServizio + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Servizio servizio;
         try {
             rs.next();
@@ -99,7 +111,10 @@ public class ServizioDAO implements IServizioDAO {
 
     public Servizio findByName(String nomeServizio, int closeConn){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo WHERE nome = '" + nomeServizio + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo WHERE nome = '" + nomeServizio + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Servizio servizio;
         try {
             rs.next();
@@ -129,7 +144,10 @@ public class ServizioDAO implements IServizioDAO {
     @Override
     public ArrayList<Servizio> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Servizio> servizi = new ArrayList<>();
         try {
             while(rs.next()) {
