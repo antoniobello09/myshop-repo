@@ -3,6 +3,7 @@ package DAO.Classi;
 import DAO.Interfacce.ICategoriaServizioDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
+import Model.Categoria;
 import Model.CategoriaServizio;
 
 import java.sql.ResultSet;
@@ -31,9 +32,9 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     @Override
     public int add(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
-        int rowCount = 0;
-        rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaServizio.getNome() + "');");
-        conn.executeUpdate("INSERT INTO categoria_servizio VALUES ('" + findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');");
+        int rowCount;
+        CategoriaDAO.getInstance().add(categoriaServizio);
+        rowCount = conn.executeUpdate("INSERT INTO categoria_servizio VALUES ('" + findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');");
         conn.close();
         return rowCount;
     }
@@ -43,7 +44,7 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     @Override
     public int update(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE categoria SET nome = '"+ categoriaServizio.getNome() + "' WHERE idCategoria = '" + categoriaServizio.getIdCategoria() +"';");
+        int rowCount = CategoriaDAO.getInstance().update(categoriaServizio);
         conn.close();
         return rowCount;
     }
@@ -52,8 +53,8 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     @Override
     public int delete(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
-        conn.executeUpdate("DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE CP.idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
+        int rowCount = conn.executeUpdate("DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE CP.idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
+        CategoriaDAO.getInstance().delete(categoriaServizio);
         conn.close();
         return rowCount;
     }
@@ -65,7 +66,7 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
 
     public CategoriaServizio findByID(int idCategoria, int i) {
         conn = DbConnection.getInstance();
-        String sql = "SELECT * FROM categoria WHERE idCategoria = '" + idCategoria + "';";
+        String sql = "SELECT * FROM categoria c INNER JOIN categoria_servizio cs ON c.idCategoria = cs.idCategoria WHERE c.idCategoria = '" + idCategoria + "';";
         ResultSet rs = conn.executeQuery(sql);
         CategoriaServizio categoriaServizio;
         try {
@@ -101,7 +102,7 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
 
     public CategoriaServizio findByName(String nomeCategoria, int i) {
         conn = DbConnection.getInstance();
-        String sql = "SELECT * FROM categoria WHERE nome = '" + nomeCategoria + "';";
+        String sql = "SELECT * FROM categoria c INNER JOIN categoria_servizio cs ON c.idCategoria = cs.idCategoria WHERE nome = '" + nomeCategoria + "';";
         ResultSet rs = conn.executeQuery(sql);
         CategoriaServizio categoriaServizio;
         try {

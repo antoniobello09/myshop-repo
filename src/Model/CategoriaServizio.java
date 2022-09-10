@@ -5,40 +5,21 @@ import Model.Other.ICategoria;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class CategoriaServizio implements ICategoria{
-
-    private int idCategoria;
-    private String nome;
+public class CategoriaServizio extends Categoria implements ICategoria{
 
     public CategoriaServizio() {
     }
 
-    public CategoriaServizio(String nome){
-        this.nome = nome;
+    public CategoriaServizio(String nome) {
+        super(nome);
     }
 
-    public CategoriaServizio(int idCategoria, String nomeCategoria){
-        this.idCategoria = idCategoria;
-        nome = nomeCategoria;
-    }
-
-
-    public int getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
+    public CategoriaServizio(int idCategoria, String nome) {
+        super(idCategoria, nome);
     }
 
     @Override
-    public String getNome() {
-        return this.nome;
+    public String getNome(){
+        return super.getNome();
     }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-
 }
