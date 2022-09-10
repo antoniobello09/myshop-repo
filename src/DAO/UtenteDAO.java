@@ -55,7 +55,7 @@ public class UtenteDAO implements IUtenteDAO {
     public int update(Utente utente) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "', name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = '" + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';";
+        String sql = "UPDATE utente SET username = '" + utente.getUsername() + "', password = '" + utente.getPassword() + "', email = '" + utente.getEmail() + "', name = '" + utente.getName() + "', surname = '" + utente.getSurname() + "', birthdate = '" + utente.getBirthdate() + "', telephone = '" + utente.getTelephone() + "', address = '" + utente.getAddress() + "', job = '" + utente.getJob() +"' WHERE idUtente = '" + utente.getIdUtente() + "';";
         IDbOperation dbOp = new WriteOperation(sql);
         int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();

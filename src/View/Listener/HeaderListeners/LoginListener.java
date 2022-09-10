@@ -1,7 +1,7 @@
 package View.Listener.HeaderListeners;
 
 import Business.SessionManager;
-import Business.UtenteBusiness;
+import Business.ModelBusiness.UtenteBusiness;
 import Model.Other.LoginResponse;
 import Model.Utente;
 import View.AppFrame;

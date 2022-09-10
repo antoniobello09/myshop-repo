@@ -1,11 +1,12 @@
-package Business;
+package Business.ModelBusiness;
 
-import DAO.Classi.ClienteDAO;
 import DAO.IUtenteDAO;
 import DAO.UtenteDAO;
 import Model.*;
 import Model.Other.LoginResponse;
 import Model.Other.RegistrationResponse;
+
+import java.util.ArrayList;
 
 public class UtenteBusiness {
 
@@ -19,6 +20,33 @@ public class UtenteBusiness {
     }
 
     private UtenteBusiness() {}
+
+    public int aggiungi(Utente utente){
+        if(UtenteDAO.getInstance().add(utente) == 0) return 0;
+        return 1;
+    }
+
+    public int aggiorna(Utente utente){
+        if(UtenteDAO.getInstance().update(utente) == 0) return 0;
+        return 1;
+    }
+
+    public int cancella(Utente utente){
+        if(UtenteDAO.getInstance().delete(utente) == 0) return 0;
+        return 1;
+    }
+
+    public Utente cercaUtenteByID(int idUtente){
+        return UtenteDAO.getInstance().findByID(idUtente);
+    }
+
+    public Utente cercaUtenteByUsername(String usernameUtente){
+        return UtenteDAO.getInstance().findByUsername(usernameUtente);
+    }
+
+    public ArrayList<Utente> cercaTuttiUtenti(){
+        return UtenteDAO.getInstance().findAll();
+    }
 
     public LoginResponse login(String username, String password) {
 
@@ -69,33 +97,6 @@ public class UtenteBusiness {
 
     }
 
-    public RegistrationResponse registerClient(Cliente c, PuntoVendita puntoVendita){
-        RegistrationResponse res = new RegistrationResponse();
-     /*   res.setMessage("Errore non definito.");
-
-        ClienteDAO cDao = ClienteDAO.getInstance();
-        int rowCount = cDao.add(c, puntoVendita);
-
-        if(rowCount != 0) {
-            res.setMessage("Iscrizione avvenuta con successo");
-            res.setUtente(c);
-        }
-*/
-        return res;
-
-    }
-
-
-
 
 }
 
-
-/*// 3. ottenere i dati dell'utente
-
-        if(uDao.clientExists(u)){
-            Cliente cliente = ClienteDAO.getInstance().findByID(u.getIdUtente());
-        }
-        //alternativa: restituire istanza specifica di Cliente, Manager o Amministratore
-
- */

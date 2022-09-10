@@ -1,9 +1,7 @@
 package Business.ModelBusiness;
 
-import Business.UtenteBusiness;
 import DAO.Classi.ArticoloDAO;
 import DAO.Classi.ServizioDAO;
-import Model.Articolo;
 import Model.Servizio;
 
 import java.util.ArrayList;

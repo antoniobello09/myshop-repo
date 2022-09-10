@@ -1,7 +1,7 @@
 package View.Panels.SideMenu.Home;
 
 import Business.SessionManager;
-import Business.UtenteBusiness;
+import Business.ModelBusiness.UtenteBusiness;
 import Model.Utente;
 import View.AppFrame;
 import View.Listener.SideMenuListeners.Home.AmministratoreSideMenuListener;
