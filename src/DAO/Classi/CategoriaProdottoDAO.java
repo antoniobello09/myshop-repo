@@ -35,8 +35,9 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     public int add(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
         int rowCount = 0;
+        conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');";
+        String sql = "INSERT INTO categoria_prodotto(idCategoria) VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -140,7 +141,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         IDbConnection  conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE idCategoriaPadre = '" + idCategoriaPadre + "';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
         CategoriaProdotto categoriaProdotto;
@@ -176,7 +177,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c WHERE nome = '" + nomeCategoria + "';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         CategoriaProdotto categoriaProdotto;
         try {
@@ -209,7 +210,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT count(*) as c FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE nome = '" + categoriaProdotto.getNome() + "' AND idCategoriaPadre IS NULL;";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         try {
             rs.next();
@@ -237,7 +238,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         IDbConnection  conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria INNER JOIN categoria_prodotto ON categoria.idCategoria = categoria_prodotto.idCategoria WHERE categoria.idCategoria <> '0';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<CategoriaProdotto> categorieProdotti = new ArrayList<>();
         CategoriaProdotto categoriaProdotto;
