@@ -20,6 +20,8 @@ public class CreateSupplierListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("aggiungi")){
+            createSupplierPanel.aggiungi();
+        }
     }
 }

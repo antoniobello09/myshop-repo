@@ -18,16 +18,14 @@ public class CreateCategoryPanel extends JPanel {
     CreateCategoryListener createCategoryListener;
 
     private JPanel formPanel = new JPanel();
-        private JLabel inserisciCategoria = new JLabel("Inserire il nome della categoria da creare:");
+        private JLabel inserisciCategoria = new JLabel("Inserire il nome della categoria da creare: ");
         private JTextField categoriaField = new JTextField();
-        private JLabel inserisciSottocategoria = new JLabel("Sottocategoria");
+        private JLabel inserisciSottocategoria = new JLabel("Sottocategoria: ");
         private JComboBox<String> sottocategoriaField;
-        private JLabel inserisciCategoriaPadre = new JLabel("Inserire il nome della categoria padre:");
+        private JLabel inserisciCategoriaPadre = new JLabel("Inserire il nome della categoria padre: ");
         private JTextField categoriaPadreField = new JTextField();
-        private JButton btnModifica = new JButton("Aggiungi");
+        private JButton btnAggiungi = new JButton("Aggiungi");
 
-    private String selectedItem;
-    private ArrayList<CategoriaProdotto> categorieList;     //Lista di categorie
 
     public CreateCategoryPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
@@ -80,8 +78,17 @@ public class CreateCategoryPanel extends JPanel {
                 }
 
             }else if(sottocategoriaField.getSelectedItem().equals("Servizio")){
-                CategoriaServizio categoriaServizio = new CategoriaServizio(categoriaField.getText());
-                CategoriaServizioDAO.getInstance().add(categoriaServizio);
+                if(!categoriaPadreField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(appFrame,
+                            "La categoria padre deve essere vuota!",
+                            "Create Product Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                else{
+                    CategoriaServizio categoriaServizio = new CategoriaServizio(categoriaField.getText());
+                    CategoriaServizioDAO.getInstance().add(categoriaServizio);
+                }
             }
 
         }
@@ -99,7 +106,7 @@ public class CreateCategoryPanel extends JPanel {
         formPanel.add(sottocategoriaField);
         formPanel.add(inserisciCategoriaPadre);
         formPanel.add(categoriaPadreField);
-        formPanel.add(btnModifica);
+        formPanel.add(btnAggiungi);
 
     }
 
@@ -108,8 +115,8 @@ public class CreateCategoryPanel extends JPanel {
     }
 
     public void listenerSettings(){
-        btnModifica.setActionCommand("aggiungi");
+        btnAggiungi.setActionCommand("aggiungi");
 
-        btnModifica.addActionListener(createCategoryListener);
+        btnAggiungi.addActionListener(createCategoryListener);
     }
 }
