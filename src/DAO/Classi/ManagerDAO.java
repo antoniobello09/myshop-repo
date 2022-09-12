@@ -37,7 +37,7 @@ public class ManagerDAO implements IManagerDAO {
         conn = DbConnection.getInstance();
         conn.executeUpdate("INSERT INTO utente(username, password, email) VALUES ('"+ manager.getUsername() + "','" + manager.getPassword() + "','" + manager.getEmail() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO manager VALUES ('" + ManagerDAO.getInstance().findByUsername(manager.getUsername(),1).getIdUtente() +"');";
+        String sql = "INSERT INTO manager VALUES ('" + UtenteDAO.getInstance().findByUsername(manager.getUsername(),1).getIdUtente() +"');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();

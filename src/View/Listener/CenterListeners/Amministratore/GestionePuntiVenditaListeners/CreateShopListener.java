@@ -19,6 +19,8 @@ public class CreateShopListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals("crea")){
+            createShopPanel.crea();
+        }
     }
 }
