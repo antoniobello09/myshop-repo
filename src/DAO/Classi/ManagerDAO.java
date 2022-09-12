@@ -114,8 +114,7 @@ public class ManagerDAO implements IManagerDAO {
                 manager.setEmail(rs.getString("email"));
                 manager.setUsername(rs.getString("username"));
                 manager.setPassword(rs.getString("password"));
-            }else{
-                return null;
+                return manager;
             }
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
