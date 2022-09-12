@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IListaDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 
@@ -29,25 +33,37 @@ public class ListaDAO implements IListaDAO {
 
     @Override
     public int add(Lista lista) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO lista(idCliente, nome) VALUES ('" + lista.getIdCliente() + "','" + lista.getNome() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO lista(idCliente, nome) VALUES ('" + lista.getIdCliente() + "','" + lista.getNome() + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(Lista lista) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE lista SET nome = '"+ lista.getNome() + "' WHERE idLista = '" + lista.getIdLista() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE lista SET nome = '"+ lista.getNome() + "' WHERE idLista = '" + lista.getIdLista() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(Lista lista) {
+        int rowCount;
         conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         conn.executeUpdate("DELETE FROM lista_has_articolo WHERE idLista = '" + lista.getIdLista() + "';");
-        int rowCount = conn.executeUpdate("DELETE FROM lista WHERE idLista = '" + lista.getIdLista() + "';");
+        String sql = "DELETE FROM lista WHERE idLista = '" + lista.getIdLista() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -58,7 +74,10 @@ public class ListaDAO implements IListaDAO {
     }
     public Lista findByID(int idLista, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM lista WHERE idLista = '" + idLista + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM lista WHERE idLista = '" + idLista + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Lista lista;
         try {
             rs.next();
@@ -86,7 +105,10 @@ public class ListaDAO implements IListaDAO {
     @Override
     public ArrayList<Lista> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM lista;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM lista;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Lista> liste = new ArrayList<>();
         try {
             while(rs.next()) {
@@ -114,7 +136,10 @@ public class ListaDAO implements IListaDAO {
     @Override
     public ArrayList<Lista> findAll(int idCliente) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM lista WHERE idCliente = '" + idCliente + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM lista WHERE idCliente = '" + idCliente + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Lista> liste = new ArrayList<>();
         try {
             while(rs.next()) {

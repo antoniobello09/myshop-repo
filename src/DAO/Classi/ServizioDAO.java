@@ -36,33 +36,36 @@ public class ServizioDAO implements IServizioDAO {
 
     @Override
     public int add(Servizio servizio) {
+        int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "INSERT INTO servizio VALUES ('"+ servizio.getIdArticolo() + "','" + servizio.getIdFornitoreServizio() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
-        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(Servizio servizio) {
+        int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "UPDATE servizio SET idFornitoreServizio = '"+ servizio.getIdFornitoreServizio() + "' WHERE idServizio = '" + servizio.getIdArticolo() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
-        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(Servizio servizio) {
+        int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "DELETE FROM servizio WHERE idServizio = '" + servizio.getIdArticolo() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
-        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }

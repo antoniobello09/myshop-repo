@@ -1,9 +1,14 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IFornitoreDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Fornitore;
+import com.sun.mail.imap.protocol.ID;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,24 +33,36 @@ public class FornitoreDAO implements IFornitoreDAO {
 
     @Override
     public int add(Fornitore fornitore) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO fornitore(nome, sito_web, citta, nazione, prod_serv) VALUES ('"+ fornitore.getNome() + "','" + fornitore.getSitoweb() + "','" + fornitore.getCitta() + "','"+ fornitore.getNazione() + "','" + fornitore.getProd_serv() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO fornitore(nome, sito_web, citta, nazione, prod_serv) VALUES ('"+ fornitore.getNome() + "','" + fornitore.getSitoweb() + "','" + fornitore.getCitta() + "','"+ fornitore.getNazione() + "','" + fornitore.getProd_serv() + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(Fornitore fornitore) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE fornitore SET nome = '"+ fornitore.getNome() + "', sito_web = '" + fornitore.getSitoweb() + "', citta = '" + fornitore.getCitta() + "', nazione = '" + fornitore.getNazione() + "' WHERE idFornitore = '" + fornitore.getIdFornitore() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE fornitore SET nome = '"+ fornitore.getNome() + "', sito_web = '" + fornitore.getSitoweb() + "', citta = '" + fornitore.getCitta() + "', nazione = '" + fornitore.getNazione() + "' WHERE idFornitore = '" + fornitore.getIdFornitore() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(Fornitore fornitore) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM fornitore WHERE idFornitore = '" + fornitore.getIdFornitore() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM fornitore WHERE idFornitore = '" + fornitore.getIdFornitore() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -56,7 +73,10 @@ public class FornitoreDAO implements IFornitoreDAO {
     }
     public Fornitore findByID(int idFornitore, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM fornitore WHERE idFornitore = '" + idFornitore + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM fornitore WHERE idFornitore = '" + idFornitore + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Fornitore fornitore;
         try {
             rs.next();
@@ -91,7 +111,10 @@ public class FornitoreDAO implements IFornitoreDAO {
     @Override
     public Fornitore findByName(String nomefornitore, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM fornitore WHERE nome = '" + nomefornitore + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM fornitore WHERE nome = '" + nomefornitore + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Fornitore fornitore = null;
         try {
             rs.next();
@@ -124,7 +147,10 @@ public class FornitoreDAO implements IFornitoreDAO {
     public ArrayList<Fornitore> findAll() {
 
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM fornitore;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM fornitore;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Fornitore> produttori = new ArrayList<>();
 
         try {
@@ -156,9 +182,11 @@ public class FornitoreDAO implements IFornitoreDAO {
 
     public ArrayList<Fornitore> findAllProd(){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM fornitore WHERE prod_serv = 'p';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM fornitore WHERE prod_serv = 'p';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Fornitore> produttori = new ArrayList<>();
-
         try {
             while (rs.next()) {
                 fornitore = new Fornitore();
@@ -186,7 +214,10 @@ public class FornitoreDAO implements IFornitoreDAO {
     }
     public ArrayList<Fornitore> findAllServ(){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM fornitore WHERE prod_serv = 's';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM fornitore WHERE prod_serv = 's';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Fornitore> produttori = new ArrayList<>();
 
         try {

@@ -120,30 +120,5 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
         prodottoComposito.setSottoprodotti(ProdottoCompositoDAO.getInstance().findSonsByID(prodottoComposito.getIdArticolo()));
         return prodottoComposito;
     }
-    /*@Override
-    public ProdottoComposito findByName(String nomeProdottoC) {
-        prodottoComposito = (ProdottoComposito) ProdottoDAO.getInstance().findByName(nomeProdottoC);
-        conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM prodottocomposito pc INNER JOIN prodotto p ON pc.idProdottoComposito = p.idProdotto WHERE p.nome = '" + nomeProdottoC + "';");
-        try {
-            while(rs.next()) {
-                Prodotto p = ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto"));
-                prodottoComposito.getSottoprodotti().add(new Prodotto_Quantita(p, rs.getInt("quantita")));
-            }
-            return prodottoComposito;
-        } catch (SQLException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
-            // Gestisce le differenti categorie d'errore
-            System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            conn.close();
-        }
-        return null;
-    }
-*/
 
 }

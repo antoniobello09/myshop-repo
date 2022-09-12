@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IPosizioneDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Posizione;
@@ -38,8 +42,12 @@ public class PosizioneDAO implements IPosizioneDAO {
 
     @Override
     public int delete(Posizione posizione) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM posizione WHERE idPosizione = '" + posizione.getIdPosizione() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM posizione WHERE idPosizione = '" + posizione.getIdPosizione() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -50,7 +58,10 @@ public class PosizioneDAO implements IPosizioneDAO {
     }
     public Posizione findByID(int idPosizione, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM posizione WHERE idPosizione = '" + idPosizione + "';");
+        String sql = "SELECT * FROM posizione WHERE idPosizione = '" + idPosizione + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Posizione posizione;
         try {
             rs.next();
@@ -78,7 +89,10 @@ public class PosizioneDAO implements IPosizioneDAO {
     @Override
     public Posizione findByNumbers(int piano, int corsia, int scaffale){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM posizione WHERE piano = '" + piano + "' AND corsia = '" + corsia + "' AND scaffale = '" + scaffale + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM posizione WHERE piano = '" + piano + "' AND corsia = '" + corsia + "' AND scaffale = '" + scaffale + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Posizione posizione;
         try {
             rs.next();
@@ -107,7 +121,10 @@ public class PosizioneDAO implements IPosizioneDAO {
     @Override
     public ArrayList<Posizione> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM posizione;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM posizione;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Posizione> posizioni = new ArrayList<>();
         try {
             while(rs.next()) {
@@ -136,7 +153,10 @@ public class PosizioneDAO implements IPosizioneDAO {
     @Override
     public ArrayList<Posizione> findAllEmpty() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM posizione p LEFT OUTER JOIN prodotto pr ON pr.idPosizione = p.idPosizione WHERE pr.idProdotto IS NULL;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM posizione p LEFT OUTER JOIN prodotto pr ON pr.idPosizione = p.idPosizione WHERE pr.idProdotto IS NULL;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Posizione> posizioni = new ArrayList<>();
         try {
             while(rs.next()) {

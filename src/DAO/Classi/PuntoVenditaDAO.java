@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IPuntoVenditaDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.PuntoVendita;
@@ -28,24 +32,36 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     @Override
     public int add(int idManager, String citta, String indirizzo) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + idManager + "','" + citta + "','" + indirizzo + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + idManager + "','" + citta + "','" + indirizzo + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(int idPuntoVendita, String citta, String indirizzo) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE puntovendita SET citta = '" + citta + "', indirizzo = '" + indirizzo + "' WHERE idPuntoVendita = '" + idPuntoVendita + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE puntovendita SET citta = '" + citta + "', indirizzo = '" + indirizzo + "' WHERE idPuntoVendita = '" + idPuntoVendita + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(int idPuntoVendita) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita);
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita;
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -57,7 +73,10 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     public PuntoVendita findByID(int idPuntoVendita, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         PuntoVendita puntoVendita;
         try {
             rs.next();
@@ -89,7 +108,10 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     public PuntoVendita findByName(String indirizzo, String citta, int closeConn){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM puntovendita WHERE indirizzo ='" + indirizzo + "' AND citta = '" + citta + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM puntovendita WHERE indirizzo ='" + indirizzo + "' AND citta = '" + citta + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         PuntoVendita puntoVendita;
         try {
             rs.next();
@@ -121,7 +143,10 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     public PuntoVendita findByManager(int idManager, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM puntovendita WHERE idManager = '" + idManager + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM puntovendita WHERE idManager = '" + idManager + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         PuntoVendita puntoVendita;
         try {
             rs.next();
@@ -153,7 +178,10 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     public ArrayList<PuntoVendita> findAll(int closeConn){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM puntovendita;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM puntovendita;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<PuntoVendita> puntiVendita = new ArrayList<>();
         try {
             while(rs.next()) {
