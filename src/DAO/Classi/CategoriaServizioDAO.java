@@ -37,8 +37,9 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     public int add(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
         int rowCount;
+        conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaServizio.getNome() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO categoria_servizio VALUES ('" + findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');";
+        String sql = "INSERT INTO categoria_servizio VALUES ('" + CategoriaDAO.getInstance().findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');";
         CategoriaDAO.getInstance().add(categoriaServizio);
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
