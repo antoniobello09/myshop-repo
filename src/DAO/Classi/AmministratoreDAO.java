@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IAmministratoreDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Amministratore;
@@ -33,8 +37,12 @@ public class AmministratoreDAO implements IAmministratoreDAO {
 
     @Override
     public int update(Amministratore amministratore) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + amministratore.getUsername() + "', password = '" + amministratore.getPassword() + "', email = '" + amministratore.getEmail() + "' WHERE idUtente = '" + amministratore.getIdUtente() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE utente SET username = '" + amministratore.getUsername() + "', password = '" + amministratore.getPassword() + "', email = '" + amministratore.getEmail() + "' WHERE idUtente = '" + amministratore.getIdUtente() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -47,6 +55,7 @@ public class AmministratoreDAO implements IAmministratoreDAO {
     @Override
     public Amministratore findByID(int idAmministratore) {
         conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         rs = conn.executeQuery("SELECT * FROM utente INNER JOIN amministratore ON idUtente = idAmministratore WHERE idAmministratore = '" + idAmministratore + "';");
         Amministratore amministratore;
         try {
@@ -74,7 +83,10 @@ public class AmministratoreDAO implements IAmministratoreDAO {
     @Override
     public Amministratore findByUsername(String username) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente INNER JOIN amministratore ON idUtente = idAmministratore WHERE username = '" + username + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente INNER JOIN amministratore ON idUtente = idAmministratore WHERE username = '" + username + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Amministratore amministratore;
         try {
             rs.next();
@@ -101,7 +113,10 @@ public class AmministratoreDAO implements IAmministratoreDAO {
     @Override
     public ArrayList<Amministratore> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente INNER JOIN amministratore ON idUtente = idAmministratore;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente INNER JOIN amministratore ON idUtente = idAmministratore;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Amministratore> amministratori = new ArrayList<>();
         try {
             while(rs.next()) {

@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.ICategoriaServizioDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Categoria;
@@ -33,8 +37,11 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     public int add(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
         int rowCount;
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO categoria_servizio VALUES ('" + findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');";
         CategoriaDAO.getInstance().add(categoriaServizio);
-        rowCount = conn.executeUpdate("INSERT INTO categoria_servizio VALUES ('" + findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');");
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -52,8 +59,12 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
 
     @Override
     public int delete(CategoriaServizio categoriaServizio) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE CP.idCategoria = '" + categoriaServizio.getIdCategoria() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE CP.idCategoria = '" + categoriaServizio.getIdCategoria() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         CategoriaDAO.getInstance().delete(categoriaServizio);
         conn.close();
         return rowCount;
@@ -66,8 +77,10 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
 
     public CategoriaServizio findByID(int idCategoria, int i) {
         conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_servizio cs ON c.idCategoria = cs.idCategoria WHERE c.idCategoria = '" + idCategoria + "';";
-        ResultSet rs = conn.executeQuery(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
+        ResultSet rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         CategoriaServizio categoriaServizio;
         try {
             rs.next();
@@ -102,8 +115,10 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
 
     public CategoriaServizio findByName(String nomeCategoria, int i) {
         conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_servizio cs ON c.idCategoria = cs.idCategoria WHERE nome = '" + nomeCategoria + "';";
-        ResultSet rs = conn.executeQuery(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
+        ResultSet rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         CategoriaServizio categoriaServizio;
         try {
             rs.next();
@@ -134,7 +149,10 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     @Override
     public ArrayList<CategoriaServizio> findAll() {
         IDbConnection  conn = DbConnection.getInstance();
-        ResultSet rs = conn.executeQuery("SELECT * FROM categoria INNER JOIN categoria_servizio ON categoria.idCategoria = categoria_Servizio.idCategoria;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM categoria INNER JOIN categoria_servizio ON categoria.idCategoria = categoria_Servizio.idCategoria;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        ResultSet rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<CategoriaServizio> categorieServizi = new ArrayList<>();
         CategoriaServizio categoriaServizio;
         try {

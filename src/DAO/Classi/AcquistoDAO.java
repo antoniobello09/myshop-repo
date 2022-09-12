@@ -1,6 +1,10 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IAcquistoDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Acquisto;
@@ -29,7 +33,10 @@ public class AcquistoDAO implements IAcquistoDAO {
     @Override
     public int add(Acquisto acquisto) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO acquisto(idPuntoVendita, data, idLista) VALUES ('"+ acquisto.getIdPuntoVendita() + "','" + acquisto.getData() + "','" + acquisto.getIdLista() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO acquisto(idPuntoVendita, data, idLista) VALUES ('"+ acquisto.getIdPuntoVendita() + "','" + acquisto.getData() + "','" + acquisto.getIdLista() + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -50,7 +57,10 @@ public class AcquistoDAO implements IAcquistoDAO {
     }
     public Acquisto findByID(int idAcquisto, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM acquisto WHERE idAcquisto = '" + idAcquisto + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM acquisto WHERE idAcquisto = '" + idAcquisto + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Acquisto acquisto;
         try {
             rs.next();
@@ -80,7 +90,10 @@ public class AcquistoDAO implements IAcquistoDAO {
     public ArrayList<Acquisto> findAll() {
 
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM acquisto;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM acquisto;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Acquisto> acquisti = new ArrayList<>();
 
         try {
@@ -109,7 +122,10 @@ public class AcquistoDAO implements IAcquistoDAO {
 
     public Acquisto findByIDLista(int idLista){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM acquisto WHERE idLista = '" + idLista + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM acquisto WHERE idLista = '" + idLista + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Acquisto acquisto;
         try {
             if(rs.next()) {

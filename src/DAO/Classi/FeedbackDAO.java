@@ -1,6 +1,9 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IFeedbackDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.FeedBack;
@@ -28,24 +31,36 @@ public class FeedbackDAO implements IFeedbackDAO {
 
     @Override
     public int add(FeedBack feedBack) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO feedback(commento, indiceGradimento, idArticolo, idAcquisto, risposta, data) VALUES ('"+ feedBack.getCommento() + "','" + feedBack.getIndiceGradimento() + "','" + feedBack.getIdArticolo() + "','"+ feedBack.getIdAcquisto() + "','" + feedBack.getRisposta() + "','" + feedBack.getData() + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO feedback(commento, indiceGradimento, idArticolo, idAcquisto, risposta, data) VALUES ('"+ feedBack.getCommento() + "','" + feedBack.getIndiceGradimento() + "','" + feedBack.getIdArticolo() + "','"+ feedBack.getIdAcquisto() + "','" + feedBack.getRisposta() + "','" + feedBack.getData() + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int update(FeedBack feedBack) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE feedback SET commento = '"+ feedBack.getCommento() + "', indiceGradimento = '" + feedBack.getIndiceGradimento() + "', risposta = '" + feedBack.getRisposta() + "', data = '" + feedBack.getData() + "' WHERE idFeedback = '" + feedBack.getIdFeedBack() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "UPDATE feedback SET commento = '"+ feedBack.getCommento() + "', indiceGradimento = '" + feedBack.getIndiceGradimento() + "', risposta = '" + feedBack.getRisposta() + "', data = '" + feedBack.getData() + "' WHERE idFeedback = '" + feedBack.getIdFeedBack() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
 
     @Override
     public int delete(FeedBack feedBack) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM feedback WHERE idFeedback = '" + feedBack.getIdFeedBack() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM feedback WHERE idFeedback = '" + feedBack.getIdFeedBack() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -56,7 +71,10 @@ public class FeedbackDAO implements IFeedbackDAO {
     }
     public FeedBack findByID(int idFeedback, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM feedback WHERE idFeedback = '" + idFeedback + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM feedback WHERE idFeedback = '" + idFeedback + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         FeedBack feedBack;
         try {
             rs.next();
@@ -88,7 +106,10 @@ public class FeedbackDAO implements IFeedbackDAO {
     @Override
     public ArrayList<FeedBack> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM feedback;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM feedback;";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<FeedBack> feedBacks = new ArrayList<>();
 
         try {
@@ -122,9 +143,11 @@ public class FeedbackDAO implements IFeedbackDAO {
     @Override
     public ArrayList<FeedBack> findByPuntoVendita(int idPuntoVendita) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM feedback f INNER JOIN acquisto a ON f.idAcquisto = a.idAcquisto WHERE a.idPuntoVendita = '" + idPuntoVendita + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM feedback f INNER JOIN acquisto a ON f.idAcquisto = a.idAcquisto WHERE a.idPuntoVendita = '" + idPuntoVendita + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<FeedBack> feedBacks = new ArrayList<>();
-
         try {
             while (rs.next()) {
                 feedBack = new FeedBack();
@@ -154,7 +177,10 @@ public class FeedbackDAO implements IFeedbackDAO {
 
     public FeedBack findByIDAcquisto_Articolo(int idAcquisto, int idArticolo){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM feedback WHERE idAcquisto = '" + idAcquisto + "' AND idArticolo = '" + idArticolo + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM feedback WHERE idAcquisto = '" + idAcquisto + "' AND idArticolo = '" + idArticolo + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         FeedBack feedBack;
         try {
             rs.next();

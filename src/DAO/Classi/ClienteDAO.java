@@ -2,6 +2,10 @@ package DAO.Classi;
 
 import DAO.Interfacce.IClienteDAO;
 import DAO.UtenteDAO;
+import DbInterface.Command.DbOperationExecutor;
+import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
+import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Cliente;
@@ -30,9 +34,13 @@ public class ClienteDAO implements IClienteDAO {
 
     @Override
     public int add(Cliente cliente) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, city, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getCity() + "','" + cliente.getJob() + "');");
-        conn.executeUpdate("INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + cliente.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + cliente.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, city, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getCity() + "','" + cliente.getJob() + "');");
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -40,8 +48,11 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public int update(Cliente cliente) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE utente SET username = '" + cliente.getUsername() + "', password = '" + cliente.getPassword() + "', name = '" + cliente.getName() + "', surname = '" + cliente.getSurname() + "', birthdate = '" + cliente.getBirthdate() + "', telephone = '" + cliente.getTelephone() + "', address = '" + cliente.getAddress() + "', job = '" + cliente.getJob() +"' WHERE idUtente = '" + cliente.getIdUtente() + "';");
-        conn.executeUpdate("UPDATE cliente SET canale_preferito = '" + cliente.getCanalePreferito() + "', abilitato = '" + (cliente.isAbilitato() ? 1 : 0) + "' WHERE idCliente = '" + cliente.getIdUtente() + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        conn.executeUpdate("UPDATE utente SET username = '" + cliente.getUsername() + "', password = '" + cliente.getPassword() + "', name = '" + cliente.getName() + "', surname = '" + cliente.getSurname() + "', birthdate = '" + cliente.getBirthdate() + "', telephone = '" + cliente.getTelephone() + "', address = '" + cliente.getAddress() + "', job = '" + cliente.getJob() +"' WHERE idUtente = '" + cliente.getIdUtente() + "';");
+        String sql = "UPDATE cliente SET canale_preferito = '" + cliente.getCanalePreferito() + "', abilitato = '" + (cliente.isAbilitato() ? 1 : 0) + "' WHERE idCliente = '" + cliente.getIdUtente() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;
     }
@@ -58,7 +69,10 @@ public class ClienteDAO implements IClienteDAO {
                 conn.executeUpdate("DELETE FROM acquisto WHERE idAcquisto = '" + rs.getInt("idAcquisto")+ "';");
                 conn.executeUpdate("DELETE FROM lista WHERE idLista = '" + rs.getInt("idLista") + "';");
             }
-            rowCount = conn.executeUpdate("DELETE FROM cliente WHERE idCliente = '" + cliente.getIdUtente() + "';");
+            DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+            String sql = "DELETE FROM cliente WHERE idCliente = '" + cliente.getIdUtente() + "';";
+            IDbOperation dbOperation = new WriteOperation(sql);
+            rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
             conn.executeUpdate("DELETE FROM utente WHERE idUtente = '" + cliente.getIdUtente() + "';");
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -77,7 +91,10 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public Cliente findByID(int idCliente) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE c.idCliente = '" + idCliente + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE c.idCliente = '" + idCliente + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Cliente cliente;
         try {
             rs.next();
@@ -114,7 +131,10 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public Cliente findByUsername(String username) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE u.username = '" + username + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE u.username = '" + username + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Cliente cliente;
         try {
             rs.next();
@@ -151,7 +171,10 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public ArrayList<Cliente> findAll() {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente;");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente;";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Cliente> clienti = new ArrayList<>();
         try {
             while(rs.next()) {
@@ -190,7 +213,10 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public ArrayList<Cliente> findByPuntoVendita(int idPuntoVendita) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE idPuntoVendita = '" + idPuntoVendita + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM utente u INNER JOIN cliente c ON u.idUtente = c.idCliente WHERE idPuntoVendita = '" + idPuntoVendita + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<Cliente> clienti = new ArrayList<>();
         try {
             while(rs.next()) {
@@ -228,7 +254,10 @@ public class ClienteDAO implements IClienteDAO {
 
     public boolean isAbilitato(int idCliente){
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT abilitato FROM cliente c WHERE c.idCliente = '" + idCliente + "';");
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT abilitato FROM cliente c WHERE c.idCliente = '" + idCliente + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         Cliente cliente;
         try {
             if(rs.next()){
