@@ -121,4 +121,32 @@ public class FornitoreDAOTest {
         Assert.assertEquals(0, rowCount);
     }
 
+    @Test
+    public void findAllProdTestOK(){
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        ArrayList<Fornitore> fornitore = fornitoreDAO.findAllProd();
+        Assert.assertEquals(3, fornitore.size());
+    }
+
+    @Test
+    public void findAllProdTestNOK(){
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        ArrayList<Fornitore> fornitore = fornitoreDAO.findAllProd();
+        Assert.assertEquals(2, fornitore.size());
+    }
+
+    @Test
+    public void findAllServTestOK(){
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        ArrayList<Fornitore> fornitore = fornitoreDAO.findAllServ();
+        Assert.assertEquals(2, fornitore.size());
+    }
+
+    @Test
+    public void findAllServTestNOK(){
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        ArrayList<Fornitore> fornitore = fornitoreDAO.findAllServ();
+        Assert.assertEquals(1, fornitore.size());
+    }
+
 }
