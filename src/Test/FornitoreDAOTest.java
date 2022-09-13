@@ -1,12 +1,10 @@
 package Test;
 
 import DAO.Classi.FornitoreDAO;
-import DAO.Classi.ManagerDAO;
 import DAO.Interfacce.IFornitoreDAO;
-import DAO.Interfacce.IManagerDAO;
 import Model.Fornitore;
 
-import Model.Manager;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
