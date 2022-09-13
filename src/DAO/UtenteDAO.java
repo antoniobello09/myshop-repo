@@ -5,6 +5,8 @@ import DbInterface.Command.DbOperationExecutor;
 import DbInterface.Command.IDbOperation;
 import DbInterface.Command.ReadOperation;
 import DbInterface.Command.WriteOperation;
+import Model.Amministratore;
+import Model.Manager;
 import Model.Utente;
 
 import java.sql.ResultSet;
@@ -31,9 +33,14 @@ public class UtenteDAO implements IUtenteDAO {
 
     @Override
     public int add(Utente utente) {
+        String sql;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES ('"+ utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getName() + "','" + utente.getSurname() + "','" + utente.getEmail() + "','" + utente.getBirthdate() + "','" + utente.getTelephone() + "','" + utente.getAddress() + "','" + utente.getJob() + "');";
+        if((utente instanceof Manager)||(utente instanceof Amministratore)){
+            sql = "INSERT INTO utente(username, password, email) VALUES ('"+ utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getEmail() + "');";
+        }else {
+            sql = "INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES ('" + utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getName() + "','" + utente.getSurname() + "','" + utente.getEmail() + "','" + utente.getBirthdate() + "','" + utente.getTelephone() + "','" + utente.getAddress() + "','" + utente.getJob() + "');";
+        }
         IDbOperation dbOp = new WriteOperation(sql);
         int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
         conn.close();

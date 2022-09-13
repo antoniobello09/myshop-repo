@@ -49,6 +49,10 @@ public class Prodotto extends Articolo implements IProdotto, Cloneable {
         this.idPosizione = idPosizione;
     }
 
+    public Prodotto(int idProdotto) {
+        setIdArticolo(idProdotto);
+    }
+
 
     public int getIdProduttore() {
         return idProduttore;

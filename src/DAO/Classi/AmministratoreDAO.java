@@ -1,6 +1,7 @@
 package DAO.Classi;
 
 import DAO.Interfacce.IAmministratoreDAO;
+import DAO.UtenteDAO;
 import DbInterface.Command.DbOperationExecutor;
 import DbInterface.Command.IDbOperation;
 import DbInterface.Command.ReadOperation;
@@ -32,7 +33,14 @@ public class AmministratoreDAO implements IAmministratoreDAO {
 
     @Override
     public int add(Amministratore amministratore) {
-        return 0;
+        int rowCount;
+        conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "INSERT INTO amministratore VALUES ('" + amministratore.getIdUtente() +"');";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        conn.close();
+        return rowCount;
     }
 
     @Override
@@ -49,7 +57,14 @@ public class AmministratoreDAO implements IAmministratoreDAO {
 
     @Override
     public int delete(Amministratore amministratore) {
-        return 0;
+        int rowCount;
+        conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM amministratore WHERE idAmministratore = '" + amministratore.getIdUtente() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        conn.close();
+        return rowCount;
     }
 
     @Override

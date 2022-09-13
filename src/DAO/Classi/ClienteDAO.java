@@ -36,10 +36,10 @@ public class ClienteDAO implements IClienteDAO {
     public int add(Cliente cliente) {
         int rowCount;
         conn = DbConnection.getInstance();
+        conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, city, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getCity() + "','" + cliente.getJob() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + cliente.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
-        conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, city, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getCity() + "','" + cliente.getJob() + "');");
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
         return rowCount;

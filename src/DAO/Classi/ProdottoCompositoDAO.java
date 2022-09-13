@@ -39,7 +39,7 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
     @Override
     public int update(int idProdottoComposito, Prodotto_Quantita prodotto_quantita) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE prodottocomposito SET quantita = '" + prodotto_quantita.getQuantita() + "' WHERE idProdottoCmposito = '" + idProdottoComposito +"' AND idProdotto = '" + prodotto_quantita.getProdotto().getIdArticolo() + "';");
+        int rowCount = conn.executeUpdate("UPDATE prodottocomposito SET quantita = '" + prodotto_quantita.getQuantita() + "' WHERE idProdottoComposito = '" + idProdottoComposito +"' AND idProdotto = '" + prodotto_quantita.getProdotto().getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
@@ -116,7 +116,7 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
 
     @Override
     public ProdottoComposito findByName(String nomeProdottoComposito) {
-        prodottoComposito = (ProdottoComposito) ProdottoDAO.getInstance().findByName(nomeProdottoComposito);
+        ProdottoComposito prodottoComposito = new ProdottoComposito(ProdottoDAO.getInstance().findByName(nomeProdottoComposito));
         prodottoComposito.setSottoprodotti(ProdottoCompositoDAO.getInstance().findSonsByID(prodottoComposito.getIdArticolo()));
         return prodottoComposito;
     }

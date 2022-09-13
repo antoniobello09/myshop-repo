@@ -44,4 +44,6 @@ public class ProdottoComposito extends Prodotto implements IProdotto {
     public void setSottoprodotti(ArrayList<Prodotto_Quantita> sottoprodotti) {
         this.sottoprodotti = sottoprodotti;
     }
+
+
 }

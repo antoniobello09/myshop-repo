@@ -30,7 +30,7 @@ public class ProdottoDAO implements IProdottoDAO {
 
     @Override
     public int add(Prodotto prodotto) {
-        ArticoloDAO.getInstance().add(prodotto);
+        //ArticoloDAO.getInstance().add(prodotto);
         int idProdotto = ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo();
         conn = DbConnection.getInstance();
         int rowCount = conn.executeUpdate("INSERT INTO prodotto(idProdotto,idProduttore,idPosizione) VALUES ('" +  idProdotto + "','" + prodotto.getIdProduttore() +"','" + prodotto.getIdPosizione() + "');");

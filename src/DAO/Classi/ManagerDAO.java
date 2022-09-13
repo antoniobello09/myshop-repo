@@ -58,7 +58,14 @@ public class ManagerDAO implements IManagerDAO {
 
     @Override
     public int delete(Manager manager) {
-        return 0;
+        int rowCount;
+        conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM manager WHERE idManager = '" + manager.getIdUtente() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        conn.close();
+        return rowCount;
     }
 
     @Override

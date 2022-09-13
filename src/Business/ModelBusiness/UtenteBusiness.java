@@ -92,9 +92,7 @@ public class UtenteBusiness {
             // vediamo se u è un cliente
             return uDao.clientExists(u);
         }
-
         return false;
-
     }
 
 
