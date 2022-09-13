@@ -1,13 +1,18 @@
 package Test;
 
 import DAO.Classi.FornitoreDAO;
+import DAO.Classi.ManagerDAO;
 import DAO.Interfacce.IFornitoreDAO;
+import DAO.Interfacce.IManagerDAO;
 import Model.Fornitore;
 
+import Model.Manager;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 
 public class FornitoreDAOTest {
@@ -17,7 +22,7 @@ public class FornitoreDAOTest {
     @Before
     public void setUp() throws Exception {
         IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
-        Fornitore fornitore = new Fornitore("FornitoreTest", "SitoWeb", "citta", "nazione", "tipo");
+        Fornitore fornitore = new Fornitore("FornitoreTest", "SitoWebTest", "citta", "nazione", "tipo");
         fornitoreDAO.add(fornitore);
         idFornitore = fornitoreDAO.findByName("FornitoreTest").getIdFornitore();
         fornitore.setIdFornitore(idFornitore);
@@ -30,6 +35,48 @@ public class FornitoreDAOTest {
         Fornitore fornitore = new Fornitore();
         fornitore.setIdFornitore(idFornitore);
         fornitoreDAO.delete(fornitore);
+    }
+
+    @Test
+    public void findAllTestOK() {
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        ArrayList<Fornitore> fornitore = fornitoreDAO.findAll();
+        Assert.assertEquals(6, fornitore.size());
+    }
+
+    @Test
+    public void findAllTestNOK() {
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        ArrayList<Fornitore> fornitore = fornitoreDAO.findAll();
+        Assert.assertEquals(5, fornitore.size());
+    }
+
+    @Test
+    public void findByIdTestOK() {
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        Fornitore fornitore = fornitoreDAO.findByID(idFornitore);
+        Assert.assertEquals("FornitoreTest", fornitore.getNome());
+    }
+
+    @Test
+    public void findByIdTestNOK() {
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        Fornitore fornitore = fornitoreDAO.findByID(idFornitore);
+        Assert.assertEquals("FornitoreTest2", fornitore.getNome());
+    }
+
+    @Test
+    public void findByUsernameTestOK() {
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        Fornitore fornitore = fornitoreDAO.findByName("FornitoreTest");
+        Assert.assertEquals("SitoWebTest", fornitore.getSitoweb());
+    }
+
+    @Test
+    public void findByUsernameTestNOK() {
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        Fornitore fornitore = fornitoreDAO.findByName("FornitoreTest");
+        Assert.assertEquals("SitoWebTest2", fornitore.getSitoweb());
     }
 
 
@@ -52,6 +99,26 @@ public class FornitoreDAOTest {
         fornitoreDAO.update(fornitore);
         fornitore = fornitoreDAO.findByName("FornitoreTest");
         Assert.assertEquals("SitowebTestModified2", fornitore.getSitoweb());
+    }
+
+    @Test
+    public void deleteTestOK(){
+        int rowCount;
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        Fornitore fornitore = new Fornitore();
+        fornitore.setIdFornitore(idFornitore);
+        rowCount = fornitoreDAO.delete(fornitore);
+        Assert.assertEquals(1, rowCount);
+    }
+
+    @Test
+    public void deleteTestNOK(){
+        int rowCount;
+        IFornitoreDAO fornitoreDAO = FornitoreDAO.getInstance();
+        Fornitore fornitore = new Fornitore();
+        fornitore.setIdFornitore(idFornitore);
+        rowCount = fornitoreDAO.delete(fornitore);
+        Assert.assertEquals(0, rowCount);
     }
 
 }

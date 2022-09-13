@@ -67,14 +67,14 @@ public class ManagerDAOTest {
     }
 
     @Test
-    public void findByIdUsernameTestOK() {
+    public void findByUsernameTestOK() {
         IManagerDAO managerDAO = ManagerDAO.getInstance();
         Manager manager = managerDAO.findByUsername("ManagerTest");
         Assert.assertEquals("PswTest", manager.getPassword());
     }
 
     @Test
-    public void findByIdUsernameTestNOK() {
+    public void findByUsernameTestNOK() {
         IManagerDAO managerDAO = ManagerDAO.getInstance();
         Manager manager = managerDAO.findByUsername("ManagerTest");
         Assert.assertEquals("PswTest2", manager.getPassword());
@@ -119,9 +119,6 @@ public class ManagerDAOTest {
         rowCount = managerDAO.delete(manager);
         Assert.assertEquals(0, rowCount);
     }
-
-
-
 
 
 
