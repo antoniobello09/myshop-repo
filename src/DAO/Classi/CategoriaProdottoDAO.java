@@ -50,7 +50,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         int rowCount = 0;
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
-        String sql = "INSERT INTO categoria_prodotto VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "','" + idCategoriaPadre + "');";
+        String sql = "INSERT INTO categoria_prodotto VALUES ('" + CategoriaDAO.getInstance().findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "','" + idCategoriaPadre + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -108,7 +108,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE c.idCategoria = '" + idCategoria + "';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         CategoriaProdotto categoriaProdotto;
         try {
@@ -176,7 +176,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     public CategoriaProdotto findByName(String nomeCategoria, int i) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "SELECT * FROM categoria c WHERE nome = '" + nomeCategoria + "';";
+        String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE nome = '" + nomeCategoria + "';";
         IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         CategoriaProdotto categoriaProdotto;
@@ -186,6 +186,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
                 categoriaProdotto = new CategoriaProdotto();
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
+                categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
                 return categoriaProdotto;
             }else if (rs.getRow()==0){
                 return null;
