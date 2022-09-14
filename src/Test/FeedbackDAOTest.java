@@ -29,11 +29,9 @@ public class FeedbackDAOTest {
     @Before
     public void setUp() throws Exception {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
-        FeedBack feedback = new FeedBack(10,1, 22, "CommentoTest", 99, Date.valueOf("2022-08-20"));
+        FeedBack feedback = new FeedBack(3, 41, "CommentoTest", 99, Date.valueOf("2022-08-20"));
         feedbackDAO.add(feedback);
-        idFeedback = feedbackDAO.findByID(idFeedback).getIdFeedBack();
-        feedback.setIdFeedBack(idFeedback);
-        feedbackDAO.add(feedback);
+        idFeedback = feedbackDAO.findByIDAcquisto_Articolo(3, 41).getIdFeedBack();
     }
 
     @After
@@ -48,7 +46,7 @@ public class FeedbackDAOTest {
     public void findByIDTestOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
         FeedBack feedback = feedbackDAO.findByID(idFeedback);
-        Assert.assertEquals(10, feedback.getIdFeedBack());
+        Assert.assertEquals("CommentoTest", feedback.getCommento());
     }
 
     @Test

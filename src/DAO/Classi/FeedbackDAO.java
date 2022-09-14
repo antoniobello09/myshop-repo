@@ -3,6 +3,7 @@ package DAO.Classi;
 import DAO.Interfacce.IFeedbackDAO;
 import DbInterface.Command.DbOperationExecutor;
 import DbInterface.Command.IDbOperation;
+import DbInterface.Command.ReadOperation;
 import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
@@ -73,7 +74,7 @@ public class FeedbackDAO implements IFeedbackDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM feedback WHERE idFeedback = '" + idFeedback + "';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         FeedBack feedBack;
         try {
@@ -108,7 +109,7 @@ public class FeedbackDAO implements IFeedbackDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM feedback;";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<FeedBack> feedBacks = new ArrayList<>();
 
@@ -145,7 +146,7 @@ public class FeedbackDAO implements IFeedbackDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM feedback f INNER JOIN acquisto a ON f.idAcquisto = a.idAcquisto WHERE a.idPuntoVendita = '" + idPuntoVendita + "';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         ArrayList<FeedBack> feedBacks = new ArrayList<>();
         try {
@@ -179,7 +180,7 @@ public class FeedbackDAO implements IFeedbackDAO {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM feedback WHERE idAcquisto = '" + idAcquisto + "' AND idArticolo = '" + idArticolo + "';";
-        IDbOperation dbOperation = new WriteOperation(sql);
+        IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         FeedBack feedBack;
         try {
