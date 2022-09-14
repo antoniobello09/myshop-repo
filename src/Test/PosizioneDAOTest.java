@@ -66,4 +66,17 @@ public class PosizioneDAOTest {
         Assert.assertEquals(15, posizione.size());
     }
 
+    @Test
+    public void findAllEmptyOK() {
+        IPosizioneDAO posizioneDAO = PosizioneDAO.getInstance();
+        ArrayList<Posizione> posizione = posizioneDAO.findAllEmpty();
+        Assert.assertEquals(8, posizione.size());
+    }
+
+    @Test
+    public void findAllEmptyNOK() {
+        IPosizioneDAO posizioneDAO = PosizioneDAO.getInstance();
+        ArrayList<Posizione> posizione = posizioneDAO.findAllEmpty();
+        Assert.assertEquals(9, posizione.size());
+    }
 }
