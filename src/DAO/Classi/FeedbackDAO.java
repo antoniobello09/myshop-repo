@@ -115,7 +115,6 @@ public class FeedbackDAO implements IFeedbackDAO {
 
         try {
             while (rs.next()) {
-                rs.next();
                 feedBack = new FeedBack();
                 feedBack.setIdFeedBack(rs.getInt("idFeedback"));
                 feedBack.setIdAcquisto(rs.getInt("idAcquisto"));

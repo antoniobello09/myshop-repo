@@ -1,9 +1,6 @@
 package Test;
 
-import DAO.Classi.AcquistoDAO;
-import DAO.Classi.FeedbackDAO;
-import DAO.Classi.ManagerDAO;
-import DAO.Classi.SchedaProdottoDAO;
+import DAO.Classi.*;
 import DAO.IUtenteDAO;
 import DAO.Interfacce.IAcquistoDAO;
 import DAO.Interfacce.IFeedbackDAO;
@@ -31,7 +28,7 @@ public class FeedbackDAOTest {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
         FeedBack feedback = new FeedBack(1, 22, "CommentoTest", 99, Date.valueOf("2022-08-20"));
         feedbackDAO.add(feedback);
-        idFeedback = feedbackDAO.findByIDAcquisto_Articolo(3, 41).getIdFeedBack();
+        idFeedback = feedbackDAO.findByIDAcquisto_Articolo(1, 22).getIdFeedBack();
     }
 
     @After
@@ -53,21 +50,49 @@ public class FeedbackDAOTest {
     public void findByIDTestNOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
         FeedBack feedback = feedbackDAO.findByID(idFeedback);
-        Assert.assertEquals(11, feedback.getIdFeedBack());
+        Assert.assertEquals(12, feedback.getIdFeedBack());
     }
-/*
+
     @Test
     public void findAllTestOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
         ArrayList<FeedBack> feedback = feedbackDAO.findAll();
-        Assert.assertEquals(1, feedback.size());
+        Assert.assertEquals(11, feedback.size());
     }
 
     @Test
     public void findAllTestNOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
         ArrayList<FeedBack> feedback = feedbackDAO.findAll();
-        Assert.assertEquals(0, feedback.size());
+        Assert.assertEquals(12, feedback.size());
     }
-*/
+
+    @Test
+    public void findByPuntoVenditaTestOK() {
+        IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
+        ArrayList<FeedBack> feedback = feedbackDAO.findByPuntoVendita(AcquistoDAO.getInstance().findByID(1).getIdPuntoVendita());
+        Assert.assertEquals(11, feedback.size());
+    }
+
+    @Test
+    public void findByPuntoVenditaTestNOK() {
+        IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
+        ArrayList<FeedBack> feedback = feedbackDAO.findByPuntoVendita(AcquistoDAO.getInstance().findByID(1).getIdPuntoVendita());
+        Assert.assertEquals(12, feedback.size());
+    }
+
+    @Test
+    public void findByIDAcquisto_ArticoloTestOK() {
+        IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
+        FeedBack feedback = feedbackDAO.findByIDAcquisto_Articolo(1,22);
+        Assert.assertEquals("CommentoTest", feedback.getCommento());
+    }
+
+    @Test
+    public void findByIDAcquisto_ArticoloTestNOK() {
+        IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
+        FeedBack feedback = feedbackDAO.findByIDAcquisto_Articolo(1,22);
+        Assert.assertEquals("CommentoTest1", feedback.getCommento());
+    }
+
 }
