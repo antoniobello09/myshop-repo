@@ -59,7 +59,7 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "DELETE FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita;
+        String sql = "DELETE FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();

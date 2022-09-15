@@ -57,7 +57,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
     }
     public SchedaProdotto findByShop_Product(int idProdotto , int idPuntoVendita, int closeConn) {
         conn = DbConnection.getInstance();
-        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idProdotto = '" + idProdotto + "' AND idPuntoVendita = '" + idPuntoVendita + "';");
+        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idProdotto = '" + idProdotto + "' AND idPuntovendita = '" + idPuntoVendita + "';");
         SchedaProdotto schedaProdotto;
         try {
             rs.next();

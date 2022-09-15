@@ -1,108 +1,103 @@
 package Test;
 
+import DAO.Classi.AcquistoDAO;
 import DAO.IUtenteDAO;
+import DAO.Interfacce.IAcquistoDAO;
 import DAO.UtenteDAO;
+import Model.Acquisto;
 import Model.Utente;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class AcquistoDAOTest {
 
+    private int idLista = 30;
+    private int idPuntoVendita = 6;
+    private int idAcquisto;
+
+
     @Before
     public void setUp() throws Exception {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        utenteDAO.add(new Utente("UserTest", "PswTest", "NomeTest", "CognomeTest", "test@gmail.com", "2000-09-17", "3245551234", "Via Test 122", "Lecce", "Tester"));
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = new Acquisto();
+        acquisto.setData(Date.valueOf("2022-09-15"));
+        acquisto.setIdPuntoVendita(idPuntoVendita);
+        acquisto.setIdLista(idLista);
+        acquistoDAO.add(acquisto);
+        idAcquisto = acquistoDAO.findByIDLista(idLista).getIdAcquisto();
     }
 
     @After
     public void tearDown() throws Exception {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        Utente u = new Utente();
-        u.setIdUtente(utenteDAO.findByUsername("UserTest").getIdUtente());
-        utenteDAO.delete(u);
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = new Acquisto();
+        acquisto.setIdAcquisto(idAcquisto);
+        acquistoDAO.delete(acquisto);
     }
 
     @Test
-    public void findAllTest() {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        ArrayList<Utente> utenti = utenteDAO.findAll();
-        Assert.assertEquals(4, utenti.size());
-    }
-
-    @Test
-    public void findByIdTest() {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        Utente utente = utenteDAO.findByID(1);
-        Assert.assertEquals("admin", utente.getUsername());
-    }
-
-    @Test
-    public void findByIdUsernameTest() {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        Utente utente = utenteDAO.findByUsername("admin");
-        Assert.assertEquals(1, utente.getIdUtente());
-    }
-
-    /*@Test
-    public void removeByIdTest() {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        Utente u = new Utente();
-        u.setIdUtente(utenteDAO.findByUsername("UserTest").getIdUtente());
-        int rowCount = utenteDAO.delete(u);
+    public void deleteTestOK(){
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = new Acquisto();
+        acquisto.setIdAcquisto(idAcquisto);
+        int rowCount = acquistoDAO.delete(acquisto);
         Assert.assertEquals(1, rowCount);
     }
-*/
+
     @Test
-    public void updateTest() {
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        Utente utente = new Utente("UserTest", "PswTest", "NomeTest", "CognomeTest", "valentino@vr46.com", "2000-09-17", "3245551234", "Via Test 122", "Lecce", "Tester");
-        utente.setIdUtente(utenteDAO.findByUsername("UserTest").getIdUtente());
-        utenteDAO.update(utente);
-        Assert.assertEquals("valentino@vr46.com", utente.getEmail());
+    public void deleteTestNOK(){
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = new Acquisto();
+        acquisto.setIdAcquisto(idAcquisto);
+        int rowCount = acquistoDAO.delete(acquisto);
+        Assert.assertEquals(0, rowCount);
     }
 
     @Test
-    public void userExistsTest(){
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        boolean response = utenteDAO.userExists("admin");
-        Assert.assertEquals(true, response);
+    public void findAllTestOK() {
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        ArrayList<Acquisto> acquisti = acquistoDAO.findAll();
+        Assert.assertEquals(3, acquisti.size());
     }
 
     @Test
-    public void credentialsOkTest(){
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        boolean response = utenteDAO.credentialsOk("admin", "12345");
-        Assert.assertEquals(true, response);
+    public void findAllTestNOK() {
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        ArrayList<Acquisto> acquisti = acquistoDAO.findAll();
+        Assert.assertEquals(1, acquisti.size());
     }
 
     @Test
-    public void clientExistsTest(){
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        boolean response = utenteDAO.clientExists(new Utente("cliente1"));
-        Assert.assertEquals(true, response);
+    public void findByIdTestOK() {
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = acquistoDAO.findByID(idAcquisto);
+        Assert.assertEquals(idAcquisto, acquisto.getIdAcquisto());
     }
 
     @Test
-    public void managerExistsTest(){
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        boolean response = utenteDAO.managerExists(new Utente("manager1"));
-        Assert.assertEquals(true, response);
+    public void findByIdTestNOK() {
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = acquistoDAO.findByID(idAcquisto);
+        Assert.assertEquals(0, acquisto.getIdAcquisto());
     }
 
     @Test
-    public void adminExistsTest(){
-        IUtenteDAO utenteDAO = UtenteDAO.getInstance();
-        boolean response = utenteDAO.administratorExists(new Utente("admin"));
-        Assert.assertEquals(true, response);
+    public void findByIdListaTestOK() {
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = acquistoDAO.findByIDLista(idLista);
+        Assert.assertEquals(idLista, acquisto.getIdLista());
     }
 
-
-
-
-
+    @Test
+    public void findByIdListaTestNOK() {
+        IAcquistoDAO acquistoDAO = AcquistoDAO.getInstance();
+        Acquisto acquisto = acquistoDAO.findByIDLista(idLista);
+        Assert.assertEquals(0, acquisto.getIdLista());
+    }
 
 }

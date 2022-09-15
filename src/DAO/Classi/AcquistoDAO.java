@@ -48,7 +48,13 @@ public class AcquistoDAO implements IAcquistoDAO {
 
     @Override
     public int delete(Acquisto acquisto) {
-        return 0;
+        conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "DELETE FROM acquisto WHERE idAcquisto = '" + acquisto.getIdAcquisto() + "';";
+        IDbOperation dbOperation = new WriteOperation(sql);
+        int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
+        conn.close();
+        return rowCount;
     }
 
     @Override
