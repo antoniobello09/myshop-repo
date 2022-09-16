@@ -9,6 +9,7 @@ import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 
 import Model.Lista;
+import Model.Manager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -97,6 +98,41 @@ public class ListaDAO implements IListaDAO {
         } finally {
             if(closeConn == 0)
             conn.close();
+        }
+        return null;
+    }
+
+    @Override
+    public Lista findByName(String nome){
+        return findByName(nome, 0);
+    }
+
+    public Lista findByName(String nome, int closeConn) {
+        conn = DbConnection.getInstance();
+        DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
+        String sql = "SELECT * FROM lista WHERE nome = '" + nome + "';";
+        IDbOperation dbOperation = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
+        Manager manager;
+        try {
+            if(rs.next()) {
+                lista = new Lista();
+                lista.setIdLista(rs.getInt("idLista"));
+                lista.setIdCliente(rs.getInt("idCliente"));
+                lista.setNome(rs.getString("nome"));
+                return lista;
+            }
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            if(closeConn == 0)
+                conn.close();
         }
         return null;
     }

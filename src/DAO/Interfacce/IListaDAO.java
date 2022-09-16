@@ -12,6 +12,7 @@ public interface IListaDAO {
     int update(Lista lista);
     int delete(Lista lista);
     Lista findByID(int idLista);
+    Lista findByName(String nome);
     ArrayList<Lista> findAll();
     ArrayList<Lista> findAll(int idCliente);
 
