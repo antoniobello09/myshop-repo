@@ -49,7 +49,7 @@ public class ListaDAOTest {
     public void findAllTestOK() {
         IListaDAO listaDAO = ListaDAO.getInstance();
         ArrayList<Lista> lista = listaDAO.findAll();
-        Assert.assertEquals(2, lista.size());
+        Assert.assertEquals(4, lista.size());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ListaDAOTest {
     public void findAllIdClienteTestOK() {
         IListaDAO listaDAO = ListaDAO.getInstance();
         ArrayList<Lista> lista = listaDAO.findAll();
-        Assert.assertEquals(2, lista.size());
+        Assert.assertEquals(4, lista.size());
     }
 
     @Test

@@ -57,7 +57,7 @@ public class FeedbackDAOTest {
     public void findAllTestOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
         ArrayList<FeedBack> feedback = feedbackDAO.findAll();
-        Assert.assertEquals(11, feedback.size());
+        Assert.assertEquals(4, feedback.size());
     }
 
     @Test
@@ -70,14 +70,14 @@ public class FeedbackDAOTest {
     @Test
     public void findByPuntoVenditaTestOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
-        ArrayList<FeedBack> feedback = feedbackDAO.findByPuntoVendita(AcquistoDAO.getInstance().findByID(1).getIdPuntoVendita());
-        Assert.assertEquals(11, feedback.size());
+        ArrayList<FeedBack> feedback = feedbackDAO.findByPuntoVendita(AcquistoDAO.getInstance().findByID(4).getIdPuntoVendita());
+        Assert.assertEquals(1, feedback.size());
     }
 
     @Test
     public void findByPuntoVenditaTestNOK() {
         IFeedbackDAO feedbackDAO = FeedbackDAO.getInstance();
-        ArrayList<FeedBack> feedback = feedbackDAO.findByPuntoVendita(AcquistoDAO.getInstance().findByID(1).getIdPuntoVendita());
+        ArrayList<FeedBack> feedback = feedbackDAO.findByPuntoVendita(AcquistoDAO.getInstance().findByID(4).getIdPuntoVendita());
         Assert.assertEquals(12, feedback.size());
     }
 
