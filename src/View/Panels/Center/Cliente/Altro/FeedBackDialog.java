@@ -18,9 +18,8 @@ import java.util.ArrayList;
 public class FeedBackDialog extends JDialog implements ActionListener {
 
     private static FeedBackDialog dialog;
-    private static Object value;        //Valore da ritornare
+    private static ArrayList<String> value;        //Valore da ritornare
     private Frame appFrame;
-    private FeedBack feedBack;
 
     private JPanel grigliaPanel = new JPanel();
     private JLabel inserisciCommento = new JLabel("Commento: ");
@@ -31,27 +30,17 @@ public class FeedBackDialog extends JDialog implements ActionListener {
     private JTextArea rispostaField = new JTextArea();
     private JButton btnSalva = new JButton("Salva");
 
-    private int idAcquisto;
-    private int idArticolo;
-    private int idFeedBack;
 
-    private FeedBackDialog(Frame frame, String title, int idAcquisto, int idArticolo) {
+    private FeedBackDialog(Frame frame, String title, String commento, int indiceDiGradimento, String risposta) {
 
         super(frame, title, true);
         appFrame = frame;
 
-        this.idAcquisto = idAcquisto;
-        this.idArticolo = idArticolo;
+        commentoField.setText(commento);
+        indiceDiGradimentoField.setText(String.valueOf(indiceDiGradimento));
+        rispostaField.setText(risposta);
 
-        if (FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo) != null){
-            feedBack = FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo);
-            this.idFeedBack = feedBack.getIdFeedBack();
-            commentoField.setText(feedBack.getCommento());
-            indiceDiGradimentoField.setText(String.valueOf(feedBack.getIndiceGradimento()));
-            rispostaField.setText(feedBack.getRisposta());
-        }
-
-
+        value = new ArrayList<>();
 
         layoutSetting();
 
@@ -61,18 +50,16 @@ public class FeedBackDialog extends JDialog implements ActionListener {
 
         listenerSettings();
 
-
         pack();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
-    public static Object showDialog(JFrame appFrame, String title, int idAcquisto, int idArticolo) {
+    public static ArrayList<String> showDialog(JFrame appFrame, String title, String commento, int indiceDiGradimento, String risposta) {
         Frame frame = JOptionPane.getFrameForComponent(appFrame);
-        dialog = new FeedBackDialog(frame, title, idAcquisto, idArticolo);
+        dialog = new FeedBackDialog(frame, title, commento, indiceDiGradimento, risposta);
         dialog.setVisible(true);
-        return null;
-
+        return value;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -83,7 +70,7 @@ public class FeedBackDialog extends JDialog implements ActionListener {
                         "Empty Field Error",
                         JOptionPane.ERROR_MESSAGE);
             }else{
-                int indiceDiGradimento = 0;
+                int indiceDiGradimento;
                 try {
                     indiceDiGradimento = Integer.parseInt(indiceDiGradimentoField.getText());
                     if((indiceDiGradimento<0)||(indiceDiGradimento>10)){
@@ -91,13 +78,9 @@ public class FeedBackDialog extends JDialog implements ActionListener {
                                 "Inserire un numero da 1 a 10!",
                                 "Feedback Error",
                                 JOptionPane.ERROR_MESSAGE);
-                    }else if (FeedbackDAO.getInstance().findByIDAcquisto_Articolo(idAcquisto, idArticolo) == null) {
-                        FeedBack f = new FeedBack(idAcquisto, idArticolo, commentoField.getText(), indiceDiGradimento, Date.valueOf(LocalDate.now()));
-                        FeedbackDAO.getInstance().add(f);
-                        FeedBackDialog.dialog.setVisible(false);
                     }else{
-                        FeedBack f = new FeedBack(idFeedBack, idAcquisto, idArticolo, commentoField.getText(), indiceDiGradimento, feedBack.getRisposta(), Date.valueOf(LocalDate.now()));
-                        FeedbackDAO.getInstance().update(f);
+                        value.add(commentoField.getText());
+                        value.add(indiceDiGradimentoField.getText());
                         FeedBackDialog.dialog.setVisible(false);
                     }
                 }catch(NumberFormatException er){

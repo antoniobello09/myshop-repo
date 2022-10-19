@@ -1,13 +1,11 @@
 package View.Panels.Center.Ospite;
 
-import DAO.Classi.ProdottoDAO;
-import Model.Prodotto;
+import Business.ModelBusiness.ProdottoBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Ospite.BrowseProductListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class BrowseProductPanel extends JPanel {
     private BrowseProductListener browseProductListener;
@@ -16,13 +14,9 @@ public class BrowseProductPanel extends JPanel {
     private JLabel labelTitle = new JLabel("Catalogo Prodotti");
     private JScrollPane currentScrollPane;
     private JTable currentTable;
-    private ProdottiTableModel currentTableModel;
-
-    private ArrayList<Prodotto> lista;
 
     public BrowseProductPanel(AppFrame appFrame) {
 
-        lista = ProdottoDAO.getInstance().findAll();
 
         this.appFrame = appFrame;
         browseProductListener = new BrowseProductListener(this, this.appFrame);
@@ -39,8 +33,8 @@ public class BrowseProductPanel extends JPanel {
     }
 
     public void tableSetting(){
-        currentTableModel = new ProdottiTableModel(lista);
-        currentTable = new JTable(currentTableModel);
+        currentTable = ProdottoBusiness.getInstance().getTabellaProdotti();
+        currentTable.setRowHeight(60);
         currentScrollPane = new JScrollPane(currentTable);
     }
 

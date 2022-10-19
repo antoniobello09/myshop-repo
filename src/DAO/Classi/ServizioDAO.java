@@ -7,11 +7,10 @@ import DbInterface.Command.ReadOperation;
 import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
-import Model.Articolo;
-import Model.CategoriaServizio;
-import Model.Prodotto;
 import Model.Servizio;
 
+import java.io.*;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class ServizioDAO implements IServizioDAO {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "UPDATE servizio SET idFornitoreServizio = '"+ servizio.getIdFornitoreServizio() + "' WHERE idServizio = '" + servizio.getIdArticolo() + "';";
+        String sql = "UPDATE servizio SET idFornitoreServizio = '" + servizio.getIdFornitoreServizio() + "' WHERE idServizio = '" + servizio.getIdArticolo() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -71,11 +70,7 @@ public class ServizioDAO implements IServizioDAO {
     }
 
     @Override
-    public Servizio findByID(int idServizio){
-        return findByID(idServizio, 0);
-    }
-
-    public Servizio findByID(int idServizio, int closeConn) {
+    public Servizio findByID(int idServizio) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo WHERE servizio.idServizio = '" + idServizio + "';";
@@ -91,28 +86,44 @@ public class ServizioDAO implements IServizioDAO {
             servizio.setPrezzo(rs.getFloat("prezzo"));
             servizio.setDescrizione(rs.getString("descrizione"));
             servizio.setIdFornitoreServizio(rs.getInt("idFornitoreServizio"));
+            Blob immagine = rs.getBlob("immagine");
+            if (immagine != null) {
+                byte[] byteFormat = immagine.getBytes(1, 1);
+                File immagineFile = switch (byteFormat[0]) {
+                    case -119 -> File.createTempFile("immagine" + servizio.getNome(), ".png");
+                    case 73, 77 -> File.createTempFile("immagine" + servizio.getNome(), ".tif");
+                    case 71 -> File.createTempFile("immagine" + servizio.getNome(), ".gif");
+                    case -1 -> File.createTempFile("immagine" + servizio.getNome(), ".jpg");
+                    default -> File.createTempFile("immagine" + servizio.getNome(), "");
+                };
+                InputStream inputStream = immagine.getBinaryStream();
+                FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                while (inputStream.available() > 0) {
+                    outputStream.write(inputStream.read());
+                }
+                outputStream.close();
+                inputStream.close();
+                servizio.setImmagine(immagineFile);
+            }
             return servizio;
-        } catch (SQLException e) {
+        } catch(SQLException e){
             // Gestisce le differenti categorie d'errore
             System.out.println("SQLException: " + e.getMessage());
             System.out.println("SQLState: " + e.getSQLState());
             System.out.println("VendorError: " + e.getErrorCode());
-        } catch (NullPointerException e) {
+        } catch(NullPointerException e){
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
-        } finally {
-            if(closeConn == 0)
-                conn.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        } finally{
+            conn.close();
         }
         return null;
     }
 
     @Override
-    public Servizio findByName(String nomeServizio) {
-        return findByName(nomeServizio, 0);
-    }
-
-    public Servizio findByName(String nomeServizio, int closeConn){
+    public Servizio findByName(String nomeServizio){
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM servizio INNER JOIN articolo ON servizio.idServizio = articolo.idArticolo WHERE nome = '" + nomeServizio + "';";
@@ -128,6 +139,25 @@ public class ServizioDAO implements IServizioDAO {
             servizio.setPrezzo(rs.getFloat("prezzo"));
             servizio.setDescrizione(rs.getString("descrizione"));
             servizio.setIdFornitoreServizio(rs.getInt("idFornitoreServizio"));
+            Blob immagine = rs.getBlob("immagine");
+            if (immagine != null) {
+                byte[] byteFormat = immagine.getBytes(1, 1);
+                File immagineFile = switch (byteFormat[0]) {
+                    case -119 -> File.createTempFile("immagine" + servizio.getNome(), ".png");
+                    case 73, 77 -> File.createTempFile("immagine" + servizio.getNome(), ".tif");
+                    case 71 -> File.createTempFile("immagine" + servizio.getNome(), ".gif");
+                    case -1 -> File.createTempFile("immagine" + servizio.getNome(), ".jpg");
+                    default -> File.createTempFile("immagine" + servizio.getNome(), "");
+                };
+                InputStream inputStream = immagine.getBinaryStream();
+                FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                while (inputStream.available() > 0) {
+                    outputStream.write(inputStream.read());
+                }
+                outputStream.close();
+                inputStream.close();
+                servizio.setImmagine(immagineFile);
+            }
             return servizio;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -137,9 +167,10 @@ public class ServizioDAO implements IServizioDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }
@@ -161,6 +192,25 @@ public class ServizioDAO implements IServizioDAO {
                 servizio.setPrezzo(rs.getFloat("prezzo"));
                 servizio.setDescrizione(rs.getString("descrizione"));
                 servizio.setIdFornitoreServizio(rs.getInt("idFornitoreServizio"));
+                Blob immagine = rs.getBlob("immagine");
+                if (immagine != null) {
+                    byte[] byteFormat = immagine.getBytes(1, 1);
+                    File immagineFile = switch (byteFormat[0]) {
+                        case -119 -> File.createTempFile("immagine" + servizio.getNome(), ".png");
+                        case 73, 77 -> File.createTempFile("immagine" + servizio.getNome(), ".tif");
+                        case 71 -> File.createTempFile("immagine" + servizio.getNome(), ".gif");
+                        case -1 -> File.createTempFile("immagine" + servizio.getNome(), ".jpg");
+                        default -> File.createTempFile("immagine" + servizio.getNome(), "");
+                    };
+                    InputStream inputStream = immagine.getBinaryStream();
+                    FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                    while (inputStream.available() > 0) {
+                        outputStream.write(inputStream.read());
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    servizio.setImmagine(immagineFile);
+                }
                 servizi.add(servizio);
             }
             return servizi;
@@ -172,6 +222,8 @@ public class ServizioDAO implements IServizioDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             conn.close();
         }

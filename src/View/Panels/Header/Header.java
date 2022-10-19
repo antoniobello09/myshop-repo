@@ -50,7 +50,7 @@ public class Header extends JPanel {
         if(u==null) setLoggedOutStatus();
 
         else {
-            welcome.setText("Benvenuto, "+u.getName());
+            welcome.setText("Benvenuto, " + u.getUsername());
             setLoggedInStatus();
         }
     }

@@ -26,19 +26,19 @@ public class DocumentoListaAcquisto extends Documento {
     @Override
     public void invia(String indirizzo) {
 
-        // 1. genera il pdf
+        // 1. genera la stringa
         String text = "";
 
         Iterator<Lista_has_Articolo> i = lista.iterator();
         while(i.hasNext()) {
             Articolo a = ArticoloDAO.getInstance().findById(i.next().getIdArticolo());
-            text += a.getNome()+", ";
+            text += a.getNome()+" ";
+
         }
 
 
         try {
             File tempFile = File.createTempFile("myshop", ".pdf");
-            System.out.println(tempFile);
             pdfAPI.creaPdf(text, tempFile.getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException(e);

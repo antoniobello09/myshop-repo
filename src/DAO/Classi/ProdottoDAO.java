@@ -7,6 +7,8 @@ import Model.Articolo;
 import Model.Prodotto;
 import Model.Fornitore;
 
+import java.io.*;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,10 +32,8 @@ public class ProdottoDAO implements IProdottoDAO {
 
     @Override
     public int add(Prodotto prodotto) {
-        //ArticoloDAO.getInstance().add(prodotto);
-        int idProdotto = ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo();
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO prodotto(idProdotto,idProduttore,idPosizione) VALUES ('" +  idProdotto + "','" + prodotto.getIdProduttore() +"','" + prodotto.getIdPosizione() + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO prodotto(idProdotto,idProduttore,idPosizione) VALUES ('" +  prodotto.getIdArticolo() + "','" + prodotto.getIdProduttore() +"','" + prodotto.getIdPosizione() + "');");
         conn.close();
         return rowCount;
     }
@@ -58,11 +58,7 @@ public class ProdottoDAO implements IProdottoDAO {
 
 
     @Override
-    public Prodotto findByID(int idProdotto){
-        return findByID(idProdotto, 0);
-    }
-
-    public Prodotto findByID(int idProdotto, int closeConn) {
+    public Prodotto findByID(int idProdotto) {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM prodotto INNER JOIN articolo ON prodotto.idProdotto = articolo.idArticolo WHERE prodotto.idProdotto = '" + idProdotto + "';");
         Prodotto prodotto;
@@ -76,6 +72,27 @@ public class ProdottoDAO implements IProdottoDAO {
             prodotto.setDescrizione(rs.getString("descrizione"));
             prodotto.setIdProduttore(rs.getInt("idProduttore"));
             prodotto.setIdPosizione(rs.getInt("idPosizione"));
+            Blob immagine = rs.getBlob("immagine");
+
+            if (immagine!=null) {
+                byte[] byteFormat = immagine.getBytes(1, 1);
+                File immagineFile = switch (byteFormat[0]) {
+                    case -119 -> File.createTempFile("immagine" + prodotto.getNome(), ".png");
+                    case 73, 77 -> File.createTempFile("immagine" + prodotto.getNome(), ".tif");
+                    case 71 -> File.createTempFile("immagine" + prodotto.getNome(), ".gif");
+                    case -1 -> File.createTempFile("immagine" + prodotto.getNome(), ".jpg");
+                    default -> File.createTempFile("immagine" + prodotto.getNome(),"");
+                };
+                InputStream inputStream = immagine.getBinaryStream();
+                FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                while (inputStream.available() > 0) {
+                    outputStream.write(inputStream.read());
+                }
+                outputStream.close();
+                inputStream.close();
+                immagineFile.deleteOnExit();
+                prodotto.setImmagine(immagineFile);
+            }
             return prodotto;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -85,19 +102,16 @@ public class ProdottoDAO implements IProdottoDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-            if(closeConn == 0)
             conn.close();
         }
         return null;
     }
 
     @Override
-    public  Prodotto findByName(String nomeProdotto){
-        return findByName(nomeProdotto, 0);
-    }
-
-    public Prodotto findByName(String nomeProdotto, int closeConn) {
+    public Prodotto findByName(String nomeProdotto) {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM prodotto INNER JOIN articolo ON prodotto.idProdotto = articolo.idArticolo WHERE articolo.nome = '" + nomeProdotto + "';");
         Prodotto prodotto = new Prodotto();
@@ -110,6 +124,26 @@ public class ProdottoDAO implements IProdottoDAO {
             prodotto.setDescrizione(rs.getString("descrizione"));
             prodotto.setIdProduttore(rs.getInt("idProduttore"));
             prodotto.setIdPosizione(rs.getInt("idPosizione"));
+            Blob immagine = rs.getBlob("immagine");
+
+            if (immagine!=null) {
+                byte[] byteFormat = immagine.getBytes(1, 1);
+                File immagineFile = switch (byteFormat[0]) {
+                    case -119 -> File.createTempFile("immagine" + prodotto.getNome(), ".png");
+                    case 73, 77 -> File.createTempFile("immagine" + prodotto.getNome(), ".tif");
+                    case 71 -> File.createTempFile("immagine" + prodotto.getNome(), ".gif");
+                    case -1 -> File.createTempFile("immagine" + prodotto.getNome(), ".jpg");
+                    default -> File.createTempFile("immagine" + prodotto.getNome(),"");
+                };
+                InputStream inputStream = immagine.getBinaryStream();
+                FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                while (inputStream.available() > 0) {
+                    outputStream.write(inputStream.read());
+                }
+                outputStream.close();
+                inputStream.close();
+                prodotto.setImmagine(immagineFile);
+            }
             return prodotto;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -119,8 +153,9 @@ public class ProdottoDAO implements IProdottoDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-            if(closeConn == 0)
             conn.close();
         }
         return null;
@@ -141,6 +176,26 @@ public class ProdottoDAO implements IProdottoDAO {
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 prodotto.setIdProduttore(rs.getInt("idProduttore"));
                 prodotto.setIdPosizione(rs.getInt("idPosizione"));
+                Blob immagine = rs.getBlob("immagine");
+
+                if (immagine!=null) {
+                    byte[] byteFormat = immagine.getBytes(1, 1);
+                    File immagineFile = switch (byteFormat[0]) {
+                        case -119 -> File.createTempFile("immagine" + prodotto.getNome(), ".png");
+                        case 73, 77 -> File.createTempFile("immagine" + prodotto.getNome(), ".tif");
+                        case 71 -> File.createTempFile("immagine" + prodotto.getNome(), ".gif");
+                        case -1 -> File.createTempFile("immagine" + prodotto.getNome(), ".jpg");
+                        default -> File.createTempFile("immagine" + prodotto.getNome(),"");
+                    };
+                    InputStream inputStream = immagine.getBinaryStream();
+                    FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                    while (inputStream.available() > 0) {
+                        outputStream.write(inputStream.read());
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    prodotto.setImmagine(immagineFile);
+                }
                 prodotti.add(prodotto);
             }
             return prodotti;
@@ -152,6 +207,8 @@ public class ProdottoDAO implements IProdottoDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             conn.close();
         }

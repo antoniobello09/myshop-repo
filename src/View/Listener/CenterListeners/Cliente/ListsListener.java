@@ -26,7 +26,7 @@ public class ListsListener implements ActionListener {
         }else if(e.getActionCommand().equals("acquista")){
             listsPanel.acquista();
         }else if(e.getActionCommand().equals("pdf")){
-            listsPanel.scaricaPDF();
+            listsPanel.inviaPDF();
         }
     }
 }

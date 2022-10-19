@@ -1,5 +1,8 @@
 package View.Panels.Center.Amministratore.GestionePuntiVenditaPanels;
 
+import Business.HelpFunctions;
+import Business.ModelBusiness.PuntoVenditaBusiness;
+import Business.ModelBusiness.SchedaProdottoBusiness;
 import DAO.Classi.ProdottoDAO;
 import DAO.Classi.PuntoVenditaDAO;
 import DAO.Classi.SchedaProdottoDAO;
@@ -24,19 +27,11 @@ public class BindShopArticlePanel extends JPanel {
         private JTextField prodottoField = new JTextField();
         private JButton btnAssocia = new JButton("Associa");
 
-    private ArrayList<PuntoVendita> puntoVenditaList = new ArrayList<>();
-
     public BindShopArticlePanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         bindShopArticleListener = new BindShopArticleListener(this, appFrame);
 
-        puntoVenditaList = PuntoVenditaDAO.getInstance().findAll();
-        if(puntoVenditaList!=null) {
-            for (int i=0;i<puntoVenditaList.size();i++){
-                puntoVenditaField.addItem("" + puntoVenditaList.get(i).getIndirizzo() + ", " + puntoVenditaList.get(i).getCitta());
-            }
-        }
-
+        puntoVenditaField = HelpFunctions.getFullComboBox(PuntoVenditaBusiness.getInstance().getAllShopsAddresses());
 
         layoutSetting();
 
@@ -55,18 +50,35 @@ public class BindShopArticlePanel extends JPanel {
                     "Empty Product Field Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
-            if(ProdottoDAO.getInstance().findByName(prodottoField.getText())!=null){
-                int idProdotto = ProdottoDAO.getInstance().findByName(prodottoField.getText()).getIdArticolo();
-                String[] indirizzo = String.valueOf(puntoVenditaField.getSelectedItem()).split(", ");
-                int idPuntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0],indirizzo[1]).getIdPuntoVendita();
-                SchedaProdottoDAO.getInstance().add(idProdotto, 0, idPuntoVendita);
-            }else{
-                JOptionPane.showMessageDialog(appFrame,
+            int result = SchedaProdottoBusiness.getInstance().associa(puntoVenditaField.getSelectedItem().toString(), prodottoField.getText());
+            switch (result) {
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
                         "Prodotto non esistente!",
                         "Wrong Product Field Error",
                         JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 2:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "L'associazione non è riuscita!",
+                            "Association Product Shop Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 3:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Associazione già fatta!",
+                            "Association Product Shop Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                        "Associazione creata con successo!",
+                        "Association Product Shop Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    break;
             }
         }
+        prodottoField.setText("");
     }
 
     public void layoutSetting(){

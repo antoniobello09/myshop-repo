@@ -21,6 +21,8 @@ public class CreateCompositeProductListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("aggiungiProdotti")){
             createCompositeProductPanel.aggiungiProdotti();
+        }else if(e.getActionCommand().equals("fileChooser")){
+            createCompositeProductPanel.scegliImmagine();
         }
     }
 

@@ -70,10 +70,7 @@ public class ListaDAO implements IListaDAO {
     }
 
     @Override
-    public Lista findByID(int idLista){
-        return findByID(idLista, 0);
-    }
-    public Lista findByID(int idLista, int closeConn) {
+    public Lista findByID(int idLista) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM lista WHERE idLista = '" + idLista + "';";
@@ -96,18 +93,13 @@ public class ListaDAO implements IListaDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
             conn.close();
         }
         return null;
     }
 
     @Override
-    public Lista findByName(String nome){
-        return findByName(nome, 0);
-    }
-
-    public Lista findByName(String nome, int closeConn) {
+    public Lista findByName(String nome) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM lista WHERE nome = '" + nome + "';";
@@ -131,8 +123,7 @@ public class ListaDAO implements IListaDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

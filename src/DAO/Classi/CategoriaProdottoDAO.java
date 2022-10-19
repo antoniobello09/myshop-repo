@@ -33,11 +33,10 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
 
     @Override
     public int add(CategoriaProdotto categoriaProdotto) {
+        int rowCount;
         conn = DbConnection.getInstance();
-        int rowCount = 0;
-        conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO categoria_prodotto(idCategoria) VALUES ('" + findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "');";
+        String sql = "INSERT INTO categoria_prodotto(idCategoria) VALUES ('" + categoriaProdotto.getIdCategoria() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -45,12 +44,11 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     }
 
     @Override
-    public int addSub(CategoriaProdotto categoriaProdotto, int idCategoriaPadre) {
+    public int addSub(CategoriaProdotto categoriaProdotto) {
         conn = DbConnection.getInstance();
         int rowCount = 0;
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        rowCount = conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaProdotto.getNome() + "');");
-        String sql = "INSERT INTO categoria_prodotto VALUES ('" + CategoriaDAO.getInstance().findByName(categoriaProdotto.getNome(),1).getIdCategoria() + "','" + idCategoriaPadre + "');";
+        String sql = "INSERT INTO categoria_prodotto VALUES ('" + categoriaProdotto.getIdCategoria() + "','" + categoriaProdotto.getIdCategoriaPadre() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -75,11 +73,9 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "DELETE FROM categoria_prodotto WHERE idCategoria_Padre = '" + categoriaProdotto.getIdCategoria() + "';";
+        String sql = "DELETE FROM categoria_prodotto WHERE idCategoriaPadre = '" + categoriaProdotto.getIdCategoriaPadre() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
-        conn.executeUpdate("DELETE FROM categoria_prodotto WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
-        conn.executeUpdate("DELETE FROM categoria WHERE idCategoria = '" + categoriaProdotto.getIdCategoria() + "';");
         conn.close();
         return rowCount;
     }
@@ -100,11 +96,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
 
 
     @Override
-    public CategoriaProdotto findByID(int idCategoria){
-        return findByID(idCategoria, 0);
-    }
-
-    public CategoriaProdotto findByID(int idCategoria, int i) {
+    public CategoriaProdotto findByID(int idCategoria) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE c.idCategoria = '" + idCategoria + "';";
@@ -131,7 +123,6 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(i==0)
             conn.close();
         }
         return null;
@@ -169,11 +160,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
     }
 
     @Override
-    public CategoriaProdotto findByName(String nomeCategoria){
-        return findByName(nomeCategoria, 0);
-    }
-
-    public CategoriaProdotto findByName(String nomeCategoria, int i) {
+    public CategoriaProdotto findByName(String nomeCategoria) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_prodotto cp ON c.idCategoria = cp.idCategoria WHERE nome = '" + nomeCategoria + "';";
@@ -200,8 +187,7 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(i==0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

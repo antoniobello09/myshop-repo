@@ -36,9 +36,8 @@ public class ClienteDAO implements IClienteDAO {
     public int add(Cliente cliente) {
         int rowCount;
         conn = DbConnection.getInstance();
-        conn.executeUpdate("INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, city, job) VALUES('"+ cliente.getUsername() + "','" + cliente.getPassword() + "','" + cliente.getName() + "','" + cliente.getSurname() + "','" + cliente.getEmail() + "','" + cliente.getBirthdate() + "','" + cliente.getTelephone() + "','" + cliente.getAddress() + "','" + cliente.getCity() + "','" + cliente.getJob() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO cliente VALUES ('" + UtenteDAO.getInstance().findByUsername(cliente.getUsername(), 1).getIdUtente() +"','" + cliente.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');";
+        String sql = "INSERT INTO cliente VALUES ('" + cliente.getIdUtente() +"','" + cliente.getIdPuntoVendita() + "','" + cliente.getCanalePreferito() + "','" + (cliente.isAbilitato() ? 1 : 0) + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -49,7 +48,6 @@ public class ClienteDAO implements IClienteDAO {
     public int update(Cliente cliente) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        conn.executeUpdate("UPDATE utente SET username = '" + cliente.getUsername() + "', password = '" + cliente.getPassword() + "', name = '" + cliente.getName() + "', surname = '" + cliente.getSurname() + "', birthdate = '" + cliente.getBirthdate() + "', telephone = '" + cliente.getTelephone() + "', address = '" + cliente.getAddress() + "', job = '" + cliente.getJob() +"' WHERE idUtente = '" + cliente.getIdUtente() + "';");
         String sql = "UPDATE cliente SET canale_preferito = '" + cliente.getCanalePreferito() + "', abilitato = '" + (cliente.isAbilitato() ? 1 : 0) + "' WHERE idCliente = '" + cliente.getIdUtente() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         int rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();

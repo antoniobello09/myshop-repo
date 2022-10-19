@@ -3,10 +3,13 @@ package DAO.Interfacce;
 import Model.Articolo;
 import Model.Utente;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface IArticoloDAO {
-    int add(Articolo articolo);
+    int add(Articolo articolo) throws SQLException, IOException;
     int update(Articolo articolo);
     int delete(Articolo articolo);
     Articolo findById(int idArticolo);

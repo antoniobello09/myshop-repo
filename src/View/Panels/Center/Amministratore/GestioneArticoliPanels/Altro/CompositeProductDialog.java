@@ -1,8 +1,11 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro;
 
+import Business.ModelBusiness.ProdottoBusiness;
+import Business.ModelBusiness.ProdottoCompositoBusiness;
 import DAO.Classi.ProdottoCompositoDAO;
 import DAO.Classi.ProdottoDAO;
 import Model.Prodotto;
+import Model.ProdottoComposito;
 import Model.Prodotto_Quantita;
 
 import javax.swing.*;
@@ -51,27 +54,26 @@ public class CompositeProductDialog extends JDialog implements ActionListener {
         dialog = new CompositeProductDialog(frame, title, idProdottoComposito);
         dialog.setVisible(true);
         return null;
-
     }
 
     public void actionPerformed(ActionEvent e) {
         if ("aggiungi".equals(e.getActionCommand())) {
-            if(prodottoField.getText().equals("")){
-                JOptionPane.showMessageDialog(appFrame,
+            if(prodottoField.getText().equals("") || quantitaField.getText().equals("")){
+                JOptionPane.showMessageDialog(this,
                         "Il campo è vuoto!",
                         "Add Product Error",
                         JOptionPane.ERROR_MESSAGE);
             }else{
-                Prodotto p;
-                p = ProdottoDAO.getInstance().findByName(prodottoField.getText());
-                if(p != null){
-                    Prodotto_Quantita pq = new Prodotto_Quantita(p, Integer.parseInt(quantitaField.getText()));
-                    ProdottoCompositoDAO.getInstance().add(idProdottoComposito, pq);
-                }else{
-                    JOptionPane.showMessageDialog(appFrame,
+                if(!ProdottoCompositoBusiness.getInstance().aggiungiSottoProdotto(prodottoField.getText(), quantitaField.getText(), idProdottoComposito)){
+                    JOptionPane.showMessageDialog(this,
                             "Il prodotto non esiste!",
                             "Add Product Error",
                             JOptionPane.ERROR_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(this,
+                            "Prodotto aggiunto con successo!",
+                            "Add Product Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
                 clearText();
             }

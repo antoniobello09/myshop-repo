@@ -3,6 +3,7 @@ package Business;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 public class HelpFunctions {
 
@@ -75,5 +76,23 @@ public class HelpFunctions {
         }
         return months[index];
     }
+
+    public static JComboBox<String> getFullComboBox(ArrayList<String> lista){
+        JComboBox<String> comboBox = new JComboBox<>();
+        Iterator<String> iterator = lista.iterator();
+        while(iterator.hasNext()){
+            comboBox.addItem(iterator.next());
+        }
+        return comboBox;
+    }
+
+    public static JComboBox<String> getFullComboBox(JComboBox<String> comboBox, ArrayList<String> lista){
+        for (String s : lista) {
+            comboBox.addItem(s);
+        }
+        return comboBox;
+    }
+
+
 
 }

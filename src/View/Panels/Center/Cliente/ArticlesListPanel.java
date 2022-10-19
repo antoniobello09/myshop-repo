@@ -1,21 +1,13 @@
 package View.Panels.Center.Cliente;
 
-import Business.SessionManager;
-import DAO.Classi.*;
-import Model.Articolo;
-import Model.Cliente;
-import Model.Lista_has_Articolo;
-import Model.Utente;
+import Business.ModelBusiness.Lista_has_ArticoloBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Cliente.ArticlesListListener;
-import View.Panels.Center.Cliente.Altro.ArticlesListTableModel;
-import View.Panels.Center.Cliente.Altro.FeedBackDialog;
+import Business.ModelBusiness.TableModels.ArticlesListTableModel;
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.security.DigestException;
-import java.util.ArrayList;
 
 public class ArticlesListPanel extends JPanel {
 
@@ -31,26 +23,22 @@ public class ArticlesListPanel extends JPanel {
         private JButton btnAggiungi = new JButton("Aggiungi");
     private JScrollPane currentScrollPane;
     private JTable currentTable;
-    private ArticlesListTableModel currentTableModel;
     private JPanel sidePanel = new JPanel();
         private JButton btnFeedBack = new JButton("Feedback");
         private JButton btnElimina = new JButton("Elimina");
     private JPanel bottomPanel = new JPanel();
         private JButton btnTermina = new JButton("Termina");
 
-    private ArrayList<Lista_has_Articolo> lista;
     private int idLista;
 
 
     public ArticlesListPanel(AppFrame appFrame, int idLista) {
         this.appFrame = appFrame;
-        this.lista = lista;
         this.idLista = idLista;
         articlesListListener = new ArticlesListListener(this, appFrame);
 
-        lista = Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista);
 
-        if(AcquistoDAO.getInstance().findByIDLista(idLista) == null){
+        if(!Lista_has_ArticoloBusiness.getInstance().isAcquistato(idLista)){
             btnFeedBack.setEnabled(false);
         }else{
             articoloField.setEditable(false);
@@ -72,24 +60,39 @@ public class ArticlesListPanel extends JPanel {
     }
 
     public void aggiungi(){
-        if(articoloField.getText().isEmpty()||quantitaField.getText().isEmpty()){
+        if(articoloField.getText().isEmpty()){
             JOptionPane.showMessageDialog(appFrame,
-                    "Un campo è vuoto!",
+                    "Il campo articolo è vuoto!",
                     "Empty field Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
-            Articolo a = ArticoloDAO.getInstance().findByName(articoloField.getText());
-            if(a == null){
-                JOptionPane.showMessageDialog(appFrame,
-                        "L'articolo non esiste!",
-                        "Wrong Article Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }else {
-                int idArticolo = a.getIdArticolo();
-                Lista_has_ArticoloDAO.getInstance().add(idLista, idArticolo, Integer.parseInt(quantitaField.getText()));
-                currentTableModel.setLista(Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista));
-                currentTableModel.fireTableDataChanged();
-            }
+            int result = Lista_has_ArticoloBusiness.getInstance().aggiungi(articoloField.getText(), quantitaField.getText());
+            switch(result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "L'articolo è stato aggiunto alla lista!",
+                            "Add Article List Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "L'articolo non esiste!",
+                            "Add Article List Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 2:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "L'articolo non è stato aggiunto!",
+                            "Add Article List Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 3:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Il campo quantità è vuoto!",
+                            "Quantity Field Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
             articoloField.setText("");
             quantitaField.setText("");
         }
@@ -104,10 +107,21 @@ public class ArticlesListPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            int idArticolo = currentTableModel.getLista().get(selectedRow).getIdArticolo();
-            Lista_has_ArticoloDAO.getInstance().delete(idLista, idArticolo);
-            currentTableModel.setLista(Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista));
-            currentTableModel.fireTableDataChanged();
+            int result = Lista_has_ArticoloBusiness.getInstance().elimina(selectedRow);
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Articolo eliminato con successo!",
+                            "Article Addition Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Articolo non eliminato!",
+                            "Article Addition Error",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+            }
         }
     }
 
@@ -120,9 +134,21 @@ public class ArticlesListPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            int idAcquisto = AcquistoDAO.getInstance().findByIDLista(idLista).getIdAcquisto();
-            int idArticolo = currentTableModel.getLista().get(selectedRow).getIdArticolo();
-            FeedBackDialog.showDialog(appFrame, "FeedBack Dialog", idAcquisto, idArticolo);
+            int result = Lista_has_ArticoloBusiness.getInstance().modificaFeedback(appFrame, selectedRow);
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Feedback modificato con successo!",
+                            "Modify Feedback Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Feedback non modificato!",
+                            "Modify Feedback Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
     }
 
@@ -131,8 +157,7 @@ public class ArticlesListPanel extends JPanel {
     }
 
     public void tableSetting(){
-        currentTableModel = new ArticlesListTableModel(lista);
-        currentTable = new JTable(currentTableModel);
+        currentTable = Lista_has_ArticoloBusiness.getInstance().getTabellaArticoli(idLista);
         currentScrollPane = new JScrollPane(currentTable);
     }
 

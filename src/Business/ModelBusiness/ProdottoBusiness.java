@@ -1,12 +1,14 @@
 package Business.ModelBusiness;
 
-import DAO.Classi.ArticoloDAO;
-import DAO.Classi.ProdottoDAO;
-import DAO.Classi.ServizioDAO;
+import DAO.Classi.*;
 import Model.Prodotto;
-import Model.Servizio;
+import Business.ModelBusiness.TableModels.ProdottiTableModel;
 
-import java.util.ArrayList;
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 
 public class ProdottoBusiness {
 
@@ -20,35 +22,28 @@ public class ProdottoBusiness {
     private ProdottoBusiness() {
     }
 
-    public int aggiungi(Prodotto prodotto){
-        if(ArticoloDAO.getInstance().add(prodotto) == 0) return 0;
-        prodotto.setIdArticolo(ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo());
-        if(ProdottoDAO.getInstance().add(prodotto) == 0) return 0;
-        return 1;
+    public JTable getTabellaProdotti(){
+        ProdottiTableModel currentTableModel = new ProdottiTableModel(ProdottoDAO.getInstance().findAll());
+        JTable tabella = new JTable(currentTableModel);
+        return tabella;
     }
 
-    public int aggiorna(Prodotto prodotto){
-        if(ArticoloDAO.getInstance().update(prodotto) == 0) return 0;
-        if(ProdottoDAO.getInstance().update(prodotto) == 0) return 0;
-        return 1;
-    }
-
-    public int cancella(Prodotto prodotto){
-        if(ProdottoDAO.getInstance().delete(prodotto) == 0) return 0;
-        if(ArticoloDAO.getInstance().delete(prodotto) == 0) return 0;
-        return 1;
-    }
-
-    public Prodotto cercaIDProdotto(int idProdotto){
-        return ProdottoDAO.getInstance().findByID(idProdotto);
-    }
-
-    public Prodotto cercaNomeProdotto(String nomeProdotto){
-        return ProdottoDAO.getInstance().findByName(nomeProdotto);
-    }
-
-    public ArrayList<Prodotto> cercaTuttiProdotti(){
-        return ProdottoDAO.getInstance().findAll();
+    public int aggiungi(String nomeProdotto, String descrizioneProdotto, String prezzoProdotto, String nomeCategoria, File immagine, String nomeProduttore, String posizione){
+        String[] posizioneArray = posizione.split(" ");
+        int idCategoria = CategoriaProdottoDAO.getInstance().findByName(nomeCategoria).getIdCategoria();
+        int idProduttore = FornitoreDAO.getInstance().findByName(nomeProduttore).getIdFornitore();
+        int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]),Integer.parseInt(posizioneArray[2]),Integer.parseInt(posizioneArray[4])).getIdPosizione();
+        Prodotto prodotto = new Prodotto(nomeProdotto, descrizioneProdotto, Float.parseFloat(prezzoProdotto), idCategoria, idProduttore, idPosizione);
+        prodotto.setImmagine(immagine);
+        if(ArticoloDAO.getInstance().add(prodotto) == 0){
+            return 1;
+        }
+        int idProdotto = ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo();
+        prodotto.setIdArticolo(idProdotto);
+        if(ProdottoDAO.getInstance().add(prodotto) == 0){
+            return 1;
+        }
+        return 0;
     }
 
 }

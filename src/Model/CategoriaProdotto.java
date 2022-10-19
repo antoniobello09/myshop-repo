@@ -1,9 +1,6 @@
 package Model;
 
-import Model.Other.ICategoria;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class CategoriaProdotto extends Categoria implements ICategoria {

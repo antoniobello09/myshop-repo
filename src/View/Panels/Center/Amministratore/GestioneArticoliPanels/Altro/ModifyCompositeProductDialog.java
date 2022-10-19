@@ -1,5 +1,7 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro;
 
+import Business.HelpFunctions;
+import Business.ModelBusiness.PosizioneBusiness;
 import DAO.Classi.*;
 import Model.*;
 
@@ -7,14 +9,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 public class ModifyCompositeProductDialog extends JDialog implements ActionListener {
 
     private static ModifyCompositeProductDialog dialog;
-    private static Object value;        //Valore da ritornare
+    private static ArrayList<String> value;        //Valore da ritornare
+    private static File immagine;
     private Frame appFrame;
-    private ProdottoComposito prodottoComposito;
 
     private JPanel grigliaPanel = new JPanel();
         private JLabel inserisciNome = new JLabel("Nome: ");
@@ -23,32 +26,34 @@ public class ModifyCompositeProductDialog extends JDialog implements ActionListe
         private JTextField descrizioneField = new JTextField();
         private JLabel inserisciPrezzo = new JLabel("Prezzo: ");
         private JTextField prezzoField = new JTextField();
+        private JLabel inserisciImmagine = new JLabel("Immagine: ");
+        private JButton btnImmagine = new JButton("Cambia immagine");
         private JLabel inserisciPosizione = new JLabel("Posizione: ");
-        private JComboBox posizioneField = new JComboBox();
+        private JComboBox posizioneField;
         private JButton btnModifiche = new JButton("Salva modifiche");
 
-    private ArrayList<Posizione> posizioniList = new ArrayList<>();
+    private JFileChooser fileChooser;
 
-    private ModifyCompositeProductDialog(Frame frame, String title, Articolo articolo) {
+    private ModifyCompositeProductDialog(Frame frame, String title,
+                                         String nomeProdottoComposito, String descrizioneProdottoComposito, String prezzoProdottoComposito, File immagine, String nomePosizione) {
 
         super(frame, title, true);
         appFrame = frame;
 
+        ModifyCompositeProductDialog.immagine = immagine;
 
-        prodottoComposito = ProdottoCompositoDAO.getInstance().findByID(articolo.getIdArticolo());
-        nomeField.setText(prodottoComposito.getNome());
-        descrizioneField.setText(prodottoComposito.getDescrizione());
-        prezzoField.setText(String.valueOf(prodottoComposito.getPrezzo()));
+        value = new ArrayList<>();
+
+        nomeField.setText(nomeProdottoComposito);
+        descrizioneField.setText(descrizioneProdottoComposito);
+        prezzoField.setText(prezzoProdottoComposito);
 
         //Creo la lista di posizioni da cui scegliere
-        posizioniList.add(PosizioneDAO.getInstance().findByID(prodottoComposito.getIdPosizione()));
-        posizioneField.addItem("" + posizioniList.get(0).getPiano() + " piano " + posizioniList.get(0).getCorsia() + " corsia "+ posizioniList.get(0).getScaffale() + " scaffale");
-        posizioniList = PosizioneDAO.getInstance().findAllEmpty();
-        if(posizioniList != null) {
-            for (int i = 0; i < posizioniList.size(); i++) {
-                posizioneField.addItem("" + posizioniList.get(i).getPiano() + " piano " + posizioniList.get(i).getCorsia() + " corsia " + posizioniList.get(i).getScaffale() + " scaffale");
-            }
-        }
+        posizioneField = HelpFunctions.getFullComboBox(PosizioneBusiness.getInstance().getPosizioniDisponibili());
+        posizioneField.addItem(nomePosizione);
+        posizioneField.setSelectedItem(nomePosizione);
+
+        fileChooserSetting();
 
         layoutSetting();
 
@@ -64,11 +69,12 @@ public class ModifyCompositeProductDialog extends JDialog implements ActionListe
 
     }
 
-    public static Object showDialog(JFrame appFrame, String title, Articolo articolo) {
+    public static ArrayList<String> showDialog(JFrame appFrame, String title,
+                                    String nomeProdottoComposito, String descrizioneProdottoComposito, String prezzoProdottoComposito, File immagine, String nomePosizione) {
         Frame frame = JOptionPane.getFrameForComponent(appFrame);
-        dialog = new ModifyCompositeProductDialog(frame, title, articolo);
+        dialog = new ModifyCompositeProductDialog(frame, title, nomeProdottoComposito, descrizioneProdottoComposito, prezzoProdottoComposito, immagine, nomePosizione);
         dialog.setVisible(true);
-        return null;
+        return value;
 
     }
 
@@ -82,20 +88,31 @@ public class ModifyCompositeProductDialog extends JDialog implements ActionListe
                         "Modify Composite Product Error",
                         JOptionPane.ERROR_MESSAGE);
             }else{
-                String[] posizioneArray = posizioneField.getSelectedItem().toString().split(" ");
-                int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]), Integer.parseInt(posizioneArray[2]), Integer.parseInt(posizioneArray[4])).getIdPosizione();
-                ProdottoComposito p = new ProdottoComposito(
-                        prodottoComposito.getIdArticolo(),
-                        nomeField.getText(),
-                        descrizioneField.getText(),
-                        Float.parseFloat(prezzoField.getText()),
-                        idPosizione);
-                ProdottoDAO.getInstance().update(p);
+                value.add(nomeField.getText());
+                value.add(descrizioneField.getText());
+                value.add(prezzoField.getText());
+                value.add(posizioneField.getSelectedItem().toString());
                 ModifyCompositeProductDialog.dialog.setVisible(false);
             }
+        }else if("fileChooser".equals(e.getActionCommand())){
+
+            int returnVal = fileChooser.showOpenDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                immagine = fileChooser.getSelectedFile();
+            }
         }
+    }
 
+    public static File getImmagine(){
+        return immagine;
+    }
 
+    public void fileChooserSetting(){
+        fileChooser = new JFileChooser();
+
+        fileChooser.addChoosableFileFilter(new ImageFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setAccessory(new ImagePreview(fileChooser));
     }
 
     public void layoutSetting(){
@@ -111,6 +128,8 @@ public class ModifyCompositeProductDialog extends JDialog implements ActionListe
             grigliaPanel.add(descrizioneField);
             grigliaPanel.add(inserisciPrezzo);
             grigliaPanel.add(prezzoField);
+            grigliaPanel.add(inserisciImmagine);
+            grigliaPanel.add(btnImmagine);
             grigliaPanel.add(inserisciPosizione);
             grigliaPanel.add(posizioneField);
             grigliaPanel.add(btnModifiche);
@@ -124,6 +143,8 @@ public class ModifyCompositeProductDialog extends JDialog implements ActionListe
         btnModifiche.addActionListener(this);
         btnModifiche.setActionCommand("modifica");
 
+        btnImmagine.addActionListener(this);
+        btnImmagine.setActionCommand("fileChooser");
     }
 
 }

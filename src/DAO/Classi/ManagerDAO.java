@@ -35,9 +35,8 @@ public class ManagerDAO implements IManagerDAO {
     public int add(Manager manager) {
         int rowCount;
         conn = DbConnection.getInstance();
-        conn.executeUpdate("INSERT INTO utente(username, password, email) VALUES ('"+ manager.getUsername() + "','" + manager.getPassword() + "','" + manager.getEmail() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO manager VALUES ('" + UtenteDAO.getInstance().findByUsername(manager.getUsername(),1).getIdUtente() +"');";
+        String sql = "INSERT INTO manager VALUES ('" + manager.getIdUtente() +"');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -69,10 +68,7 @@ public class ManagerDAO implements IManagerDAO {
     }
 
     @Override
-    public Manager findByID(int idManager){
-        return findByID(idManager, 0);
-    }
-    public Manager findByID(int idManager, int closeConn) {
+    public Manager findByID(int idManager) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM utente INNER JOIN manager ON idUtente = idManager WHERE idManager = '" + idManager + "';";
@@ -96,18 +92,13 @@ public class ManagerDAO implements IManagerDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
             conn.close();
         }
         return null;
     }
 
     @Override
-    public Manager findByUsername(String username){
-        return findByUsername(username, 0);
-    }
-
-    public Manager findByUsername(String username, int closeConn) {
+    public Manager findByUsername(String username) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM utente INNER JOIN manager ON idUtente = idManager WHERE username = '" + username + "';";
@@ -132,7 +123,6 @@ public class ManagerDAO implements IManagerDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
             conn.close();
         }
         return null;

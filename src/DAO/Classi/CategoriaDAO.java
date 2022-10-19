@@ -70,11 +70,7 @@ public class CategoriaDAO implements ICategoriaDAO {
     }
 
     @Override
-    public Categoria findByID(int idCategoria){
-        return findByID(idCategoria, 0);
-    }
-
-    public Categoria findByID(int idCategoria, int i) {
+    public Categoria findByID(int idCategoria) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria WHERE idCategoria = '" + idCategoria + "';";
@@ -100,19 +96,14 @@ public class CategoriaDAO implements ICategoriaDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(i==0)
-                conn.close();
+            conn.close();
         }
         return null;
     }
 
 
     @Override
-    public Categoria findByName(String nomeCategoria){
-        return findByName(nomeCategoria, 0);
-    }
-
-    public Categoria findByName(String nomeCategoria, int i) {
+    public Categoria findByName(String nomeCategoria) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria WHERE nome = '" + nomeCategoria + "';";
@@ -138,8 +129,7 @@ public class CategoriaDAO implements ICategoriaDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(i==0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

@@ -6,6 +6,8 @@ public class Lista_has_Articolo {
     private int idArticolo;
     private int quantita;
 
+    private Articolo articolo;
+
     public Lista_has_Articolo(int idLista, int idArticolo, int quantita) {
         this.idLista = idLista;
         this.idArticolo = idArticolo;

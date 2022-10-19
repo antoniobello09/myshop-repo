@@ -5,10 +5,37 @@ import java.util.ArrayList;
 public class SchedaProdotto {
 
     private int idSchedaProdotto;
-    private Prodotto prodotto;
+    private int idProdotto;
     private int disponibilita = 0;
     private int idPuntoVendita;
 
+    private Prodotto prodotto;
+    private PuntoVendita puntoVendita;
+
+    public SchedaProdotto() {
+    }
+
+    public SchedaProdotto(int idProdotto, int disponibilita, int idPuntoVendita) {
+        this.idProdotto = idProdotto;
+        this.disponibilita = disponibilita;
+        this.idPuntoVendita = idPuntoVendita;
+    }
+
+    public int getIdProdotto() {
+        return idProdotto;
+    }
+
+    public void setIdProdotto(int idProdotto) {
+        this.idProdotto = idProdotto;
+    }
+
+    public PuntoVendita getPuntoVendita() {
+        return puntoVendita;
+    }
+
+    public void setPuntoVendita(PuntoVendita puntoVendita) {
+        this.puntoVendita = puntoVendita;
+    }
 
     public int getIdSchedaProdotto() {
         return idSchedaProdotto;

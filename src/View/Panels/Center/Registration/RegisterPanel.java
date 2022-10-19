@@ -1,6 +1,7 @@
 package View.Panels.Center.Registration;
 
 import Business.HelpFunctions;
+import Business.ModelBusiness.ClienteBusiness;
 import Business.SessionManager;
 import DAO.Classi.ClienteDAO;
 import Model.Cliente;
@@ -81,8 +82,21 @@ public class RegisterPanel extends JPanel {
     public void iscriviti(){
         if(!isIscrivitiOK()) return;
         String dataCompleanno = yearField.getSelectedItem().toString() + "-" + HelpFunctions.convertMonth(monthField.getSelectedIndex()) + "-" + dayField.getSelectedItem().toString();
-        ClienteDAO.getInstance().add(new Cliente(
-                usernameField.getText(), passwordField.getText(), nomeField.getText(), cognomeField.getText(), emailField.getText(), dataCompleanno, telefonoField.getText(), residenzaField.getText(), cittaField.getText(), professioneField.getText(), String.valueOf(canaleField.getSelectedItem()), true,(Integer)SessionManager.getInstance().getSession().get("idPuntoVendita")));
+        int result = ClienteBusiness.getInstance().aggiungi(usernameField.getText(), passwordField.getText(), nomeField.getText(), cognomeField.getText(), emailField.getText(), dataCompleanno, telefonoField.getText(), residenzaField.getText(), cittaField.getText(), professioneField.getText(), String.valueOf(canaleField.getSelectedItem()), true,(Integer) SessionManager.getInstance().getSession().get("idPuntoVendita"));
+        switch (result){
+            case 0:
+                JOptionPane.showMessageDialog(appFrame,
+                        "Iscrizione avvenuta!",
+                        "Register success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(appFrame,
+                        "Iscrizione fallita!",
+                        "Register error",
+                        JOptionPane.ERROR_MESSAGE);
+                break;
+        }
         clearFields();
 
     }

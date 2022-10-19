@@ -1,20 +1,24 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro;
 
-import DAO.Classi.*;
+import Business.HelpFunctions;
+import Business.ModelBusiness.CategoriaBusiness;
+import Business.ModelBusiness.FornitoreBusiness;
+import Business.ModelBusiness.PosizioneBusiness;
 import Model.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 public class ModifyProductDialog extends JDialog implements ActionListener {
 
     private static ModifyProductDialog dialog;
-    private static Object value;        //Valore da ritornare
+    private static ArrayList<String> value;        //Valore da ritornare
+    private static File immagine;
     private Frame appFrame;
-    private Prodotto prodotto;
 
     private JPanel grigliaPanel = new JPanel();
         private JLabel inserisciNome = new JLabel("Nome: ");
@@ -27,69 +31,48 @@ public class ModifyProductDialog extends JDialog implements ActionListener {
         private JComboBox sottocategoriaField = new JComboBox();
         private JLabel inserisciPrezzo = new JLabel("Prezzo: ");
         private JTextField prezzoField = new JTextField();
+        private JLabel inserisciImmagine = new JLabel("Immagine: ");
+        private JButton btnImmagine = new JButton("Cambia immagine");
         private JLabel inserisciProduttore = new JLabel("Produttore: ");
         private JComboBox produttoreField = new JComboBox();
         private JLabel inserisciPosizione = new JLabel("Posizione: ");
         private JComboBox posizioneField = new JComboBox();
         private JButton btnModifiche = new JButton("Salva modifiche");
 
-    private ArrayList<CategoriaProdotto> categorieList;
-    private ArrayList<CategoriaProdotto> sottocategorieList;
-    private ArrayList<Posizione> posizioniList = new ArrayList<>();
-    private ArrayList<Fornitore> produttoriList;
+    private JFileChooser fileChooser;
 
-    private ModifyProductDialog(Frame frame, String title, Articolo articolo) {
+
+
+    private ModifyProductDialog(Frame frame, String title,
+                                String nomeProdotto, String descrizioneProdotto, String prezzoProdotto,
+                                String nomeCategoria,String nomeSottoCategoria, File immagine, String nomeProduttore, String nomePosizione) {
 
         super(frame, title, true);
         appFrame = frame;
-        prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-        nomeField.setText(prodotto.getNome());
-        descrizioneField.setText(prodotto.getDescrizione());
-        prezzoField.setText(String.valueOf(prodotto.getPrezzo()));
+        ModifyProductDialog.immagine = immagine;
 
-        int idCategoria = CategoriaProdottoDAO.getInstance().findByID(prodotto.getIdCategoria()).getIdCategoriaPadre();
-        String nomeCategoria = CategoriaProdottoDAO.getInstance().findByID(idCategoria).getNome();
+        value = new ArrayList<>();
 
-        //Creo la lista di categorie da cui scegliere
-        categorieList = CategoriaProdottoDAO.getInstance().findAll();
-        if(categorieList != null) {
-            for (int i = 0; i < categorieList.size(); i++) {
-                if (categorieList.get(i).getIdCategoriaPadre() == 0) {
-                    categoriaField.addItem(categorieList.get(i).getNome());
-                }
-            }
-        }
+        nomeField.setText(nomeProdotto);
+        descrizioneField.setText(descrizioneProdotto);
+        prezzoField.setText(String.valueOf(prezzoProdotto));
+
+        categoriaField = HelpFunctions.getFullComboBox(CategoriaBusiness.getInstance().getNomiCategorieProdotto());
         categoriaField.setSelectedItem(nomeCategoria);
 
-        sottocategorieList = CategoriaProdottoDAO.getInstance().findAllSons(idCategoria);
-        if(sottocategorieList != null) {
-            for (int i = 0; i < sottocategorieList.size(); i++) {
-                sottocategoriaField.addItem(sottocategorieList.get(i).getNome());
-            }
-        }
+        sottocategoriaField = HelpFunctions.getFullComboBox(sottocategoriaField, CategoriaBusiness.getInstance().getNomiSottoCategorieProdotto(nomeCategoria));
+        sottocategoriaField.setSelectedItem(nomeSottoCategoria);
 
-        //Creo la lista di posizioni da cui scegliere
-        posizioniList.add(PosizioneDAO.getInstance().findByID(prodotto.getIdPosizione()));
-        posizioneField.addItem("" + posizioniList.get(0).getPiano() + " piano " + posizioniList.get(0).getCorsia() + " corsia "+ posizioniList.get(0).getScaffale() + " scaffale");
-        posizioniList = PosizioneDAO.getInstance().findAllEmpty();
-        if(posizioniList != null) {
-            for (int i = 0; i < posizioniList.size(); i++) {
-                posizioneField.addItem("" + posizioniList.get(i).getPiano() + " piano " + posizioniList.get(i).getCorsia() + " corsia " + posizioniList.get(i).getScaffale() + " scaffale");
-            }
-        }
+        posizioneField = HelpFunctions.getFullComboBox(PosizioneBusiness.getInstance().getPosizioniDisponibili());
+        posizioneField.addItem(nomePosizione);
+        posizioneField.setSelectedItem(nomePosizione);
 
-        //Creo la lista di produttori da cui scegliere
-        produttoriList = FornitoreDAO.getInstance().findAllProd();
-        if(produttoriList != null) {
-            for (int i = 0; i < produttoriList.size(); i++) {
-                produttoreField.addItem(produttoriList.get(i).getNome());
-            }
-        }
-        produttoreField.setSelectedItem(FornitoreDAO.getInstance().findByID(prodotto.getIdProduttore()).getNome());
+        produttoreField = HelpFunctions.getFullComboBox(FornitoreBusiness.getInstance().getNomiProduttori());
+        produttoreField.setSelectedItem(nomeProduttore);
 
-
+        fileChooserSetting();
 
         layoutSetting();
 
@@ -105,11 +88,13 @@ public class ModifyProductDialog extends JDialog implements ActionListener {
 
     }
 
-    public static Object showDialog(JFrame appFrame, String title, Articolo articolo) {
+    public static ArrayList<String> showDialog(JFrame appFrame, String title,
+                                    String nomeProdotto, String descrizioneProdotto, String prezzoProdotto,
+                                    String nomeCategoria,String nomeSottoCategoria, File immagine, String nomeProduttore, String nomePosizione) {
         Frame frame = JOptionPane.getFrameForComponent(appFrame);
-        dialog = new ModifyProductDialog(frame, title, articolo);
+        dialog = new ModifyProductDialog(frame, title, nomeProdotto, descrizioneProdotto, prezzoProdotto, nomeCategoria, nomeSottoCategoria, immagine, nomeProduttore, nomePosizione);
         dialog.setVisible(true);
-        return null;
+        return value;
 
     }
 
@@ -123,33 +108,39 @@ public class ModifyProductDialog extends JDialog implements ActionListener {
                         "Modify Product Error",
                         JOptionPane.ERROR_MESSAGE);
             }else{
-                String[] posizioneArray = posizioneField.getSelectedItem().toString().split(" ");
-                int idCategoria = CategoriaProdottoDAO.getInstance().findByName(String.valueOf(sottocategoriaField.getSelectedItem())).getIdCategoria();
-                int idProduttore = FornitoreDAO.getInstance().findByName(String.valueOf(produttoreField.getSelectedItem())).getIdFornitore();
-                int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]), Integer.parseInt(posizioneArray[2]), Integer.parseInt(posizioneArray[4])).getIdPosizione();
-                Prodotto p = new Prodotto(
-                        prodotto.getIdArticolo(),
-                        nomeField.getText(),
-                        descrizioneField.getText(),
-                        Float.parseFloat(prezzoField.getText()),
-                        idCategoria,
-                        idProduttore,
-                        idPosizione);
-                ProdottoDAO.getInstance().update(p);
+                value.add(nomeField.getText());
+                value.add(descrizioneField.getText());
+                value.add(prezzoField.getText());
+                value.add(sottocategoriaField.getSelectedItem().toString());
+                value.add(produttoreField.getSelectedItem().toString());
+                value.add(posizioneField.getSelectedItem().toString());
                 ModifyProductDialog.dialog.setVisible(false);
             }
         } else if ("categoria".equals(e.getActionCommand())){
-            int idCategoriaPadre = CategoriaProdottoDAO.getInstance().findByName(String.valueOf(categoriaField.getSelectedItem())).getIdCategoria();
-            sottocategorieList = CategoriaProdottoDAO.getInstance().findAllSons(idCategoriaPadre);
+            String selectedItem = categoriaField.getSelectedItem().toString();
             sottocategoriaField.removeAllItems();
-            if(sottocategorieList != null) {
-                for (int i = 0; i < sottocategorieList.size(); i++) {
-                    sottocategoriaField.addItem(sottocategorieList.get(i).getNome());
+            sottocategoriaField = HelpFunctions.getFullComboBox(sottocategoriaField, CategoriaBusiness.getInstance().getNomiSottoCategorieProdotto(selectedItem));
+        } else if("fileChooser".equals(e.getActionCommand())){
+
+                int returnVal = fileChooser.showOpenDialog(this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    immagine = fileChooser.getSelectedFile();
                 }
-            }
 
         }
 
+    }
+
+    public static File getImmagine(){
+        return immagine;
+    }
+
+    public void fileChooserSetting(){
+        fileChooser = new JFileChooser();
+
+        fileChooser.addChoosableFileFilter(new ImageFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setAccessory(new ImagePreview(fileChooser));
     }
 
     public void layoutSetting(){
@@ -169,6 +160,8 @@ public class ModifyProductDialog extends JDialog implements ActionListener {
             grigliaPanel.add(sottocategoriaField);
             grigliaPanel.add(inserisciPrezzo);
             grigliaPanel.add(prezzoField);
+            grigliaPanel.add(inserisciImmagine);
+            grigliaPanel.add(btnImmagine);
             grigliaPanel.add(inserisciProduttore);
             grigliaPanel.add(produttoreField);
             grigliaPanel.add(inserisciPosizione);
@@ -183,6 +176,9 @@ public class ModifyProductDialog extends JDialog implements ActionListener {
     public void listenerSettings(){
         btnModifiche.addActionListener(this);
         btnModifiche.setActionCommand("modifica");
+
+        btnImmagine.addActionListener(this);
+        btnImmagine.setActionCommand("fileChooser");
 
         categoriaField.addActionListener(this);
         categoriaField.setActionCommand("categoria");

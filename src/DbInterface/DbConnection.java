@@ -8,12 +8,14 @@ public class DbConnection implements IDbConnection {
     private static DbConnection instance = new DbConnection();
     private static Connection conn;
     private static Statement stmt;
+    private static PreparedStatement pstmt;
     private static ResultSet rs;
     private static int rowCount;
 
     private DbConnection() {
         conn = null;
         stmt = null;
+        pstmt = null;
         rs = null;
         rowCount = 0;
         try {
@@ -61,7 +63,19 @@ public class DbConnection implements IDbConnection {
         return rowCount;
     }
 
-
+    @Override
+    public int savePhoto(Blob immagine, String sqlStatement) {
+        try {
+            pstmt = conn.prepareStatement(sqlStatement);
+            pstmt.setBlob(1, immagine);
+            rowCount = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+            System.out.println("SQL State: " + e.getSQLState());
+            System.out.println("Vendor Error: " + e.getErrorCode());
+        }
+        return rowCount;
+    }
 
     @Override
     public void close() {
@@ -96,8 +110,4 @@ public class DbConnection implements IDbConnection {
         }
     }
 
-    @Override
-    public int addFoto(File photo, String sql) {
-        return 0;
-    }
 }

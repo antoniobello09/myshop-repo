@@ -13,9 +13,6 @@ import java.util.ArrayList;
 public class FeedBackDialog extends JDialog implements ActionListener {
 
     private static FeedBackDialog dialog;
-    private static Object value;        //Valore da ritornare
-    private Frame appFrame;
-    private FeedBack feedBack;
 
     private JPanel grigliaPanel = new JPanel();
         private JPanel formPanel = new JPanel();
@@ -24,15 +21,15 @@ public class FeedBackDialog extends JDialog implements ActionListener {
         private JPanel buttonPanel = new JPanel();
             private JButton btnRisposta = new JButton("Rispondi");
 
+    private static String rispostaOUT;
 
-    private FeedBackDialog(Frame frame, String title, FeedBack f) {
+    private FeedBackDialog(Frame frame, String title, String rispostaIN) {
 
         super(frame, title, true);
-        appFrame = frame;
-        this.feedBack = f;
 
 
-        rispostaField.setText(f.getRisposta());
+
+        rispostaField.setText(rispostaIN);
 
         layoutSetting();
 
@@ -48,18 +45,17 @@ public class FeedBackDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
-    public static Object showDialog(JFrame appFrame, String title, FeedBack f) {
+    public static String showDialog(JFrame appFrame, String title, String rispostaIN) {
         Frame frame = JOptionPane.getFrameForComponent(appFrame);
-        dialog = new FeedBackDialog(frame, title, f);
+        dialog = new FeedBackDialog(frame, title, rispostaIN);
         dialog.setVisible(true);
-        return null;
+        return rispostaOUT;
 
     }
 
     public void actionPerformed(ActionEvent e) {
         if ("rispondi".equals(e.getActionCommand())) {
-            feedBack.setRisposta(rispostaField.getText());
-            FeedbackDAO.getInstance().update(feedBack);
+            rispostaOUT = rispostaField.getText();
             FeedBackDialog.dialog.setVisible(false);
         }
 

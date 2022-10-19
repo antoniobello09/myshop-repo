@@ -21,8 +21,11 @@ public class CategoriaServizioDAOTest {
     public void setUp() throws Exception {
         ICategoriaDAO categoriaDAO = CategoriaDAO.getInstance();
         ICategoriaServizioDAO categoriaServizioDAO = CategoriaServizioDAO.getInstance();
-        categoriaServizioDAO.add(new CategoriaServizio("CategoriaServizioTest"));
-        idCategoriaServizio = categoriaServizioDAO.findByName("CategoriaServizioTest").getIdCategoria();
+        CategoriaServizio categoriaServizio = new CategoriaServizio("CategoriaServizioTest");
+        categoriaDAO.add(categoriaServizio);
+        idCategoriaServizio = categoriaDAO.findByName("CategoriaServizioTest").getIdCategoria();
+        categoriaServizio.setIdCategoria(idCategoriaServizio);
+        categoriaServizioDAO.add(categoriaServizio);
     }
 
     @After

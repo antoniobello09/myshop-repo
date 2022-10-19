@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.ModelBusiness.FornitoreBusiness;
 import DAO.Classi.FornitoreDAO;
 import Model.Fornitore;
 import View.AppFrame;
@@ -47,14 +48,31 @@ public class CreateSupplierPanel extends JPanel {
         if( (supplierField.getText().isEmpty()) || (websiteField.getText().isEmpty()) || (cittaField.getText().isEmpty()) || (nazioneField.getText().isEmpty()) ) {
             JOptionPane.showMessageDialog(appFrame,
                     "La compilazione è errata!",
-                    "Create Product Error",
+                    "Create Supplier Error",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
         else{
-            Fornitore fornitore = new Fornitore(supplierField.getText(), websiteField.getText(), cittaField.getText(), nazioneField.getText(), tipoField.getSelectedItem().toString().toLowerCase().substring(0,1));
-            FornitoreDAO.getInstance().add(fornitore);
+            int result = FornitoreBusiness.getInstance().aggiungi(supplierField.getText(), websiteField.getText(), cittaField.getText(), nazioneField.getText(), tipoField.getSelectedItem().toString().toLowerCase().substring(0,1));
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Fornitore aggiunto con successo!",
+                            "Create Supplier Success",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Fornitore non aggiunto!",
+                            "Create Supplier Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
+        supplierField.setText("");
+        websiteField.setText("");
+        cittaField.setText("");
+        nazioneField.setText("");
     }
 
     public void layoutSetting(){

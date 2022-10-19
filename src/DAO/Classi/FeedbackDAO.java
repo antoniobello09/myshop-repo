@@ -67,10 +67,7 @@ public class FeedbackDAO implements IFeedbackDAO {
     }
 
     @Override
-    public FeedBack findByID(int idFeedback){
-        return findByID(idFeedback, 0);
-    }
-    public FeedBack findByID(int idFeedback, int closeConn) {
+    public FeedBack findByID(int idFeedback) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM feedback WHERE idFeedback = '" + idFeedback + "';";
@@ -97,8 +94,7 @@ public class FeedbackDAO implements IFeedbackDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

@@ -23,43 +23,58 @@ public class PuntoVenditaDAOTest {
     @Before
     public void setUp() throws Exception {
         IPuntoVenditaDAO puntoVenditaDAO = PuntoVenditaDAO.getInstance();
-        puntoVenditaDAO.add(idManager, citta, indirizzo);
+        PuntoVendita puntoVendita = new PuntoVendita(idManager, citta, indirizzo);
+        puntoVenditaDAO.add(puntoVendita);
         idPuntoVendita = puntoVenditaDAO.findByName(indirizzo, citta).getIdPuntoVendita();
     }
 
     @After
     public void tearDown() throws Exception {
         IPuntoVenditaDAO puntoVenditaDAO = PuntoVenditaDAO.getInstance();
-        puntoVenditaDAO.delete(idPuntoVendita);
+        PuntoVendita puntoVendita = new PuntoVendita();
+        puntoVendita.setIdPuntoVendita(idPuntoVendita);
+        puntoVenditaDAO.delete(puntoVendita);
     }
 
     @Test
     public void updateTestOK(){
         IPuntoVenditaDAO puntoVenditaDAO = PuntoVenditaDAO.getInstance();
-        puntoVenditaDAO.update(idPuntoVendita, "Lecce", "Montesardo");
-        PuntoVendita puntoVendita = puntoVenditaDAO.findByID(idPuntoVendita);
+        PuntoVendita puntoVendita = new PuntoVendita();
+        puntoVendita.setIdPuntoVendita(idPuntoVendita);
+        puntoVendita.setCitta("Lecce");
+        puntoVendita.setIndirizzo("Montesardo");
+        puntoVenditaDAO.update(puntoVendita);
+        puntoVendita = puntoVenditaDAO.findByID(idPuntoVendita);
         Assert.assertEquals("Montesardo", puntoVendita.getIndirizzo());
     }
 
     @Test
     public void updateTestNOK(){
         IPuntoVenditaDAO puntoVenditaDAO = PuntoVenditaDAO.getInstance();
-        puntoVenditaDAO.update(idPuntoVendita, "Lecce", "Montesardo");
-        PuntoVendita puntoVendita = puntoVenditaDAO.findByID(idPuntoVendita);
+        PuntoVendita puntoVendita = new PuntoVendita();
+        puntoVendita.setIdPuntoVendita(idPuntoVendita);
+        puntoVendita.setCitta("Lecce");
+        puntoVendita.setIndirizzo("Montesardo");
+        puntoVenditaDAO.update(puntoVendita);
+        puntoVendita = puntoVenditaDAO.findByID(idPuntoVendita);
         Assert.assertEquals("Montesardo2", puntoVendita.getIndirizzo());
     }
 
     @Test
     public void deleteTestOK(){
         IPuntoVenditaDAO puntoVenditaDAO = PuntoVenditaDAO.getInstance();
-        int rowCount = puntoVenditaDAO.delete(idPuntoVendita);
-        Assert.assertEquals(0, rowCount);
+        PuntoVendita puntoVendita = new PuntoVendita();
+        puntoVendita.setIdPuntoVendita(idPuntoVendita);
+        int rowCount = puntoVenditaDAO.delete(puntoVendita);
+        Assert.assertEquals(1, rowCount);
     }
 
     @Test
     public void deleteTestNOK(){
         IPuntoVenditaDAO puntoVenditaDAO = PuntoVenditaDAO.getInstance();
-        int rowCount = puntoVenditaDAO.delete(idPuntoVendita);
+        PuntoVendita puntoVendita = new PuntoVendita();
+        puntoVendita.setIdPuntoVendita(idPuntoVendita);
+        int rowCount = puntoVenditaDAO.delete(puntoVendita);
         Assert.assertEquals(1, rowCount);
     }
 

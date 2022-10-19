@@ -1,5 +1,6 @@
 package View;
 
+import Business.ModelBusiness.PuntoVenditaBusiness;
 import Business.SessionManager;
 import DAO.Classi.PuntoVenditaDAO;
 import Model.PuntoVendita;
@@ -13,28 +14,16 @@ import java.awt.*;
 
 public class AppFrame extends JFrame {
 
-    private String nomePuntoVendita;
-
-    Header header;
-    SideMenu sideMenu;
-    Footer footer;
-    Center center;
+    private Header header;
+    private SideMenu sideMenu;
+    private Footer footer;
+    private Center center;
 //----------------COSTRUTTORE---------------------------------------------------------//
     public AppFrame() {
         super("MY SHOP");
         setLayout(new BorderLayout());
 
-        //Mostra il Dialog per la scelta del punto vendita
-        nomePuntoVendita = ShopDialog.showDialog(this,
-                null,
-                "Punto Vendita",
-                "Punto Vendita",
-                null,
-                null,
-                null);
-        String[] indirizzo = nomePuntoVendita.split(", ");
-        PuntoVendita puntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0], indirizzo[1]);
-        SessionManager.getInstance().getSession().put("idPuntoVendita", puntoVendita.getIdPuntoVendita()); //salvataggio dell'ID del punto vendita dove si sta accedendo
+        PuntoVenditaBusiness.getInstance().scegliPuntovenditaDialog(this);
 
     //----------------HEADER--------------------------------------------------------------//
         header = new Header(this);
@@ -71,13 +60,3 @@ public class AppFrame extends JFrame {
         return this.footer;
     }
 }
-/*
-        JMenuBar bar = new JMenuBar();
-        setJMenuBar(bar);
-        JMenu operazioni = new JMenu("Operazioni");
-        JMenuItem browseMenu= new JMenuItem("Catalogo");
-        operazioni.add(browseMenu);
-        browseMenu.setActionCommand("browse");
-        browseMenu.addActionListener(list);
-        bar.add(operazioni);
- */

@@ -2,13 +2,12 @@ package DAO.Classi;
 
 import DAO.Interfacce.IArticoloDAO;
 import DbInterface.*;
-import DbInterface.Command.DbOperationExecutor;
-import DbInterface.Command.IDbOperation;
-import DbInterface.Command.ReadOperation;
-import DbInterface.Command.WriteOperation;
+import DbInterface.Command.*;
 import Model.Articolo;
 import Model.Fornitore;
 
+import java.io.*;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,24 +30,80 @@ public class ArticoloDAO implements IArticoloDAO {
     }
 
     @Override
-    public int add(Articolo articolo) {
+    public int add(Articolo articolo){
+
+        //File che contiene l'immagine
+        File immagineFile = articolo.getImmagine();
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO articolo(idCategoria, prezzo, nome, descrizione) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','" + articolo.getDescrizione() + "');";
+        //INSERT con inserimento di una stringa nella colonna 'immagine' per creare il puntatore
+        String sql = "INSERT INTO articolo(idCategoria, prezzo, nome, descrizione, immagine) VALUES ('"+ articolo.getIdCategoria() + "','" + articolo.getPrezzo() + "','" + articolo.getNome() + "','" + articolo.getDescrizione() + "', 'a');";
         IDbOperation dbOp = new WriteOperation(sql);
         int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
-        conn.close();
+        //Estrazione del Blob con il puntatore
+        sql = "SELECT * FROM articolo WHERE articolo.nome = '" + articolo.getNome() + "';";
+        dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
+        try {
+            rs.next();
+            Blob immagine = rs.getBlob("immagine");// Blob vuoto + puntatore
+            OutputStream outputStream = immagine.setBinaryStream(1);
+            FileInputStream inputStream = new FileInputStream(immagineFile);
+            while(inputStream.available()>0){
+                outputStream.write(inputStream.read());
+            }
+            outputStream.close();
+            inputStream.close();
+            //Blob pieno + puntatore
+            String psql = "UPDATE articolo SET immagine = ? WHERE nome = '" + articolo.getNome() + "';";    //Update tramite Prepared Statement
+            dbOp = new SavePhotoOperation(immagine, psql);
+            dbOperationExecutor.executeOperation(dbOp);
+        } catch (SQLException e) {
+            // handle any errors
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException | IOException e) {
+            // handle any errors
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+
         return rowCount;
     }
 
     @Override
     public int update(Articolo articolo) {
+        File immagineFile = articolo.getImmagine();
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "UPDATE articolo SET nome = '"+ articolo.getNome() + "', idCategoria = '" + articolo.getIdCategoria() + "', prezzo = '" + articolo.getPrezzo() + "', descrizione = '" + articolo.getDescrizione() + "' WHERE idArticolo = '" + articolo.getIdArticolo() + "';";
         IDbOperation dbOp = new WriteOperation(sql);
         int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
-        conn.close();
+        //Estrazione del Blob con il puntatore
+        sql = "SELECT * FROM articolo WHERE articolo.nome = '" + articolo.getNome() + "';";
+        dbOp = new ReadOperation(sql);
+        rs = dbOperationExecutor.executeOperation(dbOp).getResultSet();
+        try {
+            rs.next();
+            Blob immagine = rs.getBlob("immagine");// Blob vuoto + puntatore
+            OutputStream outputStream = immagine.setBinaryStream(1);
+            FileInputStream inputStream = new FileInputStream(immagineFile);
+            while (inputStream.available() > 0) {
+                outputStream.write(inputStream.read());
+            }
+            outputStream.close();
+            inputStream.close();
+            //Blob pieno + puntatore
+            String psql = "UPDATE articolo SET immagine = ? WHERE nome = '" + articolo.getNome() + "';";    //Update tramite Prepared Statement
+            dbOp = new SavePhotoOperation(immagine, psql);
+            dbOperationExecutor.executeOperation(dbOp);
+        } catch (SQLException | IOException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            conn.close();
+        }
         return rowCount;
     }
 
@@ -79,6 +134,25 @@ public class ArticoloDAO implements IArticoloDAO {
                 articolo.setDescrizione(rs.getString("descrizione"));
                 articolo.setPrezzo(rs.getFloat("prezzo"));
                 articolo.setIdCategoria(rs.getInt("idCategoria"));
+                Blob immagine = rs.getBlob("immagine");
+                if (immagine!=null) {
+                    byte[] byteFormat = immagine.getBytes(1, 1);
+                    File immagineFile = switch (byteFormat[0]) {
+                        case -119 -> File.createTempFile("immagine" + articolo.getNome(), ".png");
+                        case 73, 77 -> File.createTempFile("immagine" + articolo.getNome(), ".tif");
+                        case 71 -> File.createTempFile("immagine" + articolo.getNome(), ".gif");
+                        case -1 -> File.createTempFile("immagine" + articolo.getNome(), ".jpg");
+                        default -> File.createTempFile("immagine" + articolo.getNome(),"");
+                    };
+                    InputStream inputStream = immagine.getBinaryStream();
+                    FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                    while (inputStream.available() > 0) {
+                        outputStream.write(inputStream.read());
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    articolo.setImmagine(immagineFile);
+                }
                 return articolo;
             }
         } catch (SQLException e) {
@@ -89,6 +163,8 @@ public class ArticoloDAO implements IArticoloDAO {
         } catch (NullPointerException e) {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             conn.close();
         }
@@ -111,6 +187,25 @@ public class ArticoloDAO implements IArticoloDAO {
                 articolo.setDescrizione(rs.getString("descrizione"));
                 articolo.setPrezzo(rs.getFloat("prezzo"));
                 articolo.setIdCategoria(rs.getInt("idCategoria"));
+                Blob immagine = rs.getBlob("immagine");
+                if (immagine!=null) {
+                    byte[] byteFormat = immagine.getBytes(1, 1);
+                    File immagineFile = switch (byteFormat[0]) {
+                        case -119 -> File.createTempFile("immagine" + articolo.getNome(), ".png");
+                        case 73, 77 -> File.createTempFile("immagine" + articolo.getNome(), ".tif");
+                        case 71 -> File.createTempFile("immagine" + articolo.getNome(), ".gif");
+                        case -1 -> File.createTempFile("immagine" + articolo.getNome(), ".jpg");
+                        default -> File.createTempFile("immagine" + articolo.getNome(),"");
+                    };
+                    InputStream inputStream = immagine.getBinaryStream();
+                    FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                    while (inputStream.available() > 0) {
+                        outputStream.write(inputStream.read());
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    articolo.setImmagine(immagineFile);
+                }
                 articoli.add(articolo);
             }
             return articoli;
@@ -122,6 +217,8 @@ public class ArticoloDAO implements IArticoloDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             conn.close();
         }
@@ -129,11 +226,7 @@ public class ArticoloDAO implements IArticoloDAO {
     }
 
     @Override
-    public Articolo findByName(String nomeArticolo){
-        return findByName(nomeArticolo,0);
-    }
-
-    public Articolo findByName(String nomeArticolo, int closeConn) {
+    public Articolo findByName(String nomeArticolo) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM articolo WHERE articolo.nome = '" + nomeArticolo + "';";
@@ -147,6 +240,25 @@ public class ArticoloDAO implements IArticoloDAO {
             articolo.setPrezzo(rs.getFloat("prezzo"));
             articolo.setDescrizione(rs.getString("descrizione"));
             articolo.setIdCategoria(rs.getInt("idCategoria"));
+            Blob immagine = rs.getBlob("immagine");
+            if (immagine!=null) {
+                byte[] byteFormat = immagine.getBytes(1, 1);
+                File immagineFile = switch (byteFormat[0]) {
+                    case -119 -> File.createTempFile("immagine" + articolo.getNome(), ".png");
+                    case 73, 77 -> File.createTempFile("immagine" + articolo.getNome(), ".tif");
+                    case 71 -> File.createTempFile("immagine" + articolo.getNome(), ".gif");
+                    case -1 -> File.createTempFile("immagine" + articolo.getNome(), ".jpg");
+                    default -> File.createTempFile("immagine" + articolo.getNome(),"");
+                };
+                InputStream inputStream = immagine.getBinaryStream();
+                FileOutputStream outputStream = new FileOutputStream(immagineFile);
+                while (inputStream.available() > 0) {
+                    outputStream.write(inputStream.read());
+                }
+                outputStream.close();
+                inputStream.close();
+                articolo.setImmagine(immagineFile);
+            }
             return articolo;
         } catch (SQLException e) {
             // Gestisce le differenti categorie d'errore
@@ -156,8 +268,9 @@ public class ArticoloDAO implements IArticoloDAO {
         } catch (NullPointerException e) {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-            if(closeConn==0)
             conn.close();
         }
         return null;

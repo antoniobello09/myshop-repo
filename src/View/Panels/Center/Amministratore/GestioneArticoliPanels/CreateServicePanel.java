@@ -1,13 +1,18 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.HelpFunctions;
+import Business.ModelBusiness.CategoriaBusiness;
+import Business.ModelBusiness.FornitoreBusiness;
 import Business.ModelBusiness.ServizioBusiness;
-import DAO.Classi.*;
 import Model.*;
 import View.AppFrame;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateServiceListener;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ImageFilter;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ImagePreview;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class CreateServicePanel extends JPanel {
@@ -22,16 +27,16 @@ public class CreateServicePanel extends JPanel {
     private JTextField descrizioneField = new JTextField();
     private JLabel inserisciPrezzo = new JLabel("Prezzo                  €");
     private JTextField prezzoField = new JTextField();
-    private JLabel immagineProdotto = new JLabel("Immagine");
-    private JTextField immagineField = new JTextField();
+    private JLabel immagineServizio = new JLabel("Immagine");
+    private JButton btnImmagine = new JButton("Scegli immagine");
     private JLabel inserisciCategoria = new JLabel("Categoria");
     private JComboBox<String> categoriaField;
     private JLabel inserisciFornitore = new JLabel("Fornitore");
     private JComboBox<String> fornitoreField;
     private JButton btnInvia = new JButton("Invia");
 
-    private ArrayList<CategoriaServizio> categorieList;     //Lista di categorie
-    private ArrayList<Fornitore> fornitoriList;            //Lista di fornitori
+    private JFileChooser fileChooser;
+    private File immagine = null;
 
     public CreateServicePanel(AppFrame appFrame) {
         this.appFrame = appFrame;
@@ -41,20 +46,13 @@ public class CreateServicePanel extends JPanel {
         fornitoreField = new JComboBox<>();
 
         //Creo la lista di categorie da cui scegliere
-        categorieList = CategoriaServizioDAO.getInstance().findAll();
-        if(categorieList != null) {
-            for (int i = 0; i < categorieList.size(); i++) {
-                categoriaField.addItem(categorieList.get(i).getNome());
-            }
-        }
+        categoriaField = HelpFunctions.getFullComboBox(CategoriaBusiness.getInstance().getNomiCategorieServizio());
+
 
         //Creo la lista di produttori da cui scegliere
-        fornitoriList = FornitoreDAO.getInstance().findAllServ();
-        if(fornitoriList != null) {
-            for (int i = 0; i < fornitoriList.size(); i++) {
-                fornitoreField.addItem(fornitoriList.get(i).getNome());
-            }
-        }
+        fornitoreField = HelpFunctions.getFullComboBox(FornitoreBusiness.getInstance().getNomiFornitoriServizi());
+
+        fileChooserSetting();
 
         layoutSetting();
 
@@ -66,19 +64,46 @@ public class CreateServicePanel extends JPanel {
 
     }
 
+    public void scegliImmagine(){
+        int returnVal = fileChooser.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            immagine = fileChooser.getSelectedFile();
+        }
+    }
+
     public void invia(){
-        if(nomeField.getText().isEmpty() || descrizioneField.getText().isEmpty() || prezzoField.getText().isEmpty() || fornitoreField.getSelectedItem() == null){
+        if(immagine == null || nomeField.getText().isEmpty() || descrizioneField.getText().isEmpty() || prezzoField.getText().isEmpty() || fornitoreField.getSelectedItem() == null){
             JOptionPane.showMessageDialog(appFrame,
                     "La compilazione è errata!",
                     "Create Service Error",
                     JOptionPane.ERROR_MESSAGE);
-            return;
         }else{
-            int idCategoria = CategoriaServizioDAO.getInstance().findByName(categoriaField.getSelectedItem().toString()).getIdCategoria();
-            int idFornitore = FornitoreDAO.getInstance().findByName(fornitoreField.getSelectedItem().toString()).getIdFornitore();
-            Servizio servizio = new Servizio(nomeField.getText(), descrizioneField.getText(), Float.parseFloat(prezzoField.getText()), idCategoria, idFornitore);
-            ServizioBusiness.getInstance().aggiungi(servizio);
+            int result = ServizioBusiness.getInstance().aggiungi(nomeField.getText(), descrizioneField.getText(), prezzoField.getText(), categoriaField.getSelectedItem().toString(), immagine, fornitoreField.getSelectedItem().toString());
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Servizio aggiunto con successo!",
+                            "Create Service Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Il servizio non è stato aggiunto!",
+                            "Create Service Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
+
+    }
+
+    public void fileChooserSetting(){
+        fileChooser = new JFileChooser();
+
+        fileChooser.addChoosableFileFilter(new ImageFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setAccessory(new ImagePreview(fileChooser));
     }
 
     public void layoutSetting(){
@@ -95,6 +120,8 @@ public class CreateServicePanel extends JPanel {
         formProductPanel.add(prezzoField);
         formProductPanel.add(inserisciCategoria);
         formProductPanel.add(categoriaField);
+        formProductPanel.add(immagineServizio);
+        formProductPanel.add(btnImmagine);
         formProductPanel.add(inserisciFornitore);
         formProductPanel.add(fornitoreField);
         formProductPanel.add(btnInvia);
@@ -106,7 +133,9 @@ public class CreateServicePanel extends JPanel {
 
     public void listenerSettings(){
         btnInvia.setActionCommand("invia");
+        btnImmagine.setActionCommand("fileChooser");
 
         btnInvia.addActionListener(createServiceListener);
+        btnImmagine.addActionListener(createServiceListener);
     }
 }

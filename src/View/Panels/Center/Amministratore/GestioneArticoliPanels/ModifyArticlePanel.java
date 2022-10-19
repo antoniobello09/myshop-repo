@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.ModelBusiness.ArticoloBusiness;
 import DAO.Classi.ArticoloDAO;
 import DAO.Classi.ProdottoDAO;
 import Model.Articolo;
@@ -19,7 +20,7 @@ public class ModifyArticlePanel extends JPanel {
     private ModifyArticleListener modifyArticleListener;
 
     private JPanel formPanel = new JPanel();
-        private JLabel inserisciArticolo = new JLabel("Articolo da modificare:");
+        private JLabel inserisciArticolo = new JLabel("Articolo da modificare: ");
         private JTextField articoloField = new JTextField();
         private JButton btnModifica = new JButton("Modifica");
 
@@ -28,8 +29,6 @@ public class ModifyArticlePanel extends JPanel {
     public ModifyArticlePanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         modifyArticleListener = new ModifyArticleListener(this, appFrame);
-
-
 
         layoutSetting();
 
@@ -48,32 +47,22 @@ public class ModifyArticlePanel extends JPanel {
                     "Modify Article Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
-            Articolo articolo = ArticoloDAO.getInstance().findByName(articoloField.getText());
-            if(articolo != null){
-                if(ArticoloDAO.getInstance().isServizio(articolo)){
-                    ModifyServiceDialog.showDialog(appFrame,
-                            "Modifica servizio",
-                            articolo);
-                    articoloField.setText("");
-                }else if(ArticoloDAO.getInstance().isProdottoComposito(articolo)){
-                    ModifyCompositeProductDialog.showDialog(appFrame,
-                            "Modifica prodotto composito",
-                            articolo);
-                    articoloField.setText("");
-                }else if(ArticoloDAO.getInstance().isProdotto(articolo)){
-                    ModifyProductDialog.showDialog(appFrame,
-                            "Modifica prodotto",
-                            articolo);
-                    articoloField.setText("");
-                }
-            }else{
-                JOptionPane.showMessageDialog(appFrame,
+            int result = ArticoloBusiness.getInstance().modifica(appFrame, articoloField.getText());
+            switch (result){
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
                         "Nome dell'articolo non corretto!",
                         "Modify Article Error",
                         JOptionPane.ERROR_MESSAGE);
-                articoloField.setText("");
+                    break;
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                        "Modifica dell'articolo corretta",
+                        "Modify Article Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    break;
             }
-
+            articoloField.setText("");
         }
     }
 

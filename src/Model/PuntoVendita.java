@@ -7,6 +7,15 @@ public class PuntoVendita {
     private String citta;
     private String indirizzo;
 
+    public PuntoVendita() {
+    }
+
+    public PuntoVendita(int idManager, String citta, String indirizzo) {
+        this.idManager = idManager;
+        this.citta = citta;
+        this.indirizzo = indirizzo;
+    }
+
     public int getIdPuntoVendita() {
         return idPuntoVendita;
     }

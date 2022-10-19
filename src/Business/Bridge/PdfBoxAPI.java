@@ -14,22 +14,24 @@ public class PdfBoxAPI implements PdfAPI {
     @Override
     public void creaPdf(String text, String outFile) {
 
-        try (PDDocument doc = new PDDocument())
-        {
+        PDFont font = PDType1Font.HELVETICA_BOLD;
 
-            PDPage page = new PDPage();
-            doc.addPage(page);
+        PDDocument doc = new PDDocument();
+        PDPage page = new PDPage();
+        doc.addPage(page);
 
-            PDFont font = PDType1Font.HELVETICA_BOLD;
 
-            try (PDPageContentStream contents = new PDPageContentStream(doc, page))
-            {
+        try {
+
+            PDPageContentStream contents = new PDPageContentStream(doc, page);
+
+
                 contents.beginText();
                 contents.setFont(font, 12);
                 contents.newLineAtOffset(100, 700);
                 contents.showText(text);
                 contents.endText();
-            }
+
 
             doc.save(outFile);
             System.out.println("File pdf generato con PdfBox salvato in: " + outFile);

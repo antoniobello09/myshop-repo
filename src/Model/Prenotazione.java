@@ -7,6 +7,9 @@ public class Prenotazione {
     private int quantita_prenotata;
     private int idAcquisto;
 
+    public Prenotazione() {
+    }
+
     public Prenotazione(int idPrenotazione, int idProdotto, int quantita_prenotata, int idAcquisto) {
         this.idPrenotazione = idPrenotazione;
         this.idProdotto = idProdotto;

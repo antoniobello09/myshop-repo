@@ -30,11 +30,11 @@ public class Lista_has_ArticoloDAO implements ILista_has_ArticoloDAO {
     }
 
     @Override
-    public int add(int idLista, int idArticolo, int quantita) {
+    public int add(Lista_has_Articolo lista_has_articolo) {
         conn = DbConnection.getInstance();
         int rowCount;
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO lista_has_articolo(idArticolo, idLista, quantita) VALUES ('" + idArticolo + "','" + idLista + "','" + quantita + "');";
+        String sql = "INSERT INTO lista_has_articolo(idArticolo, idLista, quantita) VALUES ('" + lista_has_articolo.getIdArticolo() + "','" + lista_has_articolo.getIdLista() + "','" + lista_has_articolo.getQuantita() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -42,11 +42,11 @@ public class Lista_has_ArticoloDAO implements ILista_has_ArticoloDAO {
     }
 
     @Override
-    public int update(int idLista, int idArticolo, int quantita) {
+    public int update(Lista_has_Articolo lista_has_articolo) {
         conn = DbConnection.getInstance();
         int rowCount;
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "UPDATE lista_has_articolo SET quantita = '" + quantita + "' WHERE idLista = '" + idLista + "' AND idArticolo = '" + idArticolo + "';";
+        String sql = "UPDATE lista_has_articolo SET quantita = '" + lista_has_articolo.getQuantita() + "' WHERE idLista = '" + lista_has_articolo.getIdLista() + "' AND idArticolo = '" + lista_has_articolo.getIdArticolo() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -54,11 +54,11 @@ public class Lista_has_ArticoloDAO implements ILista_has_ArticoloDAO {
     }
 
     @Override
-    public int delete(int idLista, int idArticolo) {
+    public int delete(Lista_has_Articolo lista_has_articolo) {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "DELETE FROM lista_has_articolo WHERE idLista = '" + idLista + "' AND idArticolo = '" + idArticolo + "';";
+        String sql = "DELETE FROM lista_has_articolo WHERE idLista = '" + lista_has_articolo.getIdLista() + "' AND idArticolo = '" + lista_has_articolo.getIdArticolo() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -66,10 +66,7 @@ public class Lista_has_ArticoloDAO implements ILista_has_ArticoloDAO {
     }
 
     @Override
-    public Lista_has_Articolo findByID(int idLista, int idArticolo){
-        return findByID(idLista, idArticolo, 0);
-    }
-    public Lista_has_Articolo findByID(int idLista, int idArticolo, int closeConn) {
+    public Lista_has_Articolo findByID(int idLista, int idArticolo) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM lista_has_articolo WHERE idLista = '" + idLista + "' AND idArticolo = '" + idArticolo + "';";
@@ -91,8 +88,7 @@ public class Lista_has_ArticoloDAO implements ILista_has_ArticoloDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

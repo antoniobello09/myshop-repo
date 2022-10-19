@@ -1,21 +1,12 @@
 package View.Panels.Center.Manager;
 
-import Business.SessionManager;
-import DAO.Classi.FeedbackDAO;
-import DAO.Classi.PuntoVenditaDAO;
-import Model.FeedBack;
-import Model.Manager;
-import Model.PuntoVendita;
-import Model.Utente;
+import Business.ModelBusiness.FeedbackBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Manager.GestioneCommentiListener;
-import View.Panels.Center.Manager.Altro.FeedBackDialog;
-import View.Panels.Center.Manager.Altro.FeedbackTableModel;
-import View.Panels.Center.Ospite.ProdottiTableModel;
+import Business.ModelBusiness.TableModels.FeedbackTableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GestioneCommentiPanel extends JPanel {
 
@@ -29,17 +20,10 @@ public class GestioneCommentiPanel extends JPanel {
     private JPanel sidePanel = new JPanel();
         private JButton btnRispondi = new JButton("Rispondi");
 
-
-    private ArrayList<FeedBack> lista;
-    private int idPuntoVenditaManager;
-
     public GestioneCommentiPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         gestioneCommentiListener = new GestioneCommentiListener(this, appFrame);
 
-        Utente u = (Utente)SessionManager.getInstance().getSession().get("loggedUser");
-        idPuntoVenditaManager = PuntoVenditaDAO.getInstance().findByManager(u.getIdUtente()).getIdPuntoVendita();
-        lista = FeedbackDAO.getInstance().findByPuntoVendita(idPuntoVenditaManager);
 
         tableSetting();
 
@@ -62,16 +46,26 @@ public class GestioneCommentiPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            FeedBack f = currentTableModel.getLista().get(selectedRow);
-            FeedBackDialog.showDialog(appFrame, "Rispondi al commento", f);
-            currentTableModel.setLista(FeedbackDAO.getInstance().findByPuntoVendita(idPuntoVenditaManager));
-            currentTableModel.fireTableDataChanged();
+            int result = FeedbackBusiness.getInstance().rispondi(selectedRow, appFrame);
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Risposta salvata con successo!",
+                            "Answer Comment Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Risposta non salvata!",
+                            "Answer Comment Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
     }
 
     public void tableSetting(){
-        currentTableModel = new FeedbackTableModel(lista);
-        currentTable = new JTable(currentTableModel);
+        currentTable = FeedbackBusiness.getInstance().getTabellaFeedbacks();
         currentScrollPane = new JScrollPane(currentTable);
     }
 

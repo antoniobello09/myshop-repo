@@ -1,5 +1,8 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.HelpFunctions;
+import Business.ModelBusiness.PosizioneBusiness;
+import Business.ModelBusiness.ProdottoCompositoBusiness;
 import DAO.Classi.PosizioneDAO;
 import DAO.Classi.ProdottoDAO;
 import Model.Posizione;
@@ -7,9 +10,12 @@ import Model.Prodotto;
 import View.AppFrame;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateCompositeProductListener;
 import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.CompositeProductDialog;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ImageFilter;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ImagePreview;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class CreateCompositeProductPanel extends JPanel {
@@ -24,25 +30,22 @@ public class CreateCompositeProductPanel extends JPanel {
     private JTextField descrizioneField = new JTextField();
     private JLabel inserisciPrezzo = new JLabel("Prezzo                     €");
     private JTextField prezzoField = new JTextField();
+    private JLabel immagineProdotto = new JLabel("Immagine");
+    private JButton btnImmagine = new JButton("Scegli immagine");
     private JLabel inserisciPosizione = new JLabel("Posizione nel magazzino");
     private JComboBox<String> posizioneField;
     private JButton btnAggiungiProdotti = new JButton("Aggiungi prodotti");
 
-    private ArrayList<Posizione> posizioniList;             //Lista di posizioni
+    private JFileChooser fileChooser;
+    private File immagine = null;
 
     public CreateCompositeProductPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         createCompositeProductListener = new CreateCompositeProductListener(this, this.appFrame);
 
+        fileChooserSetting();
 
-        posizioneField = new JComboBox<>();
-        //Creo la lista di posizioni da cui scegliere
-        posizioniList = PosizioneDAO.getInstance().findAllEmpty();
-        if(posizioniList != null) {
-            for (int i = 0; i < posizioniList.size(); i++) {
-                posizioneField.addItem("" + posizioniList.get(i).getPiano() + " piano " + posizioniList.get(i).getCorsia() + " corsia " + posizioniList.get(i).getScaffale() + " scaffale");
-            }
-        }
+        posizioneField = HelpFunctions.getFullComboBox(PosizioneBusiness.getInstance().getPosizioniDisponibili());
 
         layoutSetting();
 
@@ -55,26 +58,49 @@ public class CreateCompositeProductPanel extends JPanel {
 
     }
 
+    public void scegliImmagine(){
+        int returnVal = fileChooser.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            immagine = fileChooser.getSelectedFile();
+        }
+    }
+
     public void aggiungiProdotti(){
-        if(nomeField.getText().isEmpty() || descrizioneField.getText().isEmpty() || prezzoField.getText().isEmpty() || posizioneField.getSelectedItem() == null){
+        if(immagine == null || nomeField.getText().isEmpty() || descrizioneField.getText().isEmpty() || prezzoField.getText().isEmpty() || posizioneField.getSelectedItem() == null){
             JOptionPane.showMessageDialog(appFrame,
                     "La compilazione è errata!",
                     "Create Product Error",
                     JOptionPane.ERROR_MESSAGE);
-            return;
         }else{
-            String[] posizioneArray = posizioneField.getSelectedItem().toString().split(" ");
-            int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]),Integer.parseInt(posizioneArray[2]),Integer.parseInt(posizioneArray[4])).getIdPosizione();
-            Prodotto prodotto = new Prodotto(nomeField.getText(), descrizioneField.getText(), Float.parseFloat(prezzoField.getText()), 0,0, idPosizione);
-
-            ProdottoDAO.getInstance().add(prodotto);
-            if(ProdottoDAO.getInstance().findByName(prodotto.getNome())!=null) {
-                CompositeProductDialog.showDialog(appFrame, "Aggiungi prodotto", ProdottoDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo());
+            int result = ProdottoCompositoBusiness.getInstance().aggiungi(
+                    appFrame, nomeField.getText(), descrizioneField.getText(),
+                    prezzoField.getText(), immagine, posizioneField.getSelectedItem().toString());
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Prodotto Composito creato con successo!",
+                            "Create Composite Product Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Prodotto Composito non creato!",
+                            "Create Composite Product Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
             }
             clearText();
         }
     }
 
+    public void fileChooserSetting(){
+        fileChooser = new JFileChooser();
+
+        fileChooser.addChoosableFileFilter(new ImageFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setAccessory(new ImagePreview(fileChooser));
+    }
 
     public void layoutSetting(){
         formProductPanel.setLayout(new GridLayout(0,2,0,10));
@@ -88,6 +114,8 @@ public class CreateCompositeProductPanel extends JPanel {
         formProductPanel.add(descrizioneField);
         formProductPanel.add(inserisciPrezzo);
         formProductPanel.add(prezzoField);
+        formProductPanel.add(immagineProdotto);
+        formProductPanel.add(btnImmagine);
         formProductPanel.add(inserisciPosizione);
         formProductPanel.add(posizioneField);
         formProductPanel.add(btnAggiungiProdotti);
@@ -100,8 +128,10 @@ public class CreateCompositeProductPanel extends JPanel {
 
     public void listenerSettings(){
         btnAggiungiProdotti.setActionCommand("aggiungiProdotti");
+        btnImmagine.setActionCommand("fileChooser");
 
         btnAggiungiProdotti.addActionListener(createCompositeProductListener);
+        btnImmagine.addActionListener(createCompositeProductListener);
     }
 
     public void clearText(){
@@ -109,12 +139,8 @@ public class CreateCompositeProductPanel extends JPanel {
         descrizioneField.setText("");
         prezzoField.setText("");
 
-        posizioniList = PosizioneDAO.getInstance().findAllEmpty();
         posizioneField.removeAllItems();
-        if(posizioniList != null) {
-            for (int i = 0; i < posizioniList.size(); i++) {
-                posizioneField.addItem("" + posizioniList.get(i).getPiano() + " piano " + posizioniList.get(i).getCorsia() + " corsia " + posizioniList.get(i).getScaffale() + " scaffale");
-            }
-        }
+        posizioneField = HelpFunctions.getFullComboBox(posizioneField, PosizioneBusiness.getInstance().getPosizioniDisponibili());
+        immagineProdotto = null;
     }
 }

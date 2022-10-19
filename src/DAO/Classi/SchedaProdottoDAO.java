@@ -28,34 +28,31 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
     }
 
     @Override
-    public int add(int idProdotto, int disponibilita, int idPuntoVendita) {
+    public int add(SchedaProdotto schedaProdotto) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO scheda_prodotto(idProdotto, disponibilita, idPuntoVendita) VALUES ('"+ idProdotto + "','" + disponibilita + "','" + idPuntoVendita + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO scheda_prodotto(idProdotto, disponibilita, idPuntoVendita) VALUES ('"+ schedaProdotto.getIdProdotto() + "','" + schedaProdotto.getDisponibilita() + "','" + schedaProdotto.getIdPuntoVendita() + "');");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int update(int idSchedaProdotto, int disponibilita) {
+    public int update(SchedaProdotto schedaProdotto) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE scheda_prodotto SET disponibilita = '"+  disponibilita + "' WHERE idSchedaProdotto = '" + idSchedaProdotto + "';");
+        int rowCount = conn.executeUpdate("UPDATE scheda_prodotto SET disponibilita = '"+  schedaProdotto.getDisponibilita() + "' WHERE idSchedaProdotto = '" + schedaProdotto.getIdSchedaProdotto() + "';");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int delete(int idSchedaProdotto) {
+    public int delete(SchedaProdotto schedaProdotto) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM scheda_prodotto WHERE idSchedaProdotto = '" + idSchedaProdotto + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM scheda_prodotto WHERE idSchedaProdotto = '" + schedaProdotto.getIdSchedaProdotto() + "';");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public SchedaProdotto findByShop_Product(int idProdotto, int idPuntoVendita){
-        return findByShop_Product(idProdotto, idPuntoVendita, 0);
-    }
-    public SchedaProdotto findByShop_Product(int idProdotto , int idPuntoVendita, int closeConn) {
+    public SchedaProdotto findByShop_Product(int idProdotto , int idPuntoVendita) {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idProdotto = '" + idProdotto + "' AND idPuntovendita = '" + idPuntoVendita + "';");
         SchedaProdotto schedaProdotto;
@@ -64,7 +61,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
             if (rs.getRow()==1) {
                 schedaProdotto = new SchedaProdotto();
                 schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
-                schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
+                schedaProdotto.setIdProdotto(rs.getInt("idProdotto"));
                 schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
                 schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 return schedaProdotto;
@@ -78,7 +75,34 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
+            conn.close();
+        }
+        return null;
+    }
+
+    public ArrayList<SchedaProdotto> findAllByProduct(int idProdotto) {
+        conn = DbConnection.getInstance();
+        rs = conn.executeQuery("SELECT * FROM scheda_prodotto WHERE idProdotto = '" + idProdotto + "';");
+        ArrayList<SchedaProdotto> schedeProdotto = new ArrayList<>();
+        try {
+            while(rs.next()){
+                SchedaProdotto schedaProdotto = new SchedaProdotto();
+                schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
+                schedaProdotto.setIdProdotto(rs.getInt("idProdotto"));
+                schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
+                schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
+                schedeProdotto.add(schedaProdotto);
+            }
+            return schedeProdotto;
+        } catch (SQLException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        } catch (NullPointerException e) {
+            // Gestisce le differenti categorie d'errore
+            System.out.println("Resultset: " + e.getMessage());
+        } finally {
             conn.close();
         }
         return null;
@@ -94,7 +118,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
             while (rs.next()) {
                 schedaProdotto = new SchedaProdotto();
                 schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
-                schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
+                schedaProdotto.setIdProdotto(rs.getInt("idProdotto"));
                 schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
                 schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 schedeProdotto.add(schedaProdotto);
@@ -125,7 +149,7 @@ public class SchedaProdottoDAO implements ISchedaProdottoDAO {
             while (rs.next()) {
                 schedaProdotto = new SchedaProdotto();
                 schedaProdotto.setIdSchedaProdotto(rs.getInt("idSchedaProdotto"));
-                schedaProdotto.setProdotto(ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto")));
+                schedaProdotto.setIdProdotto(rs.getInt("idProdotto"));
                 schedaProdotto.setDisponibilita(rs.getInt("disponibilita"));
                 schedaProdotto.setIdPuntoVendita(rs.getInt("idPuntoVendita"));
                 schedeProdotto.add(schedaProdotto);

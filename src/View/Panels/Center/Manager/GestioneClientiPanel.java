@@ -1,21 +1,12 @@
 package View.Panels.Center.Manager;
 
-import Business.SessionManager;
-import DAO.Classi.ClienteDAO;
-import DAO.Classi.FeedbackDAO;
-import DAO.Classi.PuntoVenditaDAO;
-import Model.Cliente;
-import Model.FeedBack;
-import Model.Utente;
+import Business.ModelBusiness.ClienteBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Manager.GestioneClientiListener;
-import View.Panels.Center.Manager.Altro.ClientiTableModel;
-import View.Panels.Center.Manager.Altro.FeedBackDialog;
-import View.Panels.Center.Manager.Altro.FeedbackTableModel;
+import Business.ModelBusiness.TableModels.ClientiTableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GestioneClientiPanel extends JPanel {
 
@@ -31,16 +22,9 @@ public class GestioneClientiPanel extends JPanel {
         private JButton btnAbilitaDisabilita = new JButton("Abilita/Disabilita");
         private JButton btnCancella = new JButton("Cancella");
 
-    private ArrayList<Cliente> lista;
-    private int idPuntoVenditaManager;
-
     public GestioneClientiPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         gestioneClientiListener = new GestioneClientiListener(this, appFrame);
-
-        Utente u = (Utente) SessionManager.getInstance().getSession().get("loggedUser");
-        idPuntoVenditaManager = PuntoVenditaDAO.getInstance().findByManager(u.getIdUtente()).getIdPuntoVendita();
-        lista = ClienteDAO.getInstance().findByPuntoVendita(idPuntoVenditaManager);
 
         tableSetting();
 
@@ -62,9 +46,9 @@ public class GestioneClientiPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            Cliente c = currentTableModel.getLista().get(selectedRow);
+            //Cliente c = currentTableModel.getLista().get(selectedRow);
 
-            System.out.println("Si dovrebbe inviare una mail all'indirizzo: " + c.getEmail());
+            //System.out.println("Si dovrebbe inviare una mail all'indirizzo: " + c.getEmail());
             //...
 
         }
@@ -79,15 +63,7 @@ public class GestioneClientiPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            Cliente c = currentTableModel.getLista().get(selectedRow);
-            if(c.isAbilitato()){
-                c.setAbilitato(false);
-            }else{
-                c.setAbilitato(true);
-            }
-            ClienteDAO.getInstance().update(c);
-            currentTableModel.setLista(ClienteDAO.getInstance().findByPuntoVendita(idPuntoVenditaManager));
-            currentTableModel.fireTableDataChanged();
+            ClienteBusiness.getInstance().abilita_disabilita(selectedRow);
         }
     }
 
@@ -100,16 +76,26 @@ public class GestioneClientiPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            Cliente c = currentTableModel.getLista().get(selectedRow);
-            ClienteDAO.getInstance().delete(c);
-            currentTableModel.setLista(ClienteDAO.getInstance().findByPuntoVendita(idPuntoVenditaManager));
-            currentTableModel.fireTableDataChanged();
+            int result = ClienteBusiness.getInstance().cancella(selectedRow);
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Cliente cancellato correttamente",
+                            "Client cancelled",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Cliente cancellato in maniera errata",
+                            "Client cancelled",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
     }
 
     public void tableSetting(){
-        currentTableModel = new ClientiTableModel(lista);
-        currentTable = new JTable(currentTableModel);
+        currentTable = ClienteBusiness.getInstance().getTabellaClienti();
         currentScrollPane = new JScrollPane(currentTable);
     }
 

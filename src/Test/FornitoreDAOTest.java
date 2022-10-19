@@ -24,7 +24,6 @@ public class FornitoreDAOTest {
         fornitoreDAO.add(fornitore);
         idFornitore = fornitoreDAO.findByName("FornitoreTest").getIdFornitore();
         fornitore.setIdFornitore(idFornitore);
-        fornitoreDAO.add(fornitore);
     }
 
     @After

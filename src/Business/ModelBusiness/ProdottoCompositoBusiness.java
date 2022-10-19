@@ -1,12 +1,18 @@
 package Business.ModelBusiness;
 
 import DAO.Classi.ArticoloDAO;
+import DAO.Classi.PosizioneDAO;
 import DAO.Classi.ProdottoCompositoDAO;
 import DAO.Classi.ProdottoDAO;
+import Model.Articolo;
 import Model.Prodotto;
 import Model.ProdottoComposito;
 import Model.Prodotto_Quantita;
+import View.AppFrame;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.CompositeProductDialog;
 
+import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class ProdottoCompositoBusiness {
@@ -21,39 +27,36 @@ public class ProdottoCompositoBusiness {
     private ProdottoCompositoBusiness() {
     }
 
-    public int aggiungi(ProdottoComposito prodotto, Prodotto_Quantita prodotto_quantita){
-        if(ArticoloDAO.getInstance().add(prodotto) == 0) return 0;
-        prodotto.setIdArticolo(ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo());
-        if(ProdottoCompositoDAO.getInstance().add(prodotto.getIdArticolo(), prodotto_quantita) == 0) return 0;
-        return 1;
+    public int aggiungi(AppFrame appFrame, String nome, String descrizione, String prezzo, File immagine, String posizione){
+        String[] posizioneArray = posizione.split(" ");
+
+        int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]),Integer.parseInt(posizioneArray[2]),Integer.parseInt(posizioneArray[4])).getIdPosizione();
+        Prodotto prodotto = new Prodotto(nome, descrizione, Float.parseFloat(prezzo), 0,0, idPosizione);
+        prodotto.setImmagine(immagine);
+        if(ArticoloDAO.getInstance().add(prodotto) == 0){
+            return 1;
+        }
+        prodotto.setIdArticolo(ArticoloDAO.getInstance().findByName(nome).getIdArticolo());
+        ProdottoDAO.getInstance().add(prodotto);
+        if(ProdottoDAO.getInstance().findByName(prodotto.getNome())!=null) {
+            CompositeProductDialog.showDialog(appFrame, "Aggiungi prodotto", ProdottoDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo());
+        }else{
+            return 1;
+        }
+        return 0;
     }
 
-    public int aggiorna(Prodotto prodotto, Prodotto_Quantita prodotto_quantita){
-        if(ArticoloDAO.getInstance().update(prodotto) == 0) return 0;
-        if(ProdottoCompositoDAO.getInstance().update(prodotto.getIdArticolo(), prodotto_quantita) == 0) return 0;
-        return 1;
-    }
-
-    public int cancella(ProdottoComposito prodotto){
-        if(ProdottoCompositoDAO.getInstance().delete(prodotto.getIdArticolo()) == 0) return 0;
-        if(ArticoloDAO.getInstance().delete(prodotto) == 0) return 0;
-        return 1;
-    }
-
-    public ProdottoComposito cercaIDProdottoComposito(int idProdottoComposito){
-        return ProdottoCompositoDAO.getInstance().findByID(idProdottoComposito);
-    }
-
-    public ProdottoComposito cercaNomeProdottoComposito(String nomeProdotto){
-        return ProdottoCompositoDAO.getInstance().findByName(nomeProdotto);
-    }
-
-    public ArrayList<Prodotto_Quantita> cercaSottoProdotti(int idProdottoComposito){
-        return ProdottoCompositoDAO.getInstance().findSonsByID(idProdottoComposito);
-    }
-
-    public ArrayList<ProdottoComposito> cercaTuttiProdottiCompositi(){
-        return ProdottoCompositoDAO.getInstance().findAll();
+    public boolean aggiungiSottoProdotto(String nomeProdotto, String quantitaProdotto, int idProdottoComposito){
+        Prodotto p;
+        p = ProdottoDAO.getInstance().findByName(nomeProdotto);
+        if(p != null){
+            p.setQuantita(Integer.parseInt(quantitaProdotto));
+            p.setIdProdottoCompositoPadre(idProdottoComposito);
+            ProdottoCompositoDAO.getInstance().add(p);
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

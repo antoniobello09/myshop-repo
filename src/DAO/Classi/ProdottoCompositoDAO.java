@@ -29,41 +29,40 @@ public class ProdottoCompositoDAO implements IProdottoCompositoDAO {
     }
 
     @Override
-    public int add(int idProdottoComposito, Prodotto_Quantita prodotto_quantita) {
+    public int add(Prodotto prodotto) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("INSERT INTO prodottocomposito(idProdottoComposito, idProdotto, quantita) VALUES ('" + idProdottoComposito + "','" + prodotto_quantita.getProdotto().getIdArticolo() + "','" + prodotto_quantita.getQuantita() + "');");
+        int rowCount = conn.executeUpdate("INSERT INTO prodottocomposito(idProdottoComposito, idProdotto, quantita) VALUES ('" + prodotto.getIdProdottoCompositoPadre() + "','" + prodotto.getIdArticolo() + "','" + prodotto.getQuantita() + "');");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int update(int idProdottoComposito, Prodotto_Quantita prodotto_quantita) {
+    public int update(Prodotto prodotto) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("UPDATE prodottocomposito SET quantita = '" + prodotto_quantita.getQuantita() + "' WHERE idProdottoComposito = '" + idProdottoComposito +"' AND idProdotto = '" + prodotto_quantita.getProdotto().getIdArticolo() + "';");
+        int rowCount = conn.executeUpdate("UPDATE prodottocomposito SET quantita = '" + prodotto.getQuantita() + "' WHERE idProdottoComposito = '" + prodotto.getIdProdottoCompositoPadre() +"' AND idProdotto = '" + prodotto.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public int delete(int idProdottoComposito) {
+    public int delete(ProdottoComposito prodottoComposito) {
         conn = DbConnection.getInstance();
-        int rowCount = conn.executeUpdate("DELETE FROM prodottocomposito WHERE idProdottoComposito = '" + idProdottoComposito + "';");
+        int rowCount = conn.executeUpdate("DELETE FROM prodottocomposito WHERE idProdottoComposito = '" + prodottoComposito.getIdArticolo() + "';");
         conn.close();
         return rowCount;
     }
 
     @Override
-    public ArrayList<Prodotto_Quantita> findSonsByID(int idProdottoComposito){
+    public ArrayList<Prodotto> findSonsByID(int idProdottoComposito){
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM prodottocomposito WHERE idProdottoComposito = '" + idProdottoComposito + "';");
-        ArrayList<Prodotto_Quantita> sottoprodotti = new ArrayList<>();
+        ArrayList<Prodotto> sottoprodotti = new ArrayList<>();
         try {
             while(rs.next()) {
                 Prodotto prodotto = ProdottoDAO.getInstance().findByID(rs.getInt("idProdotto"));
-                Prodotto_Quantita prodotto_quantita = new Prodotto_Quantita();
-                prodotto_quantita.setQuantita(rs.getInt("quantita"));
-                prodotto_quantita.setProdotto(prodotto);
-                sottoprodotti.add(prodotto_quantita);
+                prodotto.setQuantita(rs.getInt("quantita"));
+                prodotto.setIdProdottoCompositoPadre(rs.getInt("idProdottoComposito"));
+                sottoprodotti.add(prodotto);
             }
             return sottoprodotti;
         } catch (SQLException e) {

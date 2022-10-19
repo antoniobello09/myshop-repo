@@ -5,6 +5,8 @@ import View.Panels.Center.Amministratore.GestioneArticoliPanels.CreateProductPan
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class CreateProductListener implements ActionListener {
 
@@ -21,7 +23,9 @@ public class CreateProductListener implements ActionListener {
         if(e.getActionCommand().equals("categoria")){
             createProductPanel.setComboBoxSottoCategorie();
         }else if(e.getActionCommand().equals("invia")){
-            createProductPanel.invia();
+                createProductPanel.invia();
+        }else if(e.getActionCommand().equals("fileChooser")){
+            createProductPanel.scegliImmagine();
         }
     }
 }

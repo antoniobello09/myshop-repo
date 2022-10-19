@@ -1,9 +1,7 @@
 package Model;
 
-import Model.Other.ICategoria;
-
+import java.io.File;
 import java.sql.Blob;
-import java.util.List;
 
 public class Articolo {
 
@@ -11,10 +9,10 @@ public class Articolo {
     private String nome;
     private String descrizione;
     private Float prezzo;
-    private Blob immagine;
+    private File immagine;
     private int idCategoria;
 
-    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria) {
+    public Articolo(int idArticolo, String nome, String descrizione, Float prezzo, File immagine, int idCategoria) {
         this.idArticolo = idArticolo;
         this.prezzo = prezzo;
         this.nome = nome;
@@ -31,7 +29,7 @@ public class Articolo {
         this.idCategoria = idCategoria;
     }
 
-    public Articolo(String nome, String descrizione, Float prezzo, Blob immagine, int idCategoria) {
+    public Articolo(String nome, String descrizione, Float prezzo, File immagine, int idCategoria) {
         this.prezzo = prezzo;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -91,11 +89,11 @@ public class Articolo {
         this.descrizione = descrizione;
     }
 
-    public Blob getImmagine() {
+    public File getImmagine() {
         return immagine;
     }
 
-    public void setImmagine(Blob immagine) {
+    public void setImmagine(File immagine) {
         this.immagine = immagine;
     }
 

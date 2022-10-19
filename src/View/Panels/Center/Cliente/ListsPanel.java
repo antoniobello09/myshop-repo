@@ -1,21 +1,11 @@
 package View.Panels.Center.Cliente;
 
-import Business.Bridge.Documento;
-import Business.Bridge.DocumentoListaAcquisto;
-import Business.Bridge.PdfBoxAPI;
-import Business.SessionManager;
-import DAO.Classi.*;
-import Model.*;
+import Business.ModelBusiness.ListaBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Cliente.ListsListener;
-import View.Panels.Center.Cliente.Altro.ListsTableModel;
-import View.Panels.Center.Manager.Altro.ClientiTableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class ListsPanel extends JPanel {
 
@@ -28,24 +18,16 @@ public class ListsPanel extends JPanel {
         private JButton btnCrea = new JButton("Crea");
     private JScrollPane currentScrollPane;
     private JTable currentTable;
-    private ListsTableModel currentTableModel;
     private JPanel sidePanel = new JPanel();
     private JButton btnModifica = new JButton("Dettagli");
     private JButton btnAcquista = new JButton("Acquista");
     private JButton btnPDF = new JButton("Scarica PDF");
 
-    private ArrayList<Lista> lista;
-    private Lista l;
     private int idCliente;
 
     public ListsPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         listsListener = new ListsListener(this, appFrame);
-
-        Utente u = (Utente) SessionManager.getInstance().getSession().get("loggedUser");
-        idCliente = u.getIdUtente();
-        lista = ListaDAO.getInstance().findAll(idCliente);
-
 
         tableSetting();
 
@@ -65,10 +47,21 @@ public class ListsPanel extends JPanel {
                     "Empty field Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
-            Lista l = new Lista(listaField.getText(), idCliente);
-            ListaDAO.getInstance().add(l);
-            currentTableModel.setLista(ListaDAO.getInstance().findAll(idCliente));
-            currentTableModel.fireTableDataChanged();
+            int result = ListaBusiness.getInstance().crea(listaField.getText());
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Lista creata con successo!",
+                            "Create list success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Lista non creata!",
+                            "Create list error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
             listaField.setText("");
         }
     }
@@ -82,54 +75,52 @@ public class ListsPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            appFrame.getCenter().setCurrentPanel(new ArticlesListPanel(appFrame, currentTableModel.getLista().get(selectedRow).getIdLista()));
+            ListaBusiness.getInstance().modifica(selectedRow, appFrame);
         }
     }
 
     public void acquista(){
         int selectedRow = currentTable.getSelectedRow();
         selectedRow = currentTable.convertRowIndexToModel(selectedRow);
+        int result = ListaBusiness.getInstance().acquista(selectedRow);
         if(selectedRow == -1){
             JOptionPane.showMessageDialog(appFrame,
                     "Seleziona la lista da acquistare!",
                     "List Selection Error",
                     JOptionPane.ERROR_MESSAGE);
-        }else if (AcquistoDAO.getInstance().findByIDLista(currentTableModel.getLista().get(selectedRow).getIdLista())!=null) {
+        }else if (result == 1) {
             JOptionPane.showMessageDialog(appFrame,
                     "Lista già acquistata!",
                     "Purchased List Error",
                     JOptionPane.ERROR_MESSAGE);
-        }else{
-            int idPuntoVendita = (int)SessionManager.getInstance().getSession().get("idPuntoVendita");
-            Acquisto a = new Acquisto(idPuntoVendita, Date.valueOf(LocalDate.now()), currentTableModel.getLista().get(selectedRow).getIdLista());
-            AcquistoDAO.getInstance().add(a);
-            currentTableModel.setLista(ListaDAO.getInstance().findAll(idCliente));
-            currentTableModel.fireTableDataChanged();
+        }else if(result == 2){
+            JOptionPane.showMessageDialog(appFrame,
+                    "Lista non acquistata!",
+                    "Purchased List Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }else if(result == 0){
+            JOptionPane.showMessageDialog(appFrame,
+                    "Lista acquistata!",
+                    "Purchased List Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    public void scaricaPDF(){
+    public void inviaPDF(){
         int selectedRow = currentTable.getSelectedRow();
         if(selectedRow == -1){
             JOptionPane.showMessageDialog(appFrame,
-                    "Seleziona la lista da scaricare!",
+                    "Seleziona la lista da inviarti come pdf!",
                     "List Selection Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            int idLista = currentTableModel.getLista().get(selectedRow).getIdLista();
-            ArrayList<Lista_has_Articolo> l = Lista_has_ArticoloDAO.getInstance().findAllListArticles(idLista);
-            Documento listaAcquisto = new DocumentoListaAcquisto(l, new PdfBoxAPI());
-
-            //prendere l'utente loggato dalla sessione e ottenere la mail dall'oggetto cliente
-            Utente u = (Utente)SessionManager.getInstance().getSession().get("loggedUser");
-            listaAcquisto.invia(u.getEmail());
+            ListaBusiness.getInstance().inviaPDF(selectedRow);
         }
     }
 
     public void tableSetting(){
-        currentTableModel = new ListsTableModel(lista);
-        currentTable = new JTable(currentTableModel);
+        currentTable = ListaBusiness.getInstance().getTabellaListe();
         currentScrollPane = new JScrollPane(currentTable);
     }
 

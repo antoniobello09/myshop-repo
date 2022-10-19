@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
+import Business.ModelBusiness.ArticoloBusiness;
 import Business.ModelBusiness.ServizioBusiness;
 import DAO.Classi.*;
 import Model.Articolo;
@@ -22,7 +23,7 @@ public class DeleteArticlePanel extends JPanel {
     DeleteArticleListener deleteArticleListener;
 
     private JPanel formProductPanel = new JPanel();
-        private JLabel inserisciNome = new JLabel("Articolo da eliminare");
+        private JLabel inserisciNome = new JLabel("Articolo da eliminare: ");
         private JTextField nomeField = new JTextField();
         private JButton btnCancella = new JButton("Cancella");
 
@@ -44,30 +45,25 @@ public class DeleteArticlePanel extends JPanel {
                     "Non hai inserito il nome dell'articolo!",
                     "Delete Product Error",
                     JOptionPane.ERROR_MESSAGE);
-        }else{
-            Articolo articolo = ArticoloDAO.getInstance().findByName(nomeField.getText());
-
-            if (articolo != null) {
-                Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
-                Servizio servizio = ServizioBusiness.getInstance().cercaIDServizio(articolo.getIdArticolo());
-                if (ArticoloDAO.getInstance().isServizio(articolo)) {
-                    ServizioBusiness.getInstance().cancella(servizio);
-                } else if (ArticoloDAO.getInstance().isProdottoComposito(articolo)) {
-                    ProdottoCompositoDAO.getInstance().delete(articolo.getIdArticolo());
-                    ArticoloDAO.getInstance().delete(articolo);
-                } else if (ArticoloDAO.getInstance().isProdotto(articolo)) {
-                    ProdottoDAO.getInstance().delete(prodotto);
-                    ArticoloDAO.getInstance().delete(articolo);
-                }
+        }else {
+            int result = ArticoloBusiness.getInstance().cancella(nomeField.getText());
+            switch (result){
+                case 1:
+                        JOptionPane.showMessageDialog(appFrame,
+                                "Nome dell'articolo non corretto!",
+                                "Delete Article Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        break;
+                case 0:
+                        JOptionPane.showMessageDialog(appFrame,
+                                "Eliminazione avvenuta con successo",
+                                "Delete Article Success",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        break;
             }
-            else {
-                JOptionPane.showMessageDialog(appFrame,
-                        "Nome dell'articolo non corretto!",
-                        "Delete Article Error",
-                        JOptionPane.ERROR_MESSAGE);
-                nomeField.setText("");
-            }
+            nomeField.setText("");
         }
+
     }
 
     //------------------------------------------------------------------------------------------------------------------------

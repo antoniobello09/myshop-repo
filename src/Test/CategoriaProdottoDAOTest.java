@@ -21,20 +21,25 @@ public class CategoriaProdottoDAOTest {
     public void setUp() throws Exception {
         ICategoriaDAO categoriaDAO = CategoriaDAO.getInstance();
         ICategoriaProdottoDAO categoriaProdottoDAO = CategoriaProdottoDAO.getInstance();
-        //categoriaDAO.add(new Categoria("CategoriaProdottoTest"));
+
+        categoriaDAO.add(new Categoria("CategoriaProdottoTest"));
         CategoriaProdotto categoriaProdotto = new CategoriaProdotto();
-        categoriaProdotto.setNome("CategoriaProdottoTest");
-        categoriaProdottoDAO.addSub(categoriaProdotto, 30);
         idCategoriaProdotto = categoriaDAO.findByName("CategoriaProdottoTest").getIdCategoria();
+        categoriaProdotto.setIdCategoria(idCategoriaProdotto);
+        categoriaProdotto.setNome("CategoriaProdottoTest");
+        categoriaProdotto.setIdCategoriaPadre(30);
+        categoriaProdottoDAO.addSub(categoriaProdotto);
+
     }
 
     @After
     public void tearDown() throws Exception {
         ICategoriaDAO categoriaDAO = CategoriaDAO.getInstance();
         ICategoriaProdottoDAO categoriaProdottoDAO = CategoriaProdottoDAO.getInstance();
+
         CategoriaProdotto categoriaProdotto = new CategoriaProdotto();
         categoriaProdotto.setIdCategoria(idCategoriaProdotto);
-        categoriaProdottoDAO.delete(categoriaProdotto);
+        categoriaProdottoDAO.deleteSub(categoriaProdotto);
         categoriaDAO.delete(categoriaProdotto);
     }
 
@@ -95,8 +100,8 @@ public class CategoriaProdottoDAOTest {
 
     @Test
     public void findAllSonsTestNOK() {
-        ICategoriaDAO categoriaDAO = CategoriaDAO.getInstance();
-        ArrayList<Categoria> categorie = categoriaDAO.findAll();
+        ICategoriaProdottoDAO categoriaProdottoDAO = CategoriaProdottoDAO.getInstance();
+        ArrayList<CategoriaProdotto> categorie = categoriaProdottoDAO.findAllSons(30);
         Assert.assertEquals(4, categorie.size());
     }
 
@@ -115,26 +120,30 @@ public class CategoriaProdottoDAOTest {
     }
 
 
-    @Test
-    public void deleteTestOK(){
-        int rowCount;
-        ICategoriaProdottoDAO categoriaProdottoDAO = CategoriaProdottoDAO.getInstance();
-        CategoriaProdotto categoriaProdotto = new CategoriaProdotto();
-        categoriaProdotto.setIdCategoria(idCategoriaProdotto);
-        rowCount = categoriaProdottoDAO.delete(categoriaProdotto);
-        Assert.assertEquals(1, rowCount);
-    }
+    /*    @Test
+        public void deleteTestOK(){
+            int rowCount;
+            ICategoriaProdottoDAO categoriaProdottoDAO = CategoriaProdottoDAO.getInstance();
+            CategoriaProdotto categoriaProdotto = new CategoriaProdotto();
+            categoriaProdotto.setIdCategoriaPadre(30);
+            rowCount = categoriaProdottoDAO.delete(categoriaProdotto);
+            Assert.assertEquals(1, rowCount);
+        }
+
+
 
     @Test
     public void deleteTestNOK(){
         int rowCount;
         ICategoriaProdottoDAO categoriaProdottoDAO = CategoriaProdottoDAO.getInstance();
         CategoriaProdotto categoriaProdotto = new CategoriaProdotto();
-        categoriaProdotto.setIdCategoria(idCategoriaProdotto);
+        categoriaProdotto.setIdCategoriaPadre(30);
         rowCount = categoriaProdottoDAO.delete(categoriaProdotto);
         Assert.assertEquals(0, rowCount);
     }
 
+
+     */
     @Test
     public void deleteSubTestOK(){
         int rowCount;

@@ -20,6 +20,8 @@ public class CreateServiceListener implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("invia")){
             createServicePanel.invia();
+        }else if(e.getActionCommand().equals("fileChooser")){
+            createServicePanel.scegliImmagine();
         }
     }
 }

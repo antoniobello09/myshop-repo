@@ -2,12 +2,15 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Lista {
 
     private int idLista;
     private String nome;
     private int idCliente;
+
+    private ArrayList<Lista_has_Articolo> lista_has_articoli;
 
     public Lista() {
     }

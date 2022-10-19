@@ -1,19 +1,21 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
-import DAO.Classi.CategoriaProdottoDAO;
-import DAO.Classi.PosizioneDAO;
-import DAO.Classi.ProdottoDAO;
-import DAO.Classi.FornitoreDAO;
-import Model.CategoriaProdotto;
-import Model.Fornitore;
-import Model.Posizione;
-import Model.Prodotto;
+import Business.HelpFunctions;
+import Business.ModelBusiness.CategoriaBusiness;
+import Business.ModelBusiness.FornitoreBusiness;
+import Business.ModelBusiness.PosizioneBusiness;
+import Business.ModelBusiness.ProdottoBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateProductListener;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ImageFilter;
+import View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro.ImagePreview;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 
 
 public class CreateProductPanel extends JPanel {
@@ -29,7 +31,7 @@ public class CreateProductPanel extends JPanel {
         private JLabel inserisciPrezzo = new JLabel("Prezzo                         €");
         private JTextField prezzoField = new JTextField();
         private JLabel immagineProdotto = new JLabel("Immagine");
-        private JTextField immagineField = new JTextField();
+        private JButton btnImmagine = new JButton("Scegli immagine");
         private JLabel inserisciCategoria = new JLabel("Categoria");
         private JComboBox<String> categoriaField;
         private JLabel inserisciSottoCategoria = new JLabel("Sottocategoria");
@@ -41,47 +43,30 @@ public class CreateProductPanel extends JPanel {
         private JButton btnInvia = new JButton("Invia");
 
 
+    private JFileChooser fileChooser;
+    private File immagine = null;
     private String selectedItem;
-    private ArrayList<CategoriaProdotto> categorieList;     //Lista di categorie
-    private ArrayList<Posizione> posizioniList;             //Lista di posizioni
-    private ArrayList<Fornitore> produttoriList;            //Lista di produttori
-
 
     public CreateProductPanel(AppFrame appFrame){
 
         this.appFrame = appFrame;
         createProductListener = new CreateProductListener(this, this.appFrame);
 
-        categoriaField = new JComboBox<>();
         sottocategoriaField = new JComboBox<>();
+        categoriaField = new JComboBox<>();
         posizioneField = new JComboBox<>();
         produttoreField = new JComboBox<>();
 
         //Creo la lista di categorie da cui scegliere
-        categorieList = CategoriaProdottoDAO.getInstance().findAll();
-        if(categorieList != null) {
-            for (int i = 0; i < categorieList.size(); i++) {
-                if (categorieList.get(i).getIdCategoriaPadre() == 0) {
-                    categoriaField.addItem(categorieList.get(i).getNome());
-                }
-            }
-        }
+        categoriaField = HelpFunctions.getFullComboBox(CategoriaBusiness.getInstance().getNomiCategorieProdotto());
 
         //Creo la lista di posizioni da cui scegliere
-        posizioniList = PosizioneDAO.getInstance().findAllEmpty();
-        if(posizioniList != null) {
-            for (int i = 0; i < posizioniList.size(); i++) {
-                posizioneField.addItem("" + posizioniList.get(i).getPiano() + " piano " + posizioniList.get(i).getCorsia() + " corsia " + posizioniList.get(i).getScaffale() + " scaffale");
-            }
-        }
+        posizioneField = HelpFunctions.getFullComboBox(PosizioneBusiness.getInstance().getPosizioniDisponibili());
 
         //Creo la lista di produttori da cui scegliere
-        produttoriList = FornitoreDAO.getInstance().findAllProd();
-        if(produttoriList != null) {
-            for (int i = 0; i < produttoriList.size(); i++) {
-                produttoreField.addItem(produttoriList.get(i).getNome());
-            }
-        }
+        produttoreField = HelpFunctions.getFullComboBox(FornitoreBusiness.getInstance().getNomiProduttori());
+
+        fileChooserSetting();
 
         layoutSetting();
 
@@ -98,34 +83,63 @@ public class CreateProductPanel extends JPanel {
     public void setComboBoxSottoCategorie(){
         selectedItem = categoriaField.getSelectedItem().toString();
         sottocategoriaField.removeAllItems();
-        ArrayList<CategoriaProdotto> sottocategorieList = CategoriaProdottoDAO.getInstance().findAllSons(CategoriaProdottoDAO.getInstance().findByName(selectedItem).getIdCategoria());
-        if(sottocategorieList != null) {
-            for (int i = 0; i < sottocategorieList.size(); i++) {
-                sottocategoriaField.addItem(sottocategorieList.get(i).getNome());
-            }
-        }
+        sottocategoriaField = HelpFunctions.getFullComboBox(sottocategoriaField, CategoriaBusiness.getInstance().getNomiSottoCategorieProdotto(selectedItem));
         sottocategoriaField.setEnabled(true);
     }
 
     public void invia(){
-        if(nomeField.getText().isEmpty() || descrizioneField.getText().isEmpty() || prezzoField.getText().isEmpty() || sottocategoriaField.getSelectedItem() == null || produttoreField.getSelectedItem() == null || posizioneField.getSelectedItem() == null){
+        if(immagine == null || nomeField.getText().isEmpty() || descrizioneField.getText().isEmpty() || prezzoField.getText().isEmpty() || sottocategoriaField.getSelectedItem() == null || produttoreField.getSelectedItem() == null || posizioneField.getSelectedItem() == null){
             JOptionPane.showMessageDialog(appFrame,
                     "La compilazione è errata!",
                     "Create Product Error",
                     JOptionPane.ERROR_MESSAGE);
-            return;
         }else{
-            String[] posizioneArray = posizioneField.getSelectedItem().toString().split(" ");
-            int idCategoria = CategoriaProdottoDAO.getInstance().findByName(sottocategoriaField.getSelectedItem().toString()).getIdCategoria();
-            int idProduttore = FornitoreDAO.getInstance().findByName(produttoreField.getSelectedItem().toString()).getIdFornitore();
-            int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]),Integer.parseInt(posizioneArray[2]),Integer.parseInt(posizioneArray[4])).getIdPosizione();
-            Prodotto prodotto = new Prodotto(nomeField.getText(), descrizioneField.getText(), Float.parseFloat(prezzoField.getText()), idCategoria, idProduttore, idPosizione);
-            ProdottoDAO.getInstance().add(prodotto);
+
+            int result = ProdottoBusiness.getInstance().aggiungi(
+                    nomeField.getText(), descrizioneField.getText(), prezzoField.getText(),
+                    sottocategoriaField.getSelectedItem().toString(), immagine, produttoreField.getSelectedItem().toString(),
+                    posizioneField.getSelectedItem().toString());
+
+            switch (result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Prodotto creato con successo",
+                            "Create Product Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Prodotto non inserito!",
+                            "Create Product Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+        nomeField.setText("");
+        descrizioneField.setText("");
+        prezzoField.setText("");
+        posizioneField.removeAllItems();
+        posizioneField = HelpFunctions.getFullComboBox(posizioneField, PosizioneBusiness.getInstance().getPosizioniDisponibili());
+    }
+
+    public void scegliImmagine(){
+        int returnVal = fileChooser.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            immagine = fileChooser.getSelectedFile();
         }
     }
 
 //--------------------------------------------------------------------------------------------------
 
+
+    public void fileChooserSetting(){
+        fileChooser = new JFileChooser();
+
+        fileChooser.addChoosableFileFilter(new ImageFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setAccessory(new ImagePreview(fileChooser));
+    }
 
     public void layoutSetting(){
             formProductPanel.setLayout(new GridLayout(0,2,0,10));
@@ -143,6 +157,8 @@ public class CreateProductPanel extends JPanel {
         formProductPanel.add(categoriaField);
         formProductPanel.add(inserisciSottoCategoria);
         formProductPanel.add(sottocategoriaField);
+        formProductPanel.add(immagineProdotto);
+        formProductPanel.add(btnImmagine);
         formProductPanel.add(inserisciProduttore);
         formProductPanel.add(produttoreField);
         formProductPanel.add(inserisciPosizione);
@@ -160,8 +176,10 @@ public class CreateProductPanel extends JPanel {
     public void listenerSettings(){
         btnInvia.setActionCommand("invia");
         categoriaField.setActionCommand("categoria");
+        btnImmagine.setActionCommand("fileChooser");
 
         btnInvia.addActionListener(createProductListener);
         categoriaField.addActionListener(createProductListener);
+        btnImmagine.addActionListener(createProductListener);
     }
 }

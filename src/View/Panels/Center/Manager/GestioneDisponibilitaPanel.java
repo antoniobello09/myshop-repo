@@ -1,42 +1,30 @@
 package View.Panels.Center.Manager;
 
-import Business.SessionManager;
-import DAO.Classi.ManagerDAO;
-import DAO.Classi.PuntoVenditaDAO;
-import DAO.Classi.SchedaProdottoDAO;
-import Model.SchedaProdotto;
-import Model.Utente;
+import Business.ModelBusiness.SchedaProdottoBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Manager.GestioneDisponibilitaListener;
-import View.Panels.Center.Manager.Altro.DisponibilitaDialog;
-import View.Panels.Center.Manager.Altro.DisponibilitaTableModel;
-import View.Panels.Center.Ospite.ProdottiTableModel;
+import Business.ModelBusiness.TableModels.DisponibilitaTableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GestioneDisponibilitaPanel extends JPanel {
 
     private AppFrame appFrame;
     private GestioneDisponibilitaListener gestioneDisponibilitaListener;
 
-    private JLabel labelTitle = new JLabel("Diponibilita Articoli");
+    private JLabel labelTitle = new JLabel("Disponibilità Articoli");
     private JScrollPane currentScrollPane;
         private JTable currentTable;
         private DisponibilitaTableModel currentTableModel;
     private JPanel sidePanel = new JPanel();
         private JButton btnRifornisci = new JButton("Rifornisci");
 
-    private ArrayList<SchedaProdotto> disponibilitaList;
-    private int idPuntoVenditaManager;
 
     public GestioneDisponibilitaPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
         gestioneDisponibilitaListener = new GestioneDisponibilitaListener(this, appFrame);
-        Utente u = (Utente) SessionManager.getInstance().getSession().get("loggedUser");
-        idPuntoVenditaManager = PuntoVenditaDAO.getInstance().findByManager(u.getIdUtente()).getIdPuntoVendita();
-        disponibilitaList = SchedaProdottoDAO.getInstance().findAllByShop(idPuntoVenditaManager);
+
 
         tableSetting();
 
@@ -59,16 +47,26 @@ public class GestioneDisponibilitaPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }else{
             selectedRow = currentTable.convertRowIndexToModel(selectedRow);
-            SchedaProdotto sp = currentTableModel.getLista().get(selectedRow);
-            DisponibilitaDialog.showDialog(appFrame, "Rifornisci Punto Vendita", sp);
-            currentTableModel.setLista(SchedaProdottoDAO.getInstance().findAllByShop(idPuntoVenditaManager));
-            currentTableModel.fireTableDataChanged();
+            int result = SchedaProdottoBusiness.getInstance().rifornisci(selectedRow, appFrame);
+            switch(result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Disponibilità modificata con successo!",
+                            "Modify Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Disponibilità non modificata!",
+                            "Modify Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
     }
 
     public void tableSetting(){
-        currentTableModel = new DisponibilitaTableModel(disponibilitaList);
-        currentTable = new JTable(currentTableModel);
+        currentTable = SchedaProdottoBusiness.getInstance().getTabellaSchedeProdotto();
         currentScrollPane = new JScrollPane(currentTable);
     }
 

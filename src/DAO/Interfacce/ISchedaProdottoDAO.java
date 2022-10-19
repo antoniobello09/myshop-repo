@@ -7,10 +7,11 @@ import java.util.ArrayList;
 
 public interface ISchedaProdottoDAO {
 
-    int add(int idProdotto, int disponibilita, int puntoVendita);
-    int update(int idSchedaProdotto, int disponibilita);
-    int delete(int idSchedaProdotto);
+    int add(SchedaProdotto schedaProdotto);
+    int update(SchedaProdotto schedaProdotto);
+    int delete(SchedaProdotto schedaProdotto);
     SchedaProdotto findByShop_Product(int idProdotto, int idPuntoVendita);
+    ArrayList<SchedaProdotto> findAllByProduct(int idProdotto);
     ArrayList<SchedaProdotto> findAllByShop(int idPuntoVendita);
     ArrayList<SchedaProdotto> findAll();
 

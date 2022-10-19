@@ -31,11 +31,11 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
     }
 
     @Override
-    public int add(int idManager, String citta, String indirizzo) {
+    public int add(PuntoVendita puntoVendita) {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + idManager + "','" + citta + "','" + indirizzo + "');";
+        String sql = "INSERT INTO puntovendita(idManager, citta, indirizzo) VALUES ('" + puntoVendita.getIdManager() + "','" + puntoVendita.getCitta() + "','" + puntoVendita.getIndirizzo() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -43,11 +43,11 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
     }
 
     @Override
-    public int update(int idPuntoVendita, String citta, String indirizzo) {
+    public int update(PuntoVendita puntoVendita) {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "UPDATE puntovendita SET citta = '" + citta + "', indirizzo = '" + indirizzo + "' WHERE idPuntoVendita = '" + idPuntoVendita + "';";
+        String sql = "UPDATE puntovendita SET citta = '" + puntoVendita.getCitta() + "', indirizzo = '" + puntoVendita.getIndirizzo() + "' WHERE idPuntoVendita = '" + puntoVendita.getIdPuntoVendita() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -55,11 +55,11 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
     }
 
     @Override
-    public int delete(int idPuntoVendita) {
+    public int delete(PuntoVendita puntoVendita) {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "DELETE FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita + "';";
+        String sql = "DELETE FROM puntovendita WHERE idPuntoVendita = '" + puntoVendita.getIdPuntoVendita() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -68,10 +68,6 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
 
     @Override
     public PuntoVendita findByID(int idPuntoVendita) {
-        return findByID(idPuntoVendita, 0);
-    }
-
-    public PuntoVendita findByID(int idPuntoVendita, int closeConn) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM puntovendita WHERE idPuntoVendita = '" + idPuntoVendita + "';";
@@ -95,21 +91,16 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }
 
     @Override
-    public PuntoVendita findByName(String indirizzo, String citta) {
-        return findByName(indirizzo, citta, 0);
-    }
-
-    public PuntoVendita findByName(String indirizzo, String citta, int closeConn){
+    public PuntoVendita findByName(String indirizzo, String citta){
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "SELECT * FROM puntovendita WHERE indirizzo ='" + indirizzo + "' AND citta = '" + citta + "';";
+        String sql = "SELECT * FROM puntovendita WHERE indirizzo = '" + indirizzo + "' AND citta = '" + citta + "';";
         IDbOperation dbOperation = new ReadOperation(sql);
         rs = dbOperationExecutor.executeOperation(dbOperation).getResultSet();
         PuntoVendita puntoVendita;
@@ -130,18 +121,13 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }
 
     @Override
     public PuntoVendita findByManager(int idManager) {
-        return findByManager(idManager, 0);
-    }
-
-    public PuntoVendita findByManager(int idManager, int closeConn) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM puntovendita WHERE idManager = '" + idManager + "';";
@@ -165,18 +151,13 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }
 
     @Override
-    public ArrayList<PuntoVendita> findAll() {
-        return findAll(0);
-    }
-
-    public ArrayList<PuntoVendita> findAll(int closeConn){
+    public ArrayList<PuntoVendita> findAll(){
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM puntovendita;";
@@ -202,8 +183,7 @@ public class PuntoVenditaDAO implements IPuntoVenditaDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

@@ -1,16 +1,11 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels;
 
-import DAO.Classi.CategoriaProdottoDAO;
-import DAO.Classi.CategoriaServizioDAO;
-import DAO.Classi.ProdottoDAO;
-import Model.*;
+import Business.ModelBusiness.CategoriaBusiness;
 import View.AppFrame;
 import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateCategoryListener;
-import View.Listener.CenterListeners.Amministratore.GestioneArticoliListeners.CreateProductListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class CreateCategoryPanel extends JPanel {
 
@@ -53,45 +48,37 @@ public class CreateCategoryPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }else{
-            if(sottocategoriaField.getSelectedItem().equals("Prodotto")){
-                if(categoriaPadreField.getText().isEmpty()){
-                    CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
-                    if(CategoriaProdottoDAO.getInstance().add(categoriaProdotto) == 0){
-                        JOptionPane.showMessageDialog(appFrame,
-                                "La categoria è già esistente!",
-                                "Create Product Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }else{
-                    CategoriaProdotto categoriaPadreProdotto = new CategoriaProdotto(categoriaPadreField.getText());
-                    if(CategoriaProdottoDAO.getInstance().isCategory(categoriaPadreProdotto) == false){
-                        JOptionPane.showMessageDialog(appFrame,
-                                "La categoria padre non esiste!",
-                                "Create Product Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    CategoriaProdotto categoriaProdotto = new CategoriaProdotto(categoriaField.getText());
-
-                    CategoriaProdottoDAO.getInstance().addSub(categoriaProdotto, CategoriaProdottoDAO.getInstance().findByName(categoriaPadreProdotto.getNome()).getIdCategoria());
-                }
-
-            }else if(sottocategoriaField.getSelectedItem().equals("Servizio")){
-                if(!categoriaPadreField.getText().isEmpty()) {
+            int result = CategoriaBusiness.getInstance().aggiungi(categoriaField.getText(), sottocategoriaField.getSelectedItem().toString(), categoriaPadreField.getText());
+            switch (result) {
+                case 1:
                     JOptionPane.showMessageDialog(appFrame,
                             "La categoria padre deve essere vuota!",
+                            "Create Category Service Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 2:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "La categoria è già esistente!",
                             "Create Product Error",
                             JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                else{
-                    CategoriaServizio categoriaServizio = new CategoriaServizio(categoriaField.getText());
-                    CategoriaServizioDAO.getInstance().add(categoriaServizio);
-                }
+                    break;
+                case 3:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "La categoria padre non esiste!",
+                            "Create Product Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "La categoria è stata aggiunta con successo",
+                            "Create Product Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
             }
-
         }
+        categoriaField.setText("");
+        categoriaPadreField.setText("");
+
     }
 
     public void layoutSetting(){

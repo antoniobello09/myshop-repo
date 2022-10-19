@@ -13,7 +13,6 @@ public interface IFornitoreDAO {
     int delete(Fornitore fornitore);
     Fornitore findByID(int idFornitore);
     Fornitore findByName(String nomeFornitore);
-    Fornitore findByName(String nomeFornitore, int closeConn);
     ArrayList<Fornitore> findAll();
     ArrayList<Fornitore> findAllProd();
     ArrayList<Fornitore> findAllServ();

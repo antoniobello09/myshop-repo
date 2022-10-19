@@ -20,18 +20,25 @@ import java.util.ArrayList;
 public class ProdottoCompositoDAOTest {
 
     private int idProdottoComposito;
+    private int idSottoProdotto;
 
     @Before
     public void setUp() throws Exception {
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-        Prodotto prodotto = new Prodotto("ProdottoCompositoNome", "Descrizione", (float) 67, 31, 0, 35);
         IArticoloDAO articoloDAO = ArticoloDAO.getInstance();
         IProdottoDAO prodottoDAO = ProdottoDAO.getInstance();
+
+        Prodotto prodotto = new Prodotto("ProdottoCompositoNome", "Descrizione", (float) 67, 0, 0, 35);
         articoloDAO.add(prodotto);
         idProdottoComposito = articoloDAO.findByName("ProdottoCompositoNome").getIdArticolo();
         prodotto.setIdArticolo(idProdottoComposito);
         prodottoDAO.add(prodotto);
-        prodottoCompositoDAO.add(idProdottoComposito, new Prodotto_Quantita(new Prodotto(22), 10));
+        Prodotto sottoProdotto = new Prodotto();
+        sottoProdotto.setIdProdottoCompositoPadre(idProdottoComposito);
+        sottoProdotto.setQuantita(3);
+        idSottoProdotto = 22;
+        sottoProdotto.setIdArticolo(idSottoProdotto);
+        prodottoCompositoDAO.add(sottoProdotto);
     }
 
     @After
@@ -41,7 +48,7 @@ public class ProdottoCompositoDAOTest {
         IProdottoDAO prodottoDAO = ProdottoDAO.getInstance();
         ProdottoComposito prodottoComposito = new ProdottoComposito();
         prodottoComposito.setIdArticolo(idProdottoComposito);
-        prodottoCompositoDAO.delete(idProdottoComposito);
+        prodottoCompositoDAO.delete(prodottoComposito);
         prodottoDAO.delete(prodottoComposito);
         articoloDAO.delete(prodottoComposito);
     }
@@ -49,17 +56,22 @@ public class ProdottoCompositoDAOTest {
     @Test
     public void updateTestOK() {
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-
-        int rowCount = prodottoCompositoDAO.update(idProdottoComposito, new Prodotto_Quantita(new Prodotto(22), 15));
+        Prodotto sottoProdotto = new Prodotto();
+        sottoProdotto.setIdProdottoCompositoPadre(idProdottoComposito);
+        sottoProdotto.setQuantita(5);
+        sottoProdotto.setIdArticolo(idSottoProdotto);
+        int rowCount = prodottoCompositoDAO.update(sottoProdotto);
         Assert.assertEquals(1, rowCount);
     }
 
     @Test
     public void updateTestNOK() {
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-        ProdottoComposito prodottoComposito = new ProdottoComposito(idProdottoComposito, "ProdottoCompositoNome", "Descrizione", (float) 67, 0);
-        int rowCount = prodottoCompositoDAO.update(idProdottoComposito, new Prodotto_Quantita(new Prodotto(22), 15));
-        prodottoComposito = ProdottoCompositoDAO.getInstance().findByID(idProdottoComposito);
+        Prodotto sottoProdotto = new Prodotto();
+        sottoProdotto.setIdProdottoCompositoPadre(idProdottoComposito);
+        sottoProdotto.setQuantita(5);
+        sottoProdotto.setIdArticolo(idSottoProdotto);
+        int rowCount = prodottoCompositoDAO.update(sottoProdotto);
         Assert.assertEquals(0, rowCount);
     }
 
@@ -94,14 +106,14 @@ public class ProdottoCompositoDAOTest {
     @Test
     public void findAllSonsTestOK() {
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-        ArrayList<Prodotto_Quantita> prodotti = prodottoCompositoDAO.findSonsByID(35);
+        ArrayList<Prodotto> prodotti = prodottoCompositoDAO.findSonsByID(35);
         Assert.assertEquals(2, prodotti.size());
     }
 
     @Test
     public void findAllSonsTestNOK() {
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-        ArrayList<Prodotto_Quantita> prodotti = prodottoCompositoDAO.findSonsByID(35);
+        ArrayList<Prodotto> prodotti = prodottoCompositoDAO.findSonsByID(35);
         Assert.assertEquals(1, prodotti.size());
     }
 
@@ -124,7 +136,9 @@ public class ProdottoCompositoDAOTest {
     public void deleteTestOK(){
         int rowCount;
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-        rowCount = prodottoCompositoDAO.delete(idProdottoComposito);
+        ProdottoComposito prodotto = new ProdottoComposito();
+        prodotto.setIdArticolo(idProdottoComposito);
+        rowCount = prodottoCompositoDAO.delete(prodotto);
         Assert.assertEquals(1, rowCount);
     }
 
@@ -132,7 +146,9 @@ public class ProdottoCompositoDAOTest {
     public void deleteTestNOK(){
         int rowCount;
         IProdottoCompositoDAO prodottoCompositoDAO = ProdottoCompositoDAO.getInstance();
-        rowCount = prodottoCompositoDAO.delete(idProdottoComposito);
+        ProdottoComposito prodotto = new ProdottoComposito();
+        prodotto.setIdArticolo(idProdottoComposito);
+        rowCount = prodottoCompositoDAO.delete(prodotto);
         Assert.assertEquals(0, rowCount);
     }
 

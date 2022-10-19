@@ -32,6 +32,40 @@ public class ListaDAOTest {
     }
 
     @Test
+    public void updateTestOK(){
+        IListaDAO listaDAO = ListaDAO.getInstance();
+        Lista lista = new Lista( idLista, "NomeTest2", 16);
+        int rowCount = listaDAO.update(lista);
+        Assert.assertEquals(1, rowCount);
+    }
+
+    @Test
+    public void updateTestNOK(){
+        IListaDAO listaDAO = ListaDAO.getInstance();
+        Lista lista = new Lista( idLista, "NomeTest2", 16);
+        int rowCount = listaDAO.update(lista);
+        Assert.assertEquals(0, rowCount);
+    }
+
+    @Test
+    public void deleteTestOK(){
+        IListaDAO listaDAO = ListaDAO.getInstance();
+        Lista lista = new Lista();
+        lista.setIdLista(idLista);
+        int rowCount = listaDAO.delete(lista);
+        Assert.assertEquals(1, rowCount);
+    }
+
+    @Test
+    public void deleteTestNOK(){
+        IListaDAO listaDAO = ListaDAO.getInstance();
+        Lista lista = new Lista();
+        lista.setIdLista(idLista);
+        int rowCount = listaDAO.delete(lista);
+        Assert.assertEquals(0, rowCount);
+    }
+
+    @Test
     public void findByIDTestOK() {
         IListaDAO listaDAO = ListaDAO.getInstance();
         Lista lista = listaDAO.findByID(idLista);
@@ -49,7 +83,7 @@ public class ListaDAOTest {
     public void findAllTestOK() {
         IListaDAO listaDAO = ListaDAO.getInstance();
         ArrayList<Lista> lista = listaDAO.findAll();
-        Assert.assertEquals(4, lista.size());
+        Assert.assertEquals(11, lista.size());
     }
 
     @Test
@@ -63,7 +97,7 @@ public class ListaDAOTest {
     public void findAllIdClienteTestOK() {
         IListaDAO listaDAO = ListaDAO.getInstance();
         ArrayList<Lista> lista = listaDAO.findAll();
-        Assert.assertEquals(4, lista.size());
+        Assert.assertEquals(11, lista.size());
     }
 
     @Test

@@ -68,10 +68,7 @@ public class FornitoreDAO implements IFornitoreDAO {
     }
 
     @Override
-    public Fornitore findByID(int idFornitore){
-        return findByID(idFornitore, 0);
-    }
-    public Fornitore findByID(int idFornitore, int closeConn) {
+    public Fornitore findByID(int idFornitore) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM fornitore WHERE idFornitore = '" + idFornitore + "';";
@@ -97,7 +94,6 @@ public class FornitoreDAO implements IFornitoreDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
             conn.close();
         }
         return null;
@@ -105,11 +101,6 @@ public class FornitoreDAO implements IFornitoreDAO {
 
     @Override
     public Fornitore findByName(String nomefornitore) {
-        return findByName(nomefornitore,0);
-    }
-
-    @Override
-    public Fornitore findByName(String nomefornitore, int closeConn) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM fornitore WHERE nome = '" + nomefornitore + "';";
@@ -137,7 +128,6 @@ public class FornitoreDAO implements IFornitoreDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn==0)
             conn.close();
         }
         return null;

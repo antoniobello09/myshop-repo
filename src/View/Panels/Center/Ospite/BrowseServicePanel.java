@@ -19,13 +19,8 @@ public class BrowseServicePanel extends JPanel {
 
     private JScrollPane currentScrollPane;
     private JTable currentTable;
-    private ServiziTableModel currentTableModel;
-
-    private ArrayList<Servizio> lista;
 
     public BrowseServicePanel(AppFrame appFrame) {
-
-        lista = ServizioBusiness.getInstance().cercaTuttiServizi();
 
         this.appFrame = appFrame;
         browseServiceListener = new BrowseServiceListener(this, this.appFrame);
@@ -42,8 +37,7 @@ public class BrowseServicePanel extends JPanel {
     }
 
     public void tableSetting(){
-        currentTableModel = new ServiziTableModel(lista);
-        currentTable = new JTable(currentTableModel);
+        currentTable = ServizioBusiness.getInstance().getTabellaServizi();
         currentScrollPane = new JScrollPane(currentTable);
     }
 
@@ -59,6 +53,7 @@ public class BrowseServicePanel extends JPanel {
     }
 
     public void componentsSizing(){
+        currentTable.setRowHeight(60);
         currentScrollPane.setPreferredSize(new Dimension(1000,500));
     }
 

@@ -39,7 +39,7 @@ public class UtenteDAO implements IUtenteDAO {
         if((utente instanceof Manager)||(utente instanceof Amministratore)){
             sql = "INSERT INTO utente(username, password, email) VALUES ('"+ utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getEmail() + "');";
         }else {
-            sql = "INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job) VALUES ('" + utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getName() + "','" + utente.getSurname() + "','" + utente.getEmail() + "','" + utente.getBirthdate() + "','" + utente.getTelephone() + "','" + utente.getAddress() + "','" + utente.getJob() + "');";
+            sql = "INSERT INTO utente(username, password, name, surname, email, birthdate, telephone, address, job, city) VALUES ('" + utente.getUsername() + "','" + utente.getPassword() + "','" + utente.getName() + "','" + utente.getSurname() + "','" + utente.getEmail() + "','" + utente.getBirthdate() + "','" + utente.getTelephone() + "','" + utente.getAddress() + "','" + utente.getJob() + "','" + utente.getCity() + "');";
         }
         IDbOperation dbOp = new WriteOperation(sql);
         int rowCount = dbOperationExecutor.executeOperation(dbOp).getRowsAffected();
@@ -70,11 +70,7 @@ public class UtenteDAO implements IUtenteDAO {
     }
 
     @Override
-    public Utente findByID(int idUtente){
-        return findByID(idUtente, 0);
-    }
-
-    public Utente findByID(int idUtente, int closeConn) {
+    public Utente findByID(int idUtente) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM utente WHERE idUtente = '" + idUtente + "';";
@@ -106,18 +102,13 @@ public class UtenteDAO implements IUtenteDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0);
-                conn.close();
+            conn.close();
         }
         return null;
     }
 
     @Override
-    public Utente findByUsername(String username){
-        return findByUsername(username, 0);
-    }
-
-    public Utente findByUsername(String username, int closeConn) {
+    public Utente findByUsername(String username) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM utente WHERE username = '" + username + "';";
@@ -148,8 +139,7 @@ public class UtenteDAO implements IUtenteDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

@@ -18,22 +18,20 @@ public class DisponibilitaDialog extends JDialog implements ActionListener {
 
     private static DisponibilitaDialog dialog;
     private Frame appFrame;
-    private SchedaProdotto schedaProdotto;
 
     private JPanel grigliaPanel = new JPanel();
         private JLabel inserisciDisponibilita = new JLabel("Disponibilità prodotto: ");
         private JTextField disponibilitaField = new JTextField();
         private JButton btnRifornisci = new JButton("Rifornisci");
 
+    private static int disponibilitaOUT;
 
-
-    private DisponibilitaDialog(Frame frame, String title, SchedaProdotto schedaProdotto) {
+    private DisponibilitaDialog(Frame frame, String title, int disponibilitaIN) {
 
         super(frame, title, true);
         this.appFrame = frame;
-        this.schedaProdotto = schedaProdotto;
 
-        disponibilitaField.setText(String.valueOf(schedaProdotto.getDisponibilita()));
+        disponibilitaField.setText(String.valueOf(disponibilitaIN));
 
 
 
@@ -51,12 +49,12 @@ public class DisponibilitaDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
-    public static Object showDialog(JFrame appFrame, String title, SchedaProdotto schedaProdotto) {
+    public static int showDialog(JFrame appFrame, String title, int disponibilitaIN) {
         Frame frame = JOptionPane.getFrameForComponent(appFrame);
-        dialog = new DisponibilitaDialog(frame, title, schedaProdotto);
+        dialog = new DisponibilitaDialog(frame, title, disponibilitaIN);
         dialog.setVisible(true);
 
-        return null;
+        return disponibilitaOUT;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -67,7 +65,7 @@ public class DisponibilitaDialog extends JDialog implements ActionListener {
                         "Supply Product Error",
                         JOptionPane.ERROR_MESSAGE);
             }else{
-                SchedaProdottoDAO.getInstance().update(schedaProdotto.getIdSchedaProdotto(), Integer.parseInt(disponibilitaField.getText()));
+                disponibilitaOUT = Integer.parseInt(disponibilitaField.getText());
                 DisponibilitaDialog.dialog.setVisible(false);
             }
         }

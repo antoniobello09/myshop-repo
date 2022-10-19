@@ -53,10 +53,7 @@ public class PosizioneDAO implements IPosizioneDAO {
     }
 
     @Override
-    public Posizione findByID(int idPosizione){
-        return findByID(idPosizione, 0);
-    }
-    public Posizione findByID(int idPosizione, int closeConn) {
+    public Posizione findByID(int idPosizione) {
         conn = DbConnection.getInstance();
         String sql = "SELECT * FROM posizione WHERE idPosizione = '" + idPosizione + "';";
         IDbOperation dbOperation = new ReadOperation(sql);
@@ -80,8 +77,7 @@ public class PosizioneDAO implements IPosizioneDAO {
             // Gestisce le differenti categorie d'errore
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(closeConn == 0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

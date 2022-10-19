@@ -1,5 +1,6 @@
 package View.Panels.Center.Amministratore.GestionePuntiVenditaPanels;
 
+import Business.ModelBusiness.PuntoVenditaBusiness;
 import DAO.Classi.FornitoreDAO;
 import DAO.Classi.ManagerDAO;
 import DAO.Classi.PuntoVenditaDAO;
@@ -14,8 +15,8 @@ import java.awt.*;
 
 public class CreateShopPanel extends JPanel {
 
-    AppFrame appFrame;
-    CreateShopListener createShopListener;
+    private AppFrame appFrame;
+    private CreateShopListener createShopListener;
 
     private JPanel formPanel = new JPanel();
         private JLabel inserisciEmail = new JLabel("Inserire l'e-mail: ");
@@ -44,18 +45,31 @@ public class CreateShopPanel extends JPanel {
     }
 
     public void crea(){
-        if( (emailField.getText().isEmpty()) || (usernameField.getText().isEmpty()) || (passwordField.getText().isEmpty()) || (cittaField.getText().isEmpty()) || (indirizzoField.getText().isEmpty()) ) {
+        if((emailField.getText().isEmpty()) || (usernameField.getText().isEmpty()) || (passwordField.getText().isEmpty()) || (cittaField.getText().isEmpty()) || (indirizzoField.getText().isEmpty()) ) {
             JOptionPane.showMessageDialog(appFrame,
                     "Riempire tutti i campi!",
                     "Create Product Error",
                     JOptionPane.ERROR_MESSAGE);
-            return;
+        }else{
+            int result = PuntoVenditaBusiness.getInstance().crea(
+                    emailField.getText(), usernameField.getText(), passwordField.getText(),
+                    cittaField.getText(), indirizzoField.getText());
+            switch(result){
+                case 0:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Punto Vendita creato con successo!",
+                            "Create Shop Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(appFrame,
+                            "Punto Vendita non creato!",
+                            "Create Shop Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
         }
-        else{
-            Manager manager = new Manager(usernameField.getText(), passwordField.getText(), emailField.getText());
-            ManagerDAO.getInstance().add(manager);
-            PuntoVenditaDAO.getInstance().add(ManagerDAO.getInstance().findByUsername(usernameField.getText(),1).getIdUtente(), cittaField.getText(), indirizzoField.getText());
-        }
+        clearText();
     }
 
     public void layoutSetting(){
@@ -64,17 +78,17 @@ public class CreateShopPanel extends JPanel {
 
     public void componentsAdding(){
         add(formPanel);
-        formPanel.add(inserisciEmail);
-        formPanel.add(emailField);
-        formPanel.add(inserisciUsername);
-        formPanel.add(usernameField);
-        formPanel.add(inserisciPassword);
-        formPanel.add(passwordField);
-        formPanel.add(inserisciCitta);
-        formPanel.add(cittaField);
-        formPanel.add(inserisciIndirizzo);
-        formPanel.add(indirizzoField);
-        formPanel.add(btnCrea);
+            formPanel.add(inserisciEmail);
+            formPanel.add(emailField);
+            formPanel.add(inserisciUsername);
+            formPanel.add(usernameField);
+            formPanel.add(inserisciPassword);
+            formPanel.add(passwordField);
+            formPanel.add(inserisciCitta);
+            formPanel.add(cittaField);
+            formPanel.add(inserisciIndirizzo);
+            formPanel.add(indirizzoField);
+            formPanel.add(btnCrea);
 
     }
 
@@ -86,6 +100,14 @@ public class CreateShopPanel extends JPanel {
         btnCrea.setActionCommand("crea");
 
         btnCrea.addActionListener(createShopListener);
+    }
+
+    public void clearText(){
+        emailField.setText("");
+        usernameField.setText("");
+        passwordField.setText("");
+        cittaField.setText("");
+        indirizzoField.setText("");
     }
 
 }

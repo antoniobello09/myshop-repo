@@ -1,6 +1,9 @@
 package View;
 
 
+import Business.HelpFunctions;
+import Business.ModelBusiness.PuntoVenditaBusiness;
+import Business.SessionManager;
 import DAO.Classi.PuntoVenditaDAO;
 import Model.PuntoVendita;
 
@@ -20,30 +23,22 @@ public class ShopDialog extends JDialog
         private JPanel titlePanel = new JPanel();
             private JLabel label = new JLabel("Punto vendita dove stai usando il PC:");
         private JPanel comboBoxPanel = new JPanel();
-            private JComboBox<String> comboShops = new JComboBox<>();
+            private JComboBox<String> comboShops;
         private JPanel buttonPane = new JPanel();
             private JButton setButton = new JButton("Imposta");
 
-    private ArrayList<PuntoVendita> shopsList;
 
     private ShopDialog(Frame frame,
                        Component locationComp,
-                       String labelText,
                        String title,
-                       Object[] data,
-                       String initialValue,
-                       String longValue) {
+                       ArrayList<String> shopsList) {
         super(frame, title, true);
 
         contentPane = getContentPane();
         getRootPane().setDefaultButton(setButton);
 
 
-        shopsList = PuntoVenditaDAO.getInstance().findAll();
-        for(int i=0;i<shopsList.size();i++){
-            String shopAddress = shopsList.get(i).getIndirizzo() + ", " + shopsList.get(i).getCitta();
-            comboShops.addItem(shopAddress);
-        }
+        comboShops = HelpFunctions.getFullComboBox(shopsList);
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
@@ -63,19 +58,13 @@ public class ShopDialog extends JDialog
 
     public static String showDialog(Component frameComp,
                                     Component locationComp,
-                                    String labelText,
                                     String title,
-                                    String[] possibleValues,
-                                    String initialValue,
-                                    String longValue) {
+                                    ArrayList<String> shopsList) {
         Frame frame = JOptionPane.getFrameForComponent(frameComp);
         dialog = new ShopDialog(frame,
                 locationComp,
-                labelText,
                 title,
-                possibleValues,
-                initialValue,
-                longValue);
+                shopsList);
         dialog.setVisible(true);
         return value;
     }

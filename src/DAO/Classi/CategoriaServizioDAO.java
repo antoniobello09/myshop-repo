@@ -37,9 +37,8 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
     public int add(CategoriaServizio categoriaServizio) {
         conn = DbConnection.getInstance();
         int rowCount;
-        conn.executeUpdate("INSERT INTO categoria(nome) VALUES ('"+ categoriaServizio.getNome() + "');");
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "INSERT INTO categoria_servizio VALUES ('" + CategoriaDAO.getInstance().findByName(categoriaServizio.getNome(),1).getIdCategoria() + "');";
+        String sql = "INSERT INTO categoria_servizio VALUES ('" + categoriaServizio.getIdCategoria() + "');";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
         conn.close();
@@ -62,20 +61,15 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
         int rowCount;
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
-        String sql = "DELETE CP FROM categoria_servizio CP INNER JOIN categoria C ON CP.idCategoria = C.idCategoria WHERE CP.idCategoria = '" + categoriaServizio.getIdCategoria() + "';";
+        String sql = "DELETE FROM categoria_servizio WHERE idCategoria = '" + categoriaServizio.getIdCategoria() + "';";
         IDbOperation dbOperation = new WriteOperation(sql);
         rowCount = dbOperationExecutor.executeOperation(dbOperation).getRowsAffected();
-        CategoriaDAO.getInstance().delete(categoriaServizio);
         conn.close();
         return rowCount;
     }
 
     @Override
-    public CategoriaServizio findByID(int idCategoria){
-        return findByID(idCategoria, 0);
-    }
-
-    public CategoriaServizio findByID(int idCategoria, int i) {
+    public CategoriaServizio findByID(int idCategoria) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_servizio cs ON c.idCategoria = cs.idCategoria WHERE c.idCategoria = '" + idCategoria + "';";
@@ -101,19 +95,14 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(i==0)
-                conn.close();
+            conn.close();
         }
         return null;
     }
 
 
     @Override
-    public CategoriaServizio findByName(String nomeCategoria){
-        return findByName(nomeCategoria, 0);
-    }
-
-    public CategoriaServizio findByName(String nomeCategoria, int i) {
+    public CategoriaServizio findByName(String nomeCategoria) {
         conn = DbConnection.getInstance();
         DbOperationExecutor dbOperationExecutor = new DbOperationExecutor();
         String sql = "SELECT * FROM categoria c INNER JOIN categoria_servizio cs ON c.idCategoria = cs.idCategoria WHERE nome = '" + nomeCategoria + "';";
@@ -139,8 +128,7 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
             // handle any errors
             System.out.println("Resultset: " + e.getMessage());
         } finally {
-            if(i==0)
-                conn.close();
+            conn.close();
         }
         return null;
     }

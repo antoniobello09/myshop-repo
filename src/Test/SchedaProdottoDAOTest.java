@@ -22,43 +22,56 @@ public class SchedaProdottoDAOTest {
     @Before
     public void setUp() throws Exception{
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
-        schedaProdottoDAO.add(idProdotto, 13, idPuntoVendita);
+        SchedaProdotto schedaProdotto = new SchedaProdotto(idProdotto, 13, idPuntoVendita);
+        schedaProdottoDAO.add(schedaProdotto);
         idSchedaProdotto = schedaProdottoDAO.findByShop_Product(idProdotto, idPuntoVendita).getIdSchedaProdotto();
     }
 
     @After
     public void tearDown() throws Exception{
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
-        schedaProdottoDAO.delete(idSchedaProdotto);
+        SchedaProdotto schedaProdotto = new SchedaProdotto();
+        schedaProdotto.setIdSchedaProdotto(idSchedaProdotto);
+        schedaProdottoDAO.delete(schedaProdotto);
     }
 
     @Test
     public void updateTestOK(){
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
-        schedaProdottoDAO.update(idSchedaProdotto, 50);
-        SchedaProdotto schedaProdotto = schedaProdottoDAO.findByShop_Product(idProdotto, idPuntoVendita);
+        SchedaProdotto schedaProdotto = new SchedaProdotto();
+        schedaProdotto.setIdSchedaProdotto(idSchedaProdotto);
+        schedaProdotto.setDisponibilita(50);
+        schedaProdottoDAO.update(schedaProdotto);
+        schedaProdotto = schedaProdottoDAO.findByShop_Product(idProdotto, idPuntoVendita);
         Assert.assertEquals(50, schedaProdotto.getDisponibilita());
     }
 
     @Test
     public void updateTestNOK(){
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
-        schedaProdottoDAO.update(idSchedaProdotto, 50);
-        SchedaProdotto schedaProdotto = schedaProdottoDAO.findByShop_Product(idProdotto, idPuntoVendita);
+        SchedaProdotto schedaProdotto = new SchedaProdotto();
+        schedaProdotto.setIdSchedaProdotto(idSchedaProdotto);
+        schedaProdotto.setDisponibilita(50);
+        schedaProdottoDAO.update(schedaProdotto);
+        schedaProdotto = schedaProdottoDAO.findByShop_Product(idProdotto, idPuntoVendita);
         Assert.assertEquals(51, schedaProdotto.getDisponibilita());
     }
 
     @Test
     public void deleteTestOK(){
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
-        int rowCount = schedaProdottoDAO.delete(idSchedaProdotto);
+        SchedaProdotto schedaProdotto = new SchedaProdotto();
+        schedaProdotto.setIdSchedaProdotto(idSchedaProdotto);
+        int rowCount = schedaProdottoDAO.delete(schedaProdotto);
         Assert.assertEquals(0, rowCount);
     }
 
     @Test
     public void deleteTestNOK(){
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
-        int rowCount = schedaProdottoDAO.delete(idSchedaProdotto);
+        SchedaProdotto schedaProdotto = new SchedaProdotto();
+        schedaProdotto.setIdSchedaProdotto(idSchedaProdotto);
+        int rowCount = schedaProdottoDAO.delete(schedaProdotto);
         Assert.assertEquals(1, rowCount);
     }
 
@@ -87,7 +100,7 @@ public class SchedaProdottoDAOTest {
     public void findAllByShopNOK() {
         ISchedaProdottoDAO schedaProdottoDAO = SchedaProdottoDAO.getInstance();
         ArrayList<SchedaProdotto> schedaProdotto = schedaProdottoDAO.findAllByShop(idPuntoVendita);
-        Assert.assertEquals(2, schedaProdotto.size());
+        Assert.assertEquals(3, schedaProdotto.size());
     }
 
     @Test

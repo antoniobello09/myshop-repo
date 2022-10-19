@@ -1,6 +1,7 @@
 package DbInterface;
 
 import java.io.File;
+import java.sql.Blob;
 import java.sql.ResultSet;
 
 public interface IDbConnection {
@@ -8,5 +9,5 @@ public interface IDbConnection {
     int executeUpdate(String sqlStatement);
     void close();
 
-    int addFoto(File photo, String sql);
+    int savePhoto(Blob immagine, String sql);
 }
