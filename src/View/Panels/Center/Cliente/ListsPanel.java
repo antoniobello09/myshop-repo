@@ -21,7 +21,7 @@ public class ListsPanel extends JPanel {
     private JPanel sidePanel = new JPanel();
     private JButton btnModifica = new JButton("Dettagli");
     private JButton btnAcquista = new JButton("Acquista");
-    private JButton btnPDF = new JButton("Scarica PDF");
+    private JButton btnPDF = new JButton("Inviami PDF");
 
     private int idCliente;
 
