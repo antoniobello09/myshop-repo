@@ -1,11 +1,7 @@
 package Business.AbstractFactory;
 
-import Model.Articolo;
-import Model.ICategoria;
+public abstract class AbstractFactory {
 
-public interface AbstractFactory {
-
-    Articolo crea();
-    ICategoria creaCategoria();
+    public abstract Object crea(String articleType);
 
 }

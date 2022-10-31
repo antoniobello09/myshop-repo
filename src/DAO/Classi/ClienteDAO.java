@@ -1,5 +1,6 @@
 package DAO.Classi;
 
+import Business.FactoryMethod.UtenteFactory;
 import DAO.Interfacce.IClienteDAO;
 import DAO.UtenteDAO;
 import DbInterface.Command.DbOperationExecutor;
@@ -9,6 +10,7 @@ import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Cliente;
+import Model.Manager;
 import Model.PuntoVendita;
 
 import java.sql.ResultSet;
@@ -96,7 +98,8 @@ public class ClienteDAO implements IClienteDAO {
         Cliente cliente;
         try {
             rs.next();
-            cliente = new Cliente();
+            UtenteFactory utenteFactory = new UtenteFactory();
+            cliente = (Cliente) utenteFactory.crea("CLIENTE");
             cliente.setIdUtente(rs.getInt("idUtente"));
             cliente.setEmail(rs.getString("email"));
             cliente.setUsername(rs.getString("username"));
@@ -136,7 +139,8 @@ public class ClienteDAO implements IClienteDAO {
         Cliente cliente;
         try {
             rs.next();
-            cliente = new Cliente();
+            UtenteFactory utenteFactory = new UtenteFactory();
+            cliente = (Cliente) utenteFactory.crea("CLIENTE");
             cliente.setIdUtente(rs.getInt("idUtente"));
             cliente.setEmail(rs.getString("email"));
             cliente.setUsername(rs.getString("username"));
@@ -176,7 +180,8 @@ public class ClienteDAO implements IClienteDAO {
         ArrayList<Cliente> clienti = new ArrayList<>();
         try {
             while(rs.next()) {
-                cliente = new Cliente();
+                UtenteFactory utenteFactory = new UtenteFactory();
+                cliente = (Cliente) utenteFactory.crea("CLIENTE");
                 cliente.setIdUtente(rs.getInt("idUtente"));
                 cliente.setEmail(rs.getString("email"));
                 cliente.setUsername(rs.getString("username"));
@@ -218,7 +223,8 @@ public class ClienteDAO implements IClienteDAO {
         ArrayList<Cliente> clienti = new ArrayList<>();
         try {
             while(rs.next()) {
-                cliente = new Cliente();
+                UtenteFactory utenteFactory = new UtenteFactory();
+                cliente = (Cliente) utenteFactory.crea("CLIENTE");
                 cliente.setIdUtente(rs.getInt("idUtente"));
                 cliente.setEmail(rs.getString("email"));
                 cliente.setUsername(rs.getString("username"));

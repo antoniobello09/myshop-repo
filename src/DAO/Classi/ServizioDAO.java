@@ -1,5 +1,7 @@
 package DAO.Classi;
 
+import Business.AbstractFactory.AbstractFactory;
+import Business.AbstractFactory.FactoryProvider;
 import DAO.Interfacce.IServizioDAO;
 import DbInterface.Command.DbOperationExecutor;
 import DbInterface.Command.IDbOperation;
@@ -7,6 +9,7 @@ import DbInterface.Command.ReadOperation;
 import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
+import Model.Prodotto;
 import Model.Servizio;
 
 import java.io.*;
@@ -79,7 +82,8 @@ public class ServizioDAO implements IServizioDAO {
         Servizio servizio;
         try {
             rs.next();
-            servizio = new Servizio();
+            AbstractFactory articleFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.ARTICOLO);
+            servizio = (Servizio) articleFactory.crea("SERVIZIO");
             servizio.setIdArticolo(rs.getInt("idServizio"));
             servizio.setNome(rs.getString("nome"));
             servizio.setIdCategoria(rs.getInt("idCategoria"));
@@ -132,7 +136,8 @@ public class ServizioDAO implements IServizioDAO {
         Servizio servizio;
         try {
             rs.next();
-            servizio = new Servizio();
+            AbstractFactory articleFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.ARTICOLO);
+            servizio = (Servizio) articleFactory.crea("SERVIZIO");
             servizio.setIdArticolo(rs.getInt("idServizio"));
             servizio.setNome(rs.getString("nome"));
             servizio.setIdCategoria(rs.getInt("idCategoria"));
@@ -185,7 +190,8 @@ public class ServizioDAO implements IServizioDAO {
         ArrayList<Servizio> servizi = new ArrayList<>();
         try {
             while(rs.next()) {
-                servizio = new Servizio();
+                AbstractFactory articleFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.ARTICOLO);
+                servizio = (Servizio) articleFactory.crea("SERVIZIO");
                 servizio.setIdArticolo(rs.getInt("idServizio"));
                 servizio.setNome(rs.getString("nome"));
                 servizio.setIdCategoria(rs.getInt("idCategoria"));

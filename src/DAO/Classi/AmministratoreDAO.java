@@ -1,5 +1,6 @@
 package DAO.Classi;
 
+import Business.FactoryMethod.UtenteFactory;
 import DAO.Interfacce.IAmministratoreDAO;
 import DAO.UtenteDAO;
 import DbInterface.Command.DbOperationExecutor;
@@ -75,7 +76,8 @@ public class AmministratoreDAO implements IAmministratoreDAO {
         Amministratore amministratore;
         try {
             rs.next();
-            amministratore = new Amministratore();
+            UtenteFactory utenteFactory = new UtenteFactory();
+            amministratore = (Amministratore) utenteFactory.crea("AMMINISTRATORE");
             amministratore.setIdUtente(rs.getInt("idUtente"));
             amministratore.setEmail(rs.getString("email"));
             amministratore.setUsername(rs.getString("username"));
@@ -105,7 +107,8 @@ public class AmministratoreDAO implements IAmministratoreDAO {
         Amministratore amministratore;
         try {
             rs.next();
-            amministratore = new Amministratore();
+            UtenteFactory utenteFactory = new UtenteFactory();
+            amministratore = (Amministratore) utenteFactory.crea("AMMINISTRATORE");
             amministratore.setIdUtente(rs.getInt("idUtente"));
             amministratore.setEmail(rs.getString("email"));
             amministratore.setUsername(rs.getString("username"));
@@ -135,7 +138,8 @@ public class AmministratoreDAO implements IAmministratoreDAO {
         ArrayList<Amministratore> amministratori = new ArrayList<>();
         try {
             while(rs.next()) {
-                amministratore = new Amministratore();
+                UtenteFactory utenteFactory = new UtenteFactory();
+                amministratore = (Amministratore) utenteFactory.crea("AMMINISTRATORE");
                 amministratore.setIdUtente(rs.getInt("idUtente"));
                 amministratore.setEmail(rs.getString("email"));
                 amministratore.setUsername(rs.getString("username"));

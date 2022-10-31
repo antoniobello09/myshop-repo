@@ -56,7 +56,7 @@ public class HelpFunctions {
     public static String convertMonth(int index){
         return monthsN[index];
     }
-
+/*
     public static String convertMonth2(String name){
         int index = -1;
         for(int i=0;i<months.length;i++){
@@ -76,7 +76,7 @@ public class HelpFunctions {
         }
         return months[index];
     }
-
+*/
     public static JComboBox<String> getFullComboBox(ArrayList<String> lista){
         JComboBox<String> comboBox = new JComboBox<>();
         Iterator<String> iterator = lista.iterator();

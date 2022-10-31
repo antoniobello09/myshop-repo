@@ -1,14 +1,23 @@
 package Business.ModelBusiness;
 
+import Business.SessionManager;
+import Business.Strategy.AlphabeticSort;
+import Business.Strategy.AvailabilitySort;
+import Business.Strategy.PriceSort;
+import Business.Strategy.SortProductList;
 import DAO.Classi.*;
 import Model.Prodotto;
 import Business.ModelBusiness.TableModels.ProdottiTableModel;
+import Model.Utente;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static Business.ModelBusiness.UtenteBusiness.Privilegio.*;
 
 public class ProdottoBusiness {
 
@@ -23,7 +32,22 @@ public class ProdottoBusiness {
     }
 
     public JTable getTabellaProdotti(){
-        ProdottiTableModel currentTableModel = new ProdottiTableModel(ProdottoDAO.getInstance().findAll());
+        ArrayList<Prodotto> prodotti = ProdottoDAO.getInstance().findAll();
+//-----------USO DELLO STRATEGY PER RIORDINARE L'ARRAY DI PRODOTTI IN BASE AL TIPO DI UTENTE LOGGATO---------------//
+        SortProductList sortProductList = new SortProductList(prodotti);
+        Utente utente = (Utente) SessionManager.getInstance().getSession().get("loggedUser");
+        if(utente != null) {
+            if (UtenteBusiness.getInstance().userCan(utente, ADMIN_SYSTEM)) {
+                sortProductList.setProductSortStartegy(new AlphabeticSort());
+            } else if (UtenteBusiness.getInstance().userCan(utente, MANAGE_SHOP)) {
+                sortProductList.setProductSortStartegy(new AvailabilitySort());
+            } else if (UtenteBusiness.getInstance().userCan(utente, CLIENT)) {
+                sortProductList.setProductSortStartegy(new PriceSort());
+            }
+            sortProductList.sort();
+        }
+//-------------------------------------------------------------------------------------------------------------------//
+        ProdottiTableModel currentTableModel = new ProdottiTableModel(prodotti);
         JTable tabella = new JTable(currentTableModel);
         return tabella;
     }

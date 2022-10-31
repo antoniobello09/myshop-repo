@@ -1,19 +1,18 @@
 package Business.AbstractFactory;
 
-import Business.AbstractFactory.AbstractFactory;
-
 public class FactoryProvider {
 
-    public enum TipoFactory {PRODOTTO, SERVIZIO}
+    public enum FactoryType { ARTICOLO, CATEGORIA }
 
-    public static AbstractFactory getFactory(TipoFactory choice) {
+    public static AbstractFactory getFactory(FactoryType type) {
 
-        if(TipoFactory.PRODOTTO.equals(choice))
-            return new ProdottoFactory();
-        else if(TipoFactory.SERVIZIO.equals(choice))
-            return new ServizioFactory();
-        return null;
+        if(type == null) return null;
 
+        switch(type) {
+            case ARTICOLO: return new ArticoloFactory();
+            case CATEGORIA: return new CategoriaFactory();
+            default: return null;
+        }
     }
 
 }

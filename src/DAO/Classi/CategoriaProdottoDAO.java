@@ -1,5 +1,7 @@
 package DAO.Classi;
 
+import Business.AbstractFactory.AbstractFactory;
+import Business.AbstractFactory.FactoryProvider;
 import DAO.Interfacce.ICategoriaProdottoDAO;
 import DbInterface.*;
 import DbInterface.Command.DbOperationExecutor;
@@ -7,6 +9,7 @@ import DbInterface.Command.IDbOperation;
 import DbInterface.Command.ReadOperation;
 import DbInterface.Command.WriteOperation;
 import Model.CategoriaProdotto;
+import Model.Servizio;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,7 +109,8 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         try {
             rs.next();
             if (rs.getRow()==1) {
-                categoriaProdotto = new CategoriaProdotto();
+                AbstractFactory categoryFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.CATEGORIA);
+                categoriaProdotto = (CategoriaProdotto) categoryFactory.crea("PRODOTTO");
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
                 categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
@@ -138,7 +142,8 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         CategoriaProdotto categoriaProdotto;
         try {
             while (rs.next()) {
-                categoriaProdotto = new CategoriaProdotto();
+                AbstractFactory categoryFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.CATEGORIA);
+                categoriaProdotto = (CategoriaProdotto) categoryFactory.crea("PRODOTTO");
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
                 categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
@@ -170,7 +175,8 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         try {
             rs.next();
             if (rs.getRow()==1) {
-                categoriaProdotto = new CategoriaProdotto();
+                AbstractFactory categoryFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.CATEGORIA);
+                categoriaProdotto = (CategoriaProdotto) categoryFactory.crea("PRODOTTO");
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
                 categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));
@@ -231,7 +237,8 @@ public class CategoriaProdottoDAO implements ICategoriaProdottoDAO {
         CategoriaProdotto categoriaProdotto;
         try {
             while (rs.next()) {
-                categoriaProdotto = new CategoriaProdotto();
+                AbstractFactory categoryFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.CATEGORIA);
+                categoriaProdotto = (CategoriaProdotto) categoryFactory.crea("PRODOTTO");
                 categoriaProdotto.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaProdotto.setNome(rs.getString("nome"));
                 categoriaProdotto.setIdCategoriaPadre(rs.getInt("idCategoriaPadre"));

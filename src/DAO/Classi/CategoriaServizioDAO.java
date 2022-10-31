@@ -1,5 +1,7 @@
 package DAO.Classi;
 
+import Business.AbstractFactory.AbstractFactory;
+import Business.AbstractFactory.FactoryProvider;
 import DAO.Interfacce.ICategoriaServizioDAO;
 import DbInterface.Command.DbOperationExecutor;
 import DbInterface.Command.IDbOperation;
@@ -8,6 +10,7 @@ import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Categoria;
+import Model.CategoriaProdotto;
 import Model.CategoriaServizio;
 
 import java.sql.ResultSet;
@@ -112,7 +115,8 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
         try {
             rs.next();
             if (rs.getRow()==1) {
-                categoriaServizio = new CategoriaServizio();
+                AbstractFactory categoryFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.CATEGORIA);
+                categoriaServizio = (CategoriaServizio) categoryFactory.crea("SERVIZIO");
                 categoriaServizio.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaServizio.setNome(rs.getString("nome"));
                 return categoriaServizio;
@@ -146,7 +150,8 @@ public class CategoriaServizioDAO  implements ICategoriaServizioDAO {
         try {
             int i=0;
             while (rs.next()) {
-                categoriaServizio = new CategoriaServizio();
+                AbstractFactory categoryFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.CATEGORIA);
+                categoriaServizio = (CategoriaServizio) categoryFactory.crea("SERVIZIO");
                 categoriaServizio.setIdCategoria(rs.getInt("idCategoria"));
                 categoriaServizio.setNome(rs.getString("nome"));
                 categorieServizi.add(categoriaServizio);

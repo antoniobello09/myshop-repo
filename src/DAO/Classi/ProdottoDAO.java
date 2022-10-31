@@ -1,5 +1,7 @@
 package DAO.Classi;
 
+import Business.AbstractFactory.AbstractFactory;
+import Business.AbstractFactory.FactoryProvider;
 import DAO.Interfacce.IProdottoDAO;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
@@ -64,7 +66,8 @@ public class ProdottoDAO implements IProdottoDAO {
         Prodotto prodotto;
         try {
             rs.next();
-            prodotto = new Prodotto();
+            AbstractFactory articleFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.ARTICOLO);
+            prodotto = (Prodotto)articleFactory.crea("PRODOTTO");
             prodotto.setIdArticolo(rs.getInt("idProdotto"));
             prodotto.setNome(rs.getString("nome"));
             prodotto.setIdCategoria(rs.getInt("idCategoria"));
@@ -114,7 +117,8 @@ public class ProdottoDAO implements IProdottoDAO {
     public Prodotto findByName(String nomeProdotto) {
         conn = DbConnection.getInstance();
         rs = conn.executeQuery("SELECT * FROM prodotto INNER JOIN articolo ON prodotto.idProdotto = articolo.idArticolo WHERE articolo.nome = '" + nomeProdotto + "';");
-        Prodotto prodotto = new Prodotto();
+        AbstractFactory articleFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.ARTICOLO);
+        prodotto = (Prodotto)articleFactory.crea("PRODOTTO");
         try {
             rs.next();
             prodotto.setIdArticolo(rs.getInt("idProdotto"));
@@ -168,7 +172,8 @@ public class ProdottoDAO implements IProdottoDAO {
         ArrayList<Prodotto> prodotti = new ArrayList<>();
         try {
             while (rs.next()) {
-                prodotto = new Prodotto();
+                AbstractFactory articleFactory = FactoryProvider.getFactory(FactoryProvider.FactoryType.ARTICOLO);
+                prodotto = (Prodotto)articleFactory.crea("PRODOTTO");
                 prodotto.setIdArticolo(rs.getInt("idProdotto"));
                 prodotto.setNome(rs.getString("nome"));
                 prodotto.setIdCategoria(rs.getInt("idCategoria"));

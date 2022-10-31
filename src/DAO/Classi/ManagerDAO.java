@@ -1,5 +1,6 @@
 package DAO.Classi;
 
+import Business.FactoryMethod.UtenteFactory;
 import DAO.Interfacce.IManagerDAO;
 import DAO.UtenteDAO;
 import DbInterface.Command.DbOperationExecutor;
@@ -8,6 +9,7 @@ import DbInterface.Command.ReadOperation;
 import DbInterface.Command.WriteOperation;
 import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
+import Model.Amministratore;
 import Model.Manager;
 
 import java.sql.ResultSet;
@@ -77,7 +79,8 @@ public class ManagerDAO implements IManagerDAO {
         Manager manager;
         try {
             rs.next();
-            manager = new Manager();
+            UtenteFactory utenteFactory = new UtenteFactory();
+            manager = (Manager) utenteFactory.crea("MANAGER");
             manager.setIdUtente(rs.getInt("idUtente"));
             manager.setEmail(rs.getString("email"));
             manager.setUsername(rs.getString("username"));
@@ -107,7 +110,8 @@ public class ManagerDAO implements IManagerDAO {
         Manager manager;
         try {
             if(rs.next()) {
-                manager = new Manager();
+                UtenteFactory utenteFactory = new UtenteFactory();
+                manager = (Manager) utenteFactory.crea("MANAGER");
                 manager.setIdUtente(rs.getInt("idUtente"));
                 manager.setEmail(rs.getString("email"));
                 manager.setUsername(rs.getString("username"));
@@ -138,7 +142,8 @@ public class ManagerDAO implements IManagerDAO {
         ArrayList<Manager> managers = new ArrayList<>();
         try {
             while(rs.next()) {
-                manager = new Manager();
+                UtenteFactory utenteFactory = new UtenteFactory();
+                manager = (Manager) utenteFactory.crea("MANAGER");
                 manager.setIdUtente(rs.getInt("idUtente"));
                 manager.setEmail(rs.getString("email"));
                 manager.setUsername(rs.getString("username"));
