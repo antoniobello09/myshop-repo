@@ -4,7 +4,7 @@ package Model;
 import java.io.File;
 import java.sql.Blob;
 
-public class Prodotto extends Articolo implements IProdotto, Cloneable {
+public class Prodotto extends Articolo {
 
     private int idProduttore;
     private int idPosizione;

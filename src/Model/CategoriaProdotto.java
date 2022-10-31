@@ -3,7 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriaProdotto extends Categoria implements ICategoria {
+public class CategoriaProdotto extends Categoria{
 
 
     private List<CategoriaProdotto> sottocategorie = new ArrayList<>();

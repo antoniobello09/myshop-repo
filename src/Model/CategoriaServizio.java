@@ -1,6 +1,6 @@
 package Model;
 
-public class CategoriaServizio extends Categoria implements ICategoria{
+public class CategoriaServizio extends Categoria{
 
     public CategoriaServizio() {
     }

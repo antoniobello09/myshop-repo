@@ -4,7 +4,7 @@ import java.io.File;
 import java.sql.Blob;
 import java.util.ArrayList;
 
-public class ProdottoComposito extends Prodotto implements IProdotto {
+public class ProdottoComposito extends Prodotto {
 
     private ArrayList<Prodotto> sottoprodotti = new ArrayList<>();
 
