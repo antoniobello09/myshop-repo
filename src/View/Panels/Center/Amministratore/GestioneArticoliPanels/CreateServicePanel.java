@@ -45,11 +45,11 @@ public class CreateServicePanel extends JPanel {
         categoriaField = new JComboBox<>();
         fornitoreField = new JComboBox<>();
 
-        //Creo la lista di categorie da cui scegliere
+        //Creo la combo box a partire da un array di stringhe di nomi
         categoriaField = HelpFunctions.getFullComboBox(CategoriaBusiness.getInstance().getNomiCategorieServizio());
 
 
-        //Creo la lista di produttori da cui scegliere
+        //Creo la combo box a partire da un array di stringhe di nomi
         fornitoreField = HelpFunctions.getFullComboBox(FornitoreBusiness.getInstance().getNomiFornitoriServizi());
 
         fileChooserSetting();
@@ -79,6 +79,7 @@ public class CreateServicePanel extends JPanel {
                     "Create Service Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
+            //Business per aggiungere il servizio
             int result = ServizioBusiness.getInstance().aggiungi(nomeField.getText(), descrizioneField.getText(), prezzoField.getText(), categoriaField.getSelectedItem().toString(), immagine, fornitoreField.getSelectedItem().toString());
             switch (result){
                 case 0:
@@ -95,7 +96,10 @@ public class CreateServicePanel extends JPanel {
                     break;
             }
         }
-
+        nomeField.setText("");
+        descrizioneField.setText("");
+        prezzoField.setText("");
+        immagine = null;
     }
 
     public void fileChooserSetting(){

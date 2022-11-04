@@ -1,12 +1,6 @@
 package View.Panels.Center.Amministratore.GestioneArticoliPanels.Altro;
 
-import Business.ModelBusiness.ProdottoBusiness;
 import Business.ModelBusiness.ProdottoCompositoBusiness;
-import DAO.Classi.ProdottoCompositoDAO;
-import DAO.Classi.ProdottoDAO;
-import Model.Prodotto;
-import Model.ProdottoComposito;
-import Model.Prodotto_Quantita;
 
 import javax.swing.*;
 import java.awt.*;

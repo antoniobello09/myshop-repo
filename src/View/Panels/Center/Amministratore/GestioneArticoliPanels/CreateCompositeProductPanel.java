@@ -45,6 +45,7 @@ public class CreateCompositeProductPanel extends JPanel {
 
         fileChooserSetting();
 
+        //Da un array di stringhe di posizioni HelpFunctions mi dà un ComboBox pronta
         posizioneField = HelpFunctions.getFullComboBox(PosizioneBusiness.getInstance().getPosizioniDisponibili());
 
         layoutSetting();
@@ -140,6 +141,7 @@ public class CreateCompositeProductPanel extends JPanel {
         prezzoField.setText("");
 
         posizioneField.removeAllItems();
+        //Aggiorno la combo box con le nuove prosizioni disponibili
         posizioneField = HelpFunctions.getFullComboBox(posizioneField, PosizioneBusiness.getInstance().getPosizioniDisponibili());
         immagineProdotto = null;
     }

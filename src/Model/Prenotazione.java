@@ -7,6 +7,9 @@ public class Prenotazione {
     private int quantita_prenotata;
     private int idAcquisto;
 
+    private Prodotto prodotto;
+    private Acquisto acquisto;
+
     public Prenotazione() {
     }
 

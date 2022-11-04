@@ -2,7 +2,6 @@ package DAO.Interfacce;
 
 import Model.Prodotto;
 import Model.ProdottoComposito;
-import Model.Prodotto_Quantita;
 
 import java.util.ArrayList;
 

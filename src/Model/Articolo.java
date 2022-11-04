@@ -12,6 +12,8 @@ public class Articolo {
     private File immagine;
     private int idCategoria;
 
+    private Categoria categoria;
+
     public Articolo(int idArticolo, String nome, String descrizione, Float prezzo, File immagine, int idCategoria) {
         this.idArticolo = idArticolo;
         this.prezzo = prezzo;

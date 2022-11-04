@@ -11,6 +11,8 @@ public class Prodotto extends Articolo {
     private int quantita;
     private int idProdottoCompositoPadre;
 
+    private Fornitore produttore;
+    private Prodotto prodottoPadre;
 
     public Prodotto(){
 

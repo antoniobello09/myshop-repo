@@ -10,6 +10,7 @@ public class Lista {
     private String nome;
     private int idCliente;
 
+    private Cliente cliente;
     private ArrayList<Lista_has_Articolo> lista_has_articoli;
 
     public Lista() {

@@ -50,7 +50,9 @@ public class BindShopArticlePanel extends JPanel {
                     "Empty Product Field Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
+
             int result = SchedaProdottoBusiness.getInstance().associa(puntoVenditaField.getSelectedItem().toString(), prodottoField.getText());
+
             switch (result) {
                 case 1:
                     JOptionPane.showMessageDialog(appFrame,

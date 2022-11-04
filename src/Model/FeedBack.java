@@ -13,6 +13,8 @@ public class FeedBack {
     private String risposta;
     private Date data;
 
+    private Acquisto acquisto;
+    private Articolo articolo;
 
     public FeedBack() {
 

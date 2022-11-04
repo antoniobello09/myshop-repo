@@ -28,7 +28,6 @@ public class PuntoVenditaBusiness {
 
     }
 
-
     public ArrayList<String> getAllShopsAddresses(){
         ArrayList<PuntoVendita> shopsList = puntoVenditaDAO.findAll();
         ArrayList<String> indirizzi = new ArrayList<>();
@@ -61,17 +60,25 @@ public class PuntoVenditaBusiness {
                 "</html>";
     }
 
+    //L'aggiunta di un manager si divide in due fasi
+    //1. UtenteDAO.add
+    //2. ManagerDAO.add
     public int crea(String emailManager, String usernameManager, String passwordManager,
                      String cittaPuntoVendita, String indirizzoPuntoVendita){
+
         Manager manager = new Manager(usernameManager, passwordManager, emailManager);
         if(UtenteDAO.getInstance().add(manager)==0){
-            return 1;
+            return 1;   //L'utente esiste già
         }
+
+        //Ormai aggiunto il manager alla tabella utente
+        //Recupero l'id del nuovo manager e faccio ManagerDAO.add
         manager.setIdUtente(UtenteDAO.getInstance().findByUsername(usernameManager).getIdUtente());
         ManagerDAO.getInstance().add(manager);
+        //Aggiungo un nuovo puntovendita
         PuntoVendita puntoVendita = new PuntoVendita(manager.getIdUtente(), cittaPuntoVendita, indirizzoPuntoVendita);
         if(PuntoVenditaDAO.getInstance().add(puntoVendita)==0){
-            return 1;
+            return 1; //Il punto vendita esiste già
         }
         return 0;
     }

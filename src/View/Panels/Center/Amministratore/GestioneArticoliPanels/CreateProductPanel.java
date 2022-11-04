@@ -57,13 +57,13 @@ public class CreateProductPanel extends JPanel {
         posizioneField = new JComboBox<>();
         produttoreField = new JComboBox<>();
 
-        //Creo la lista di categorie da cui scegliere
+        //Creo la combo box a partire da un array di stringhe di nomi
         categoriaField = HelpFunctions.getFullComboBox(CategoriaBusiness.getInstance().getNomiCategorieProdotto());
 
-        //Creo la lista di posizioni da cui scegliere
+        //Creo la combo box a partire da un array di stringhe di posizioni
         posizioneField = HelpFunctions.getFullComboBox(PosizioneBusiness.getInstance().getPosizioniDisponibili());
 
-        //Creo la lista di produttori da cui scegliere
+        //Creo la combo box a partire da un array di stringhe di nomi
         produttoreField = HelpFunctions.getFullComboBox(FornitoreBusiness.getInstance().getNomiProduttori());
 
         fileChooserSetting();
@@ -119,6 +119,7 @@ public class CreateProductPanel extends JPanel {
         descrizioneField.setText("");
         prezzoField.setText("");
         posizioneField.removeAllItems();
+        //Aggiorno la combo box con le nuove posizioni disponibili
         posizioneField = HelpFunctions.getFullComboBox(posizioneField, PosizioneBusiness.getInstance().getPosizioniDisponibili());
     }
 

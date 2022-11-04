@@ -51,9 +51,11 @@ public class CreateShopPanel extends JPanel {
                     "Create Product Error",
                     JOptionPane.ERROR_MESSAGE);
         }else{
+
             int result = PuntoVenditaBusiness.getInstance().crea(
                     emailField.getText(), usernameField.getText(), passwordField.getText(),
                     cittaField.getText(), indirizzoField.getText());
+
             switch(result){
                 case 0:
                     JOptionPane.showMessageDialog(appFrame,

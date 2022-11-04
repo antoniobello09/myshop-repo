@@ -68,8 +68,10 @@ public class ServiziTableModel extends AbstractTableModel {
             case 0: return s.getNome();
             case 1: return s.getDescrizione();
             case 2: return s.getPrezzo();
+            //Ora per far vedere il nome della categoria, lo devo recuperare grazie all' idCategoria presente nel Prodotto p
             case 3: return CategoriaServizioDAO.getInstance().findByID(s.getIdCategoria()).getNome();
             case 4:
+                //Serve per far vedere le immagini
                 if(s.getImmagine()!=null){
                     ImageIcon imageIcon = new ImageIcon(s.getImmagine().getPath());
                     if (imageIcon .getIconWidth() > 100) {
@@ -103,6 +105,8 @@ public class ServiziTableModel extends AbstractTableModel {
         this.rowEditable = rowEditable;
     }
 
+
+    //Serve per far vedere le immagini
     @Override
     public Class<?> getColumnClass(int column) {
         switch (column) {

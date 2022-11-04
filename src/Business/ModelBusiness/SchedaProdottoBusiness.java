@@ -50,22 +50,34 @@ public class SchedaProdottoBusiness {
         return 0;
     }
 
+
+    //Associa un punto vendita a un prodtto
     public int associa(String indirizzoPuntoVenditaCompleto, String nomeProdotto){
         Prodotto p = ProdottoDAO.getInstance().findByName(nomeProdotto);
-        if(p !=null){
+        if(p !=null){   //Il prodotto esiste?
+            //Per aggiungere un record alla tabella SchedaProdotto ho bisogno:
+            // 1. idPuntoVendita
+            // 2. idProdotto
+            // 3. disponibilità = 0
+
             int idProdotto = p.getIdArticolo();
+
+            //Devo recuperare l'idPuntoVendita
+            //L'indirizzo è nella forma "Via Esempio 13, Alessano"  perciò devo staccare la città dall'indirizzo
             String[] indirizzo = indirizzoPuntoVenditaCompleto.split(", ");
             int idPuntoVendita = PuntoVenditaDAO.getInstance().findByName(indirizzo[0],indirizzo[1]).getIdPuntoVendita();
+
             SchedaProdotto schedaProdotto = new SchedaProdotto(idProdotto, 0, idPuntoVendita);
+            //Verifico che la scheda sia già presente nella tabella
             if(SchedaProdottoDAO.getInstance().findByShop_Product(idProdotto, idPuntoVendita) != null){
-                return 3;
+                return 3; //La scheda esiste già
             }
             if(SchedaProdottoDAO.getInstance().add(schedaProdotto)==0){
-                return 2;
+                return 2;   //L'add non è andato a buon fine
             }
             return 0;
         }
-        return 1;
+        return 1;   //Il prodotto non esiste
     }
 
 }

@@ -59,7 +59,7 @@ public class CreateSupplierPanel extends JPanel {
                     JOptionPane.showMessageDialog(appFrame,
                             "Fornitore aggiunto con successo!",
                             "Create Supplier Success",
-                            JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case 1:
                     JOptionPane.showMessageDialog(appFrame,

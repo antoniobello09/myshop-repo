@@ -37,6 +37,8 @@ public class BrowseServicePanel extends JPanel {
     }
 
     public void tableSetting(){
+        //La JTable che mi serve la recupero da ServizioBusiness
+        //E' compito del Business associare la tableModel alla JTable
         currentTable = ServizioBusiness.getInstance().getTabellaServizi();
         currentScrollPane = new JScrollPane(currentTable);
     }

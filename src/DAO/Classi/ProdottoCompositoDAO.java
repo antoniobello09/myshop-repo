@@ -5,7 +5,6 @@ import DbInterface.DbConnection;
 import DbInterface.IDbConnection;
 import Model.Prodotto;
 import Model.ProdottoComposito;
-import Model.Prodotto_Quantita;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

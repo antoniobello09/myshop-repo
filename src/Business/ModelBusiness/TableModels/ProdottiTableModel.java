@@ -73,9 +73,12 @@ public class ProdottiTableModel extends AbstractTableModel {
             case 0: return p.getNome();
             case 1: return p.getDescrizione();
             case 2: return p.getPrezzo();
+            //Ora per far vedere i nomi delle categorie, li devo recuperare grazie all' idCategoria presente nel Prodotto p
+            //Nome della categoria padre
             case 3: return CategoriaProdottoDAO.getInstance().findByID(CategoriaProdottoDAO.getInstance().findByID(p.getIdCategoria()).getIdCategoriaPadre()).getNome();
+            //Nome della sottocategoria
             case 4: return CategoriaProdottoDAO.getInstance().findByID(p.getIdCategoria()).getNome();
-            case 5:
+            case 5://Serve a far vedere l'immagine
                 if(p.getImmagine()!=null){
                     ImageIcon imageIcon = new ImageIcon(p.getImmagine().getPath());
                     if (imageIcon .getIconWidth() > 100) {
@@ -93,6 +96,10 @@ public class ProdottiTableModel extends AbstractTableModel {
                     return null;
                 }
             case 6: return FornitoreDAO.getInstance().findByID(p.getIdProduttore()).getNome();
+            //Per far vedere la disponibilità di un prodotto nel punto vendita dove mi trovo recupero la scheda prodotto.
+            //Se il findByProduct_Shop non trova la scheda allora significa che il prodotto non è associato dall'admin al punto vendita dove mi trovo
+            //e quindi ritorno una disponibilità pari a 0
+            //altrimenti ritorno la disponibilità della scheda prodotto trovata
             case 7: SchedaProdotto schedaProdotto = SchedaProdottoDAO.getInstance().findByShop_Product(p.getIdArticolo(), (int) SessionManager.getInstance().getSession().get("idPuntoVendita"));
                     if(schedaProdotto != null) return schedaProdotto.getDisponibilita();
                     else return 0;
@@ -112,6 +119,8 @@ public class ProdottiTableModel extends AbstractTableModel {
         this.rowEditable = rowEditable;
     }
 
+
+    //Serve per far vedere le immagini
     @Override
     public Class<?> getColumnClass(int column) {
         switch (column) {

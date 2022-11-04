@@ -14,6 +14,34 @@ public class HelpFunctions {
     private static String[] months = {"--","GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO", "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"};
 
 
+
+    // Crea una nuova combo box da un array di stringhe
+    public static JComboBox<String> getFullComboBox(ArrayList<String> lista){
+        JComboBox<String> comboBox = new JComboBox<>();
+        Iterator<String> iterator = lista.iterator();
+        while(iterator.hasNext()){
+            comboBox.addItem(iterator.next());
+        }
+        return comboBox;
+    }
+
+
+    //Modifica una combo box già esistente che passo come parametro
+    public static JComboBox<String> getFullComboBox(JComboBox<String> comboBox, ArrayList<String> lista){
+        for (String s : lista) {
+            comboBox.addItem(s);
+        }
+        return comboBox;
+    }
+
+
+
+
+
+
+
+//----Funzioni ausiliarie per mettere la data di nascita al momento in cui ci si registra-------------------------------------//
+
     public static void setDaysComboBox(JComboBox comboBox, String month, String year){
         comboBox.removeAllItems();
         switch (month) {
@@ -77,21 +105,7 @@ public class HelpFunctions {
         return months[index];
     }
 */
-    public static JComboBox<String> getFullComboBox(ArrayList<String> lista){
-        JComboBox<String> comboBox = new JComboBox<>();
-        Iterator<String> iterator = lista.iterator();
-        while(iterator.hasNext()){
-            comboBox.addItem(iterator.next());
-        }
-        return comboBox;
-    }
 
-    public static JComboBox<String> getFullComboBox(JComboBox<String> comboBox, ArrayList<String> lista){
-        for (String s : lista) {
-            comboBox.addItem(s);
-        }
-        return comboBox;
-    }
 
 
 

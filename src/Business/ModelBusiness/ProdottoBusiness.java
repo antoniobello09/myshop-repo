@@ -32,6 +32,7 @@ public class ProdottoBusiness {
     }
 
     public JTable getTabellaProdotti(){
+        //Recupero tutti i prodotti, anche i compositi
         ArrayList<Prodotto> prodotti = ProdottoDAO.getInstance().findAll();
 //-----------USO DELLO STRATEGY PER RIORDINARE L'ARRAY DI PRODOTTI IN BASE AL TIPO DI UTENTE LOGGATO---------------//
         SortProductList sortProductList = new SortProductList(prodotti);
@@ -47,25 +48,37 @@ public class ProdottoBusiness {
             sortProductList.sort();
         }
 //-------------------------------------------------------------------------------------------------------------------//
+        //Creo la tableModel che poi associo al JTable
         ProdottiTableModel currentTableModel = new ProdottiTableModel(prodotti);
         JTable tabella = new JTable(currentTableModel);
         return tabella;
     }
 
+
+
     public int aggiungi(String nomeProdotto, String descrizioneProdotto, String prezzoProdotto, String nomeCategoria, File immagine, String nomeProduttore, String posizione){
+
+        //L'aggiunta di un prodotto avviene in due fasi:
+        // 1. ArticoloDAO.add
+        // 2. ProdottoDAO.add
+
+        //La posizione è una stringa del tipo "3 piano 2 corsia 4 scaffale" ma a me servono solo i numeri
         String[] posizioneArray = posizione.split(" ");
+        //Dai nomi di categoria e produttore e dai numeri della posizione recupero gli id che mi servono
         int idCategoria = CategoriaProdottoDAO.getInstance().findByName(nomeCategoria).getIdCategoria();
         int idProduttore = FornitoreDAO.getInstance().findByName(nomeProduttore).getIdFornitore();
         int idPosizione = PosizioneDAO.getInstance().findByNumbers(Integer.parseInt(posizioneArray[0]),Integer.parseInt(posizioneArray[2]),Integer.parseInt(posizioneArray[4])).getIdPosizione();
+        //Creo il prodotto
         Prodotto prodotto = new Prodotto(nomeProdotto, descrizioneProdotto, Float.parseFloat(prezzoProdotto), idCategoria, idProduttore, idPosizione);
         prodotto.setImmagine(immagine);
         if(ArticoloDAO.getInstance().add(prodotto) == 0){
-            return 1;
+            return 1;   //Errore: L'articolo esiste già
         }
+        //Recupero l'ID dalla tabella articolo per poi aggiungere il prodotto nella tabella prodotti
         int idProdotto = ArticoloDAO.getInstance().findByName(prodotto.getNome()).getIdArticolo();
         prodotto.setIdArticolo(idProdotto);
         if(ProdottoDAO.getInstance().add(prodotto) == 0){
-            return 1;
+            return 1;   //Errore: L'articolo esiste già
         }
         return 0;
     }

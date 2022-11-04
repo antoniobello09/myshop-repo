@@ -23,6 +23,7 @@ public class AppFrame extends JFrame {
         super("MY SHOP");
         setLayout(new BorderLayout());
 
+        //Dialog per scegliere il punto vendita dove mi trovo
         PuntoVenditaBusiness.getInstance().scegliPuntovenditaDialog(this);
 
     //----------------HEADER--------------------------------------------------------------//

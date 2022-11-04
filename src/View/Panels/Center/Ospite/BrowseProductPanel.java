@@ -33,6 +33,8 @@ public class BrowseProductPanel extends JPanel {
     }
 
     public void tableSetting(){
+        //La JTable che mi serve la recupero da ProdottoBusiness
+        //E' compito del Business associare la tableModel alla JTable
         currentTable = ProdottoBusiness.getInstance().getTabellaProdotti();
         currentTable.setRowHeight(60);
         currentScrollPane = new JScrollPane(currentTable);

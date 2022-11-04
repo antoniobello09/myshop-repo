@@ -48,7 +48,9 @@ public class CreateCategoryPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }else{
+            //Aggiunge la categoria e restituisce un codice di errore
             int result = CategoriaBusiness.getInstance().aggiungi(categoriaField.getText(), sottocategoriaField.getSelectedItem().toString(), categoriaPadreField.getText());
+            //In base al codice di errore fa vedere un messaggio
             switch (result) {
                 case 1:
                     JOptionPane.showMessageDialog(appFrame,
@@ -76,6 +78,7 @@ public class CreateCategoryPanel extends JPanel {
                     break;
             }
         }
+        //Ripulisco i textField
         categoriaField.setText("");
         categoriaPadreField.setText("");
 

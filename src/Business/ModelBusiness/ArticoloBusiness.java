@@ -35,33 +35,48 @@ public class ArticoloBusiness {
         return ArticoloDAO.getInstance().isServizio(articolo);
     }
 
+    //Cancella un articolo conoscendone il nome
     public int cancella(String nomeArticolo){
+
+        //La cancellazione di un articolo si divide in due fasi:
+        // 1. ServizioDAO.delete / ProdottoDAO.delete per cancellarlo dalla tabella servizio/prodotto
+        // 2. ArticoloDAO.delete per cancellarlo dalla tabella articolo
+        // per il prodotto composito va anche eliminato dalla tabella ProdottoComposito
+
+        //Recupero l'articolo
         Articolo articolo = ArticoloDAO.getInstance().findByName(nomeArticolo);
-        if (articolo != null) {
-            Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
-            ProdottoComposito prodottoComposito = ProdottoCompositoDAO.getInstance().findByID(articolo.getIdArticolo());
-            Servizio servizio = ServizioBusiness.getInstance().cercaIDServizio(articolo.getIdArticolo());
+        if (articolo != null) { //L'articolo esiste?
+            //L'articolo è un servizio, prodotto o prodotto composito?
             if (ArticoloDAO.getInstance().isServizio(articolo)) {
+                //E' un servizio quindi creo un oggetto servizio e poi faccio delete
+                Servizio servizio = ServizioDAO.getInstance().findByID(articolo.getIdArticolo());
                 ServizioDAO.getInstance().delete(servizio);
                 ArticoloDAO.getInstance().delete(servizio);
             } else if (ArticoloDAO.getInstance().isProdottoComposito(articolo)) {
+                //E' un prodotto composito quidni creo un oggetto prodotto composito e poi faccio delete
+                ProdottoComposito prodottoComposito = ProdottoCompositoDAO.getInstance().findByID(articolo.getIdArticolo());
                 ProdottoCompositoDAO.getInstance().delete(prodottoComposito);
                 ProdottoDAO.getInstance().delete(prodottoComposito);
                 ArticoloDAO.getInstance().delete(articolo);
             } else if (ArticoloDAO.getInstance().isProdotto(articolo)) {
+                //E' un prodotto quidni creo un oggetto prodotto e poi faccio delete
+                Prodotto prodotto = ProdottoDAO.getInstance().findByID(articolo.getIdArticolo());
                 ProdottoDAO.getInstance().delete(prodotto);
                 ArticoloDAO.getInstance().delete(articolo);
             }
         } else {
-           return 1;
+           return 1;//Errore : l'articolo non esiste
         }
-        return 0;
+        return 0;//Cancellazione andata a buon fine
     }
 
     public int modifica(AppFrame appFrame, String nomeArticolo){
-        this.appFrame = appFrame;
+        ArticoloBusiness.appFrame = appFrame;
+        //recupero l'articolo dal nomeArticolo
         Articolo articolo = ArticoloDAO.getInstance().findByName(nomeArticolo);
-        if(articolo != null){
+        if(articolo != null){//L'articolo esiste?
+
+            //in base al tipo di articolo faccio partire un dialog per la modifica
             if(ArticoloDAO.getInstance().isServizio(articolo)){
                 modificaServizio(articolo.getIdArticolo());
             }else if(ArticoloDAO.getInstance().isProdottoComposito(articolo)){
@@ -70,31 +85,39 @@ public class ArticoloBusiness {
                 modificaProdotto(articolo.getIdArticolo());
             }
         }else{
-            return 1;
+            return 1;//L'articolo non esiste
         }
         return 0;
     }
 
     public void modificaServizio(int idServizio){
+        //Recuper il servizip
         Servizio servizio = ServizioDAO.getInstance().findByID(idServizio);
+        //Nel dialog voglio mostrare i campi già compilati pertanto mi servono i nomi delle categorie, del produttore ecc.
         String nomeCategoria = CategoriaServizioDAO.getInstance().findByID(servizio.getIdCategoria()).getNome();
         String nomeFornitoreServizio = FornitoreDAO.getInstance().findByID(servizio.getIdFornitoreServizio()).getNome();
+        //Questo dialog ha come parametri le informazioni relative al serviio da mofìdificare
+        //Restistuisce un array di nuove informazioni
         ArrayList<String> risultati = ModifyServiceDialog.showDialog(appFrame,
                 "Modifica servizio",
                 servizio.getNome(), servizio.getDescrizione(), String.valueOf(servizio.getPrezzo()),
                 nomeCategoria, servizio.getImmagine(), nomeFornitoreServizio);
+        //recupero gli id dall'array di nuove informazioni
         int idCategoriaAggiornata = CategoriaServizioDAO.getInstance().findByName(risultati.get(3)).getIdCategoria();
         int idFornitoreAggiornato = FornitoreDAO.getInstance().findByName(risultati.get(4)).getIdFornitore();
+        //Preparo iil servizio per poi fare l'update
         servizio.setNome(risultati.get(0));
         servizio.setDescrizione(risultati.get(1));
         servizio.setPrezzo(Float.valueOf(risultati.get(2)));
         servizio.setIdFornitoreServizio(idFornitoreAggiornato);
         servizio.setIdCategoria(idCategoriaAggiornata);
         servizio.setImmagine(ModifyServiceDialog.getImmagine());
+        //Update in due fasi
         ServizioDAO.getInstance().update(servizio);
         ArticoloDAO.getInstance().update(servizio);
     }
 
+    //Stessi commenti fatti per il modifica Servizio
     public void modificaProdotto(int idProdotto){
         Prodotto prodotto = ProdottoDAO.getInstance().findByID(idProdotto);
         String nomeCategoria = CategoriaProdottoDAO.getInstance().findByID(CategoriaProdottoDAO.getInstance().findByID(prodotto.getIdCategoria()).getIdCategoriaPadre()).getNome();
@@ -120,6 +143,7 @@ public class ArticoloBusiness {
         ArticoloDAO.getInstance().update(prodotto);
     }
 
+    //Stessi commenti fatti per il modifica prodotto composito
     public void modificaProdottoComposito(int idProdottoComposito){
         Prodotto prodotto = ProdottoDAO.getInstance().findByID(idProdottoComposito);
         String posizione = PosizioneBusiness.getInstance().getPosizioneStringa(PosizioneDAO.getInstance().findByID(prodotto.getIdPosizione()));

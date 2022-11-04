@@ -9,6 +9,7 @@ public class Servizio extends Articolo implements Cloneable{
 
     private int idFornitoreServizio;
 
+    private Fornitore fornitoreServizio;
 
     public Servizio(int idArticolo, String nome, String descrizione, Float prezzo, File immagine, int idCategoria, int idFornitoreServizio) {
         super(idArticolo, nome, descrizione, prezzo, immagine, idCategoria);

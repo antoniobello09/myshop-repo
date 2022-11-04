@@ -9,6 +9,9 @@ public class Acquisto {
     private Date data;
     private int idLista;
 
+    private PuntoVendita puntoVendita;
+    private Lista lista;
+
     public Acquisto(int idAcquisto, int idPuntoVendita, Date data) {
         this.idAcquisto = idAcquisto;
         this.idPuntoVendita = idPuntoVendita;

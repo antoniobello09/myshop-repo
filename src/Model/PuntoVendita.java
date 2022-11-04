@@ -7,6 +7,8 @@ public class PuntoVendita {
     private String citta;
     private String indirizzo;
 
+    private Manager manager;
+
     public PuntoVendita() {
     }
 
